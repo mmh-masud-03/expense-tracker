@@ -4,9 +4,9 @@ export const POST = async (req) => {
   try {
     await ConnectToDB();
     const body = await req.json();
-    const { title, amount, category, date } = body;
+    const { user, title, amount, category, date } = body;
 
-    if (!title || !amount || !category || !date) {
+    if (!user || !title || !amount || !category) {
       return new Response(
         JSON.stringify({ error: "All fields are required" }),
         {
@@ -15,7 +15,13 @@ export const POST = async (req) => {
       );
     }
 
-    const newExpense = await Expense.create({ title, amount, category, date });
+    const newExpense = await Expense.create({
+      user,
+      title,
+      amount,
+      category,
+      date,
+    });
     return new Response(JSON.stringify(newExpense), { status: 201 });
   } catch (err) {
     console.error(err);
