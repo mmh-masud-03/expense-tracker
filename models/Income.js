@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import User from "./User";
 
 const IncomeSchema = new mongoose.Schema({
-  userid: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -17,7 +16,7 @@ const IncomeSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["Business", "Job", "Project", "Freelance"],
+    enum: ["Business", "Job", "Project", "Freelance", "Other"],
     required: true,
   },
   date: {
