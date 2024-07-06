@@ -1,4 +1,3 @@
-// components/ExpenseReport.js
 "use client";
 import { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
@@ -28,14 +27,26 @@ export default function ExpenseReport() {
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    totalPages: 1,
+    currentPage: 1,
+  });
 
   useEffect(() => {
     const fetchExpenseData = async () => {
       try {
-        const data = await GetAllExpenses();
-        setExpenseData(data);
+        // Fetching expenses with pagination and sorting
+        const { expenses, totalPages, currentPage } = await GetAllExpenses({
+          sortBy: "amount", // Adjust sorting criteria as needed
+          sortOrder: "desc", // Sort in descending order
+          page: 1, // Fetch first page
+          limit: 10, // Fetch 10 items per page
+        });
+        setExpenseData(expenses);
+        setPagination({ totalPages, currentPage });
       } catch (err) {
         setError("Failed to fetch expense data.");
+        console.error("Error fetching expense data:", err);
       } finally {
         setLoading(false);
       }
@@ -56,7 +67,7 @@ export default function ExpenseReport() {
     );
   }
 
-  if (!expenseData || expenseData.length === 0) {
+  if (expenseData.length === 0) {
     return (
       <div className="p-4 mb-6 bg-white rounded shadow-md">
         No expense data available
@@ -64,14 +75,15 @@ export default function ExpenseReport() {
     );
   }
 
+  // Prepare data for charts
   const categories = [
     ...new Set(expenseData.map((expense) => expense.category)),
   ];
-  const categoryTotals = categories.map((category) => {
-    return expenseData
+  const categoryTotals = categories.map((category) =>
+    expenseData
       .filter((expense) => expense.category === category)
-      .reduce((sum, expense) => sum + expense.amount, 0);
-  });
+      .reduce((sum, expense) => sum + expense.amount, 0)
+  );
 
   const barData = {
     labels: categories,
@@ -106,14 +118,23 @@ export default function ExpenseReport() {
 
   return (
     <div className="p-4 mb-6 bg-white rounded shadow-md">
-      <h2 className="text-xl font-bold">Expense Report</h2>
+      <h2 className="text-xl font-bold mb-4">Expense Report</h2>
       <div className="mt-4">
-        <h3 className="text-lg font-semibold">Bar Chart</h3>
-        <Bar data={barData} />
+        <h3 className="text-lg font-semibold mb-2">Bar Chart</h3>
+        <div className="relative">
+          <Bar data={barData} options={{ responsive: true }} />
+        </div>
       </div>
       <div className="mt-4">
-        <h3 className="text-lg font-semibold">Pie Chart</h3>
-        <Pie data={pieData} />
+        <h3 className="text-lg font-semibold mb-2">Pie Chart</h3>
+        <div className="relative">
+          <Pie data={pieData} options={{ responsive: true }} />
+        </div>
+      </div>
+      <div className="mt-4">
+        <div className="text-sm text-gray-600">
+          Page {pagination.currentPage} of {pagination.totalPages}
+        </div>
       </div>
     </div>
   );
