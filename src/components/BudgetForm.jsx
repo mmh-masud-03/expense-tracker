@@ -1,6 +1,7 @@
 // components/BudgetForm.js
+"use client";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function BudgetForm({ id }) {
   const [amount, setAmount] = useState("");

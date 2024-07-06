@@ -1,6 +1,6 @@
-// components/AuthForm.js
+"use client";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function AuthForm({ type }) {
   const [name, setName] = useState("");
@@ -10,7 +10,30 @@ export default function AuthForm({ type }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic
+    const endpoint =
+      type === "register" ? "/api/auth/register" : "/api/auth/login";
+    const payload = {
+      email,
+      password,
+    };
+    if (type === "register") {
+      payload.username = name;
+    }
+
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      console.log(type === "register" ? "Registered" : "Logged in");
+      router.push("/dashboard");
+    } else {
+      console.error("Error:", res.statusText);
+    }
   };
 
   return (
