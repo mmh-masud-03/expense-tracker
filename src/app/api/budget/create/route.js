@@ -1,5 +1,6 @@
 import { ConnectToDB } from "@/utils/connect";
 import Budget from "@/models/Budget";
+
 export const POST = async (req) => {
   try {
     await ConnectToDB();
