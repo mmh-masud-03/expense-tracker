@@ -1,5 +1,6 @@
 import { ConnectToDB } from "@/utils/connect";
 import Expense from "@/models/Expense";
+
 export const POST = async (req) => {
   try {
     await ConnectToDB();
@@ -9,9 +10,7 @@ export const POST = async (req) => {
     if (!user || !title || !amount || !category) {
       return new Response(
         JSON.stringify({ error: "All fields are required" }),
-        {
-          status: 400,
-        }
+        { status: 400 }
       );
     }
 
@@ -22,6 +21,7 @@ export const POST = async (req) => {
       category,
       date,
     });
+
     return new Response(JSON.stringify(newExpense), { status: 201 });
   } catch (err) {
     console.error(err);
