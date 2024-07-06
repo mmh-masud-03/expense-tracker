@@ -2,8 +2,6 @@ import { ConnectToDB } from "@/utils/connect";
 import User from "@/models/User";
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
-// import { cookies } from "next/headers";
-// import Cookies from "js-cookie";
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -42,16 +40,32 @@ export async function POST(req) {
 
     if (isMatched) {
       const token = generateToken(user);
-      //   const cookieOptions = {
-      //     httpOnly: true,
-      //     secure: process.env.NODE_ENV === "production",
-      //     sameSite: "strict",
-      //     maxAge: 60 * 60,
-      //     path: "/",
-      //   };
-      //   cookies().set("authToken", token, cookieOptions);
-      //   Cookies.set("user", user);
-      return new Response(JSON.stringify(user, token), { status: 200 });
+
+      // Create a cookie options object
+      const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60, // 1 hour
+        path: "/",
+      };
+
+      // Set the cookie header
+      const headers = new Headers();
+      headers.append(
+        "Set-Cookie",
+        `authToken=${token}; HttpOnly; Max-Age=${cookieOptions.maxAge}; Path=${
+          cookieOptions.path
+        }; SameSite=${cookieOptions.sameSite}; ${
+          cookieOptions.secure ? "Secure" : ""
+        }`
+      );
+
+      // Send the response
+      return new Response(JSON.stringify({ user }), {
+        status: 200,
+        headers,
+      });
     }
   } catch (err) {
     return new Response(err.message, { status: 500 });
