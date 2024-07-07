@@ -31,8 +31,7 @@ export default function IncomeReport() {
   useEffect(() => {
     const fetchIncomeData = async () => {
       try {
-        // Adjust the API endpoint as needed
-        const response = await fetch("/api/income?page=1&limit=100"); // Fetching a larger set of data for the report
+        const response = await fetch("/api/income?page=1&limit=100"); // Fetching a larger set of data
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         setIncomeData(data.incomes); // Adjust based on the response structure
@@ -66,13 +65,13 @@ export default function IncomeReport() {
     );
   }
 
-  // Prepare data for charts
-  const categories = ["Business", "Job", "Project", "Freelance", "Other"];
-  const categoryTotals = categories.map((category) => {
-    return incomeData
+  // Dynamic categories based on the available data
+  const categories = [...new Set(incomeData.map((income) => income.category))];
+  const categoryTotals = categories.map((category) =>
+    incomeData
       .filter((income) => income.category === category)
-      .reduce((sum, income) => sum + income.amount, 0);
-  });
+      .reduce((sum, income) => sum + income.amount, 0)
+  );
 
   const barData = {
     labels: categories,
@@ -107,14 +106,40 @@ export default function IncomeReport() {
 
   return (
     <div className="p-4 mb-6 bg-white rounded shadow-md">
-      <h2 className="text-xl font-bold">Income Report</h2>
+      <h2 className="text-xl font-bold mb-4">Income Report</h2>
       <div className="mt-4">
-        <h3 className="text-lg font-semibold">Bar Chart</h3>
-        <Bar data={barData} />
+        <h3 className="text-lg font-semibold mb-2">Bar Chart</h3>
+        <Bar
+          data={barData}
+          options={{
+            responsive: true,
+            plugins: {
+              legend: { position: "top" },
+              tooltip: {
+                callbacks: {
+                  label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+                },
+              },
+            },
+          }}
+        />
       </div>
       <div className="mt-4">
-        <h3 className="text-lg font-semibold">Pie Chart</h3>
-        <Pie data={pieData} />
+        <h3 className="text-lg font-semibold mb-2">Pie Chart</h3>
+        <Pie
+          data={pieData}
+          options={{
+            responsive: true,
+            plugins: {
+              legend: { position: "top" },
+              tooltip: {
+                callbacks: {
+                  label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+                },
+              },
+            },
+          }}
+        />
       </div>
     </div>
   );

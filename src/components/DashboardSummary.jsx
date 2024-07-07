@@ -6,6 +6,7 @@ import {
   AiOutlineLoading3Quarters,
 } from "react-icons/ai";
 import { BsFillCheckCircleFill } from "react-icons/bs";
+import { FaMoneyBillWave, FaWallet } from "react-icons/fa";
 
 const fetcher = async (url) => {
   const res = await fetch(url);
@@ -29,18 +30,22 @@ export default function DashboardSummary() {
 
   if (budgetError || expenseError || incomeError) {
     return (
-      <div className="p-4 mb-6 bg-red-100 rounded-lg shadow-md flex items-center">
-        <AiOutlineExclamationCircle className="text-red-500 w-6 h-6 mr-2" />
-        <span>Error: Failed to fetch data.</span>
+      <div className="p-6 mb-6 bg-red-100 rounded-lg shadow-lg flex items-center">
+        <AiOutlineExclamationCircle className="text-red-500 w-8 h-8 mr-4" />
+        <span className="text-red-700 font-semibold">
+          Error: Failed to fetch data. Please try again later.
+        </span>
       </div>
     );
   }
 
   if (!budgetData || !expenseData || !incomeData) {
     return (
-      <div className="p-4 mb-6 bg-white rounded-lg shadow-md flex items-center justify-center">
-        <AiOutlineLoading3Quarters className="w-6 h-6 mr-2 animate-spin" />
-        <span>Loading...</span>
+      <div className="p-6 mb-6 bg-white rounded-lg shadow-lg flex items-center justify-center">
+        <AiOutlineLoading3Quarters className="w-8 h-8 mr-4 text-blue-500 animate-spin" />
+        <span className="text-gray-700 font-semibold">
+          Loading dashboard data...
+        </span>
       </div>
     );
   }
@@ -72,40 +77,58 @@ export default function DashboardSummary() {
   );
   const remainingBudget = totalBudget - totalExpenses;
 
+  const summaryItems = [
+    {
+      title: "Total Budget",
+      amount: totalBudget,
+      icon: AiOutlineDollarCircle,
+      color: "green",
+    },
+    {
+      title: "Total Expenses",
+      amount: totalExpenses,
+      icon: FaMoneyBillWave,
+      color: "red",
+    },
+    {
+      title: "Remaining Budget",
+      amount: remainingBudget,
+      icon: BsFillCheckCircleFill,
+      color: "blue",
+    },
+    {
+      title: "Total Income",
+      amount: totalIncome,
+      icon: FaWallet,
+      color: "purple",
+    },
+  ];
+
   return (
-    <div className="p-4 mb-6 bg-white rounded shadow-md">
-      <h2 className="text-xl font-bold mb-4">Dashboard Summary</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 bg-green-100 rounded-lg shadow-sm flex items-center">
-          <AiOutlineDollarCircle className="text-green-500 w-10 h-10 mr-4" />
-          <div>
-            <p className="text-lg font-semibold">Total Budget</p>
-            <p className="text-2xl font-bold">{totalBudget.toFixed(2)} TK</p>
-          </div>
-        </div>
-        <div className="p-4 bg-red-100 rounded-lg shadow-sm flex items-center">
-          <AiOutlineDollarCircle className="text-red-500 w-10 h-10 mr-4" />
-          <div>
-            <p className="text-lg font-semibold">Total Expenses</p>
-            <p className="text-2xl font-bold">{totalExpenses.toFixed(2)} TK</p>
-          </div>
-        </div>
-        <div className="p-4 bg-blue-100 rounded-lg shadow-sm flex items-center">
-          <BsFillCheckCircleFill className="text-blue-500 w-10 h-10 mr-4" />
-          <div>
-            <p className="text-lg font-semibold">Remaining Budget</p>
-            <p className="text-2xl font-bold">
-              {remainingBudget.toFixed(2)} TK
+    <div className="p-6 mb-8 bg-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+        Dashboard Summary
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {summaryItems.map((item, index) => (
+          <div
+            key={index}
+            className={`p-6 bg-${item.color}-50 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105`}
+          >
+            <div className="flex items-center mb-4">
+              <item.icon className={`text-${item.color}-500 w-10 h-10 mr-4`} />
+              <h3 className={`text-lg font-semibold text-${item.color}-700`}>
+                {item.title}
+              </h3>
+            </div>
+            <p className={`text-xl font-bold text-${item.color}-600`}>
+              {item.amount.toLocaleString("en-US", {
+                style: "currency",
+                currency: "BDT",
+              })}
             </p>
           </div>
-        </div>
-        <div className="p-4 bg-purple-100 rounded-lg shadow-sm flex items-center">
-          <AiOutlineDollarCircle className="text-purple-500 w-10 h-10 mr-4" />
-          <div>
-            <p className="text-lg font-semibold">Total Income</p>
-            <p className="text-2xl font-bold">{totalIncome.toFixed(2)} TK</p>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
