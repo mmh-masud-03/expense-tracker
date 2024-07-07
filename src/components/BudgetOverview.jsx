@@ -20,19 +20,17 @@ export default function BudgetOverview() {
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState(1);
   const limit = 10;
+
   const fetchExpense = async () => {
     const res = await fetch("/api/expenses");
     const { expenses } = await res.json();
     setExpenses(expenses);
-    console.log(data);
   };
-  const totalExpenses = expenses.reduce(
-    (sum, expense) => sum + expense.amount,
-    0
-  );
+
   useEffect(() => {
     fetchExpense();
   }, []);
+
   const { data, error } = useSWR(
     `/api/budget?month=${selectedMonth}&year=${selectedYear}&page=${page}&limit=${limit}`,
     fetcher,
@@ -57,6 +55,15 @@ export default function BudgetOverview() {
   };
 
   const aggregatedBudgetData = data ? aggregateData(data.data) : [];
+  const totalExpenses = expenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
+  const totalBudget = aggregatedBudgetData.reduce(
+    (acc, budget) => acc + budget.amount,
+    0
+  );
+  const remainingBudget = totalBudget - totalExpenses;
 
   if (error) {
     return (
@@ -84,12 +91,6 @@ export default function BudgetOverview() {
       </div>
     );
   }
-
-  const totalBudget = aggregatedBudgetData.reduce(
-    (acc, budget) => acc + budget.amount,
-    0
-  );
-  const remainingBudget = totalBudget - totalExpenses;
 
   const months = [
     "January",
@@ -120,21 +121,23 @@ export default function BudgetOverview() {
           <AiOutlineDollarCircle className="text-green-500 w-10 h-10 mr-4" />
           <div>
             <p className="text-lg font-semibold">Total Budget</p>
-            <p className="text-2xl font-bold">${totalBudget.toFixed(2)}</p>
+            <p className="text-2xl font-bold">{totalBudget.toFixed(2)} TK</p>
           </div>
         </div>
         <div className="p-4 bg-red-100 rounded-lg shadow-sm flex items-center">
           <AiOutlineDollarCircle className="text-red-500 w-10 h-10 mr-4" />
           <div>
             <p className="text-lg font-semibold">Total Expenses</p>
-            <p className="text-2xl font-bold">${totalExpenses.toFixed(2)}</p>
+            <p className="text-2xl font-bold">{totalExpenses.toFixed(2)} TK</p>
           </div>
         </div>
         <div className="p-4 bg-blue-100 rounded-lg shadow-sm flex items-center">
           <BsFillCheckCircleFill className="text-blue-500 w-10 h-10 mr-4" />
           <div>
             <p className="text-lg font-semibold">Remaining Budget</p>
-            <p className="text-2xl font-bold">${remainingBudget.toFixed(2)}</p>
+            <p className="text-2xl font-bold">
+              {remainingBudget.toFixed(2)} TK
+            </p>
           </div>
         </div>
       </div>
@@ -147,13 +150,20 @@ export default function BudgetOverview() {
           </div>
           <div className="text-right">
             <span className="text-xs font-semibold inline-block text-blue-600">
-              {((remainingBudget / totalBudget) * 100).toFixed(2)}%
+              {totalBudget > 0
+                ? ((remainingBudget / totalBudget) * 100).toFixed(2)
+                : 0}
+              %
             </span>
           </div>
         </div>
         <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
           <div
-            style={{ width: `${(remainingBudget / totalBudget) * 100}%` }}
+            style={{
+              width: `${
+                totalBudget > 0 ? (remainingBudget / totalBudget) * 100 : 0
+              }%`,
+            }}
             className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
           ></div>
         </div>
@@ -207,7 +217,7 @@ export default function BudgetOverview() {
                 >
                   <td className="py-3 px-4">{budget.month}</td>
                   <td className="py-3 px-4">{budget.year}</td>
-                  <td className="py-3 px-4">${budget.amount.toFixed(2)}</td>
+                  <td className="py-3 px-4">{budget.amount.toFixed(2)} TK</td>
                 </tr>
               ))}
             </tbody>
