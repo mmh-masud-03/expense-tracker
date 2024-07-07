@@ -2,6 +2,7 @@
 import DashboardSummary from "@/components/DashboardSummary";
 import RecentTransactions from "@/components/RecentTransactions";
 import BudgetOverview from "@/components/BudgetOverview";
+import FinancialDashboard from "@/components/FinancialDashboard";
 
 export default function Dashboard() {
   return (
@@ -9,6 +10,7 @@ export default function Dashboard() {
       <DashboardSummary />
       <RecentTransactions />
       <BudgetOverview />
+      <FinancialDashboard />
     </div>
   );
 }
