@@ -10,19 +10,19 @@ const ExpenseSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      trim: true, // Ensure whitespace is trimmed
-      minlength: 1, // Ensure title is not empty
-      maxlength: 100, // Optional: Set a maximum length for title
+      trim: true,
+      minlength: 1,
+      maxlength: 100,
     },
     amount: {
       type: Number,
       required: true,
-      min: 0, // Ensure amount is non-negative
+      min: 0,
     },
     category: {
       type: String,
       enum: ["Food", "Travel", "Bills", "Entertainment", "Other"],
-      default: "Other", // Optional: Default category if not specified
+      default: "Other",
     },
     date: {
       type: Date,
@@ -30,13 +30,11 @@ const ExpenseSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
-// Create indexes to improve performance
-ExpenseSchema.index({ user: 1 });
-ExpenseSchema.index({ date: 1 });
+ExpenseSchema.index({ user: 1, date: 1 });
 
 const Expense =
   mongoose.models.Expense || mongoose.model("Expense", ExpenseSchema);
