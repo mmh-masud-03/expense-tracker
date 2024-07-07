@@ -14,9 +14,12 @@ export const GET = async (req) => {
     const skip = (page - 1) * limit;
 
     // Fetch paginated income data
-    const incomes = await Income.find().skip(skip).limit(limit);
+    const incomes = await Income.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ date: -1 }); // Sort by date, most recent first
 
-    // Calculate total income and overview stats
+    // Calculate total income amount
     const totalIncomeAmount = await Income.aggregate([
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
@@ -26,6 +29,7 @@ export const GET = async (req) => {
     // Count total number of income documents
     const totalDocuments = await Income.countDocuments();
 
+    // Return response with income data, pagination info, and total amount
     return new Response(
       JSON.stringify({
         incomes,
@@ -37,6 +41,8 @@ export const GET = async (req) => {
     );
   } catch (err) {
     console.error(err);
-    return new Response(JSON.stringify("Server Error"), { status: 500 });
+    return new Response(JSON.stringify({ error: "Server Error" }), {
+      status: 500,
+    });
   }
 };

@@ -1,4 +1,3 @@
-// components/IncomeReport.js
 "use client";
 import { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
@@ -32,8 +31,11 @@ export default function IncomeReport() {
   useEffect(() => {
     const fetchIncomeData = async () => {
       try {
-        const data = await GetAllIncome();
-        setIncomeData(data);
+        // Adjust the API endpoint as needed
+        const response = await fetch("/api/income?page=1&limit=100"); // Fetching a larger set of data for the report
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        setIncomeData(data.incomes); // Adjust based on the response structure
       } catch (err) {
         setError("Failed to fetch income data.");
       } finally {
@@ -64,6 +66,7 @@ export default function IncomeReport() {
     );
   }
 
+  // Prepare data for charts
   const categories = ["Business", "Job", "Project", "Freelance", "Other"];
   const categoryTotals = categories.map((category) => {
     return incomeData
@@ -75,7 +78,7 @@ export default function IncomeReport() {
     labels: categories,
     datasets: [
       {
-        label: "Income",
+        label: "Income by Category",
         data: categoryTotals,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
@@ -88,7 +91,7 @@ export default function IncomeReport() {
     labels: categories,
     datasets: [
       {
-        label: "Income",
+        label: "Income by Category",
         data: categoryTotals,
         backgroundColor: [
           "#FF6384",

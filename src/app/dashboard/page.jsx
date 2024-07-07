@@ -5,7 +5,7 @@ import BudgetOverview from "@/components/BudgetOverview";
 
 export default function Dashboard() {
   return (
-    <div className="p-6">
+    <div className="flex flex-col gap-y-7">
       <DashboardSummary />
       <RecentTransactions />
       <BudgetOverview />
