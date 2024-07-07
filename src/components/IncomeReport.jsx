@@ -31,12 +31,14 @@ export default function IncomeReport() {
   useEffect(() => {
     const fetchIncomeData = async () => {
       try {
-        const response = await fetch("/api/income?page=1&limit=100"); // Fetching a larger set of data
-        if (!response.ok) throw new Error("Network response was not ok");
-        const data = await response.json();
-        setIncomeData(data.incomes); // Adjust based on the response structure
+        const { incomes } = await GetAllIncome({
+          sortBy: "amount", // Adjust sorting criteria as needed
+          sortOrder: "desc", // Sort in descending order
+        });
+        setIncomeData(incomes);
       } catch (err) {
         setError("Failed to fetch income data.");
+        console.error("Error fetching income data:", err);
       } finally {
         setLoading(false);
       }
@@ -47,17 +49,21 @@ export default function IncomeReport() {
 
   if (loading) {
     return (
-      <div className="p-4 mb-6 bg-white rounded shadow-md">Loading...</div>
+      <div className="flex justify-center items-center h-64 bg-white rounded shadow-md">
+        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 mb-6 bg-white rounded shadow-md">Error: {error}</div>
+      <div className="p-4 mb-6 bg-white rounded shadow-md text-red-500">
+        Error: {error}
+      </div>
     );
   }
 
-  if (!incomeData || incomeData.length === 0) {
+  if (incomeData.length === 0) {
     return (
       <div className="p-4 mb-6 bg-white rounded shadow-md">
         No income data available
@@ -65,7 +71,7 @@ export default function IncomeReport() {
     );
   }
 
-  // Dynamic categories based on the available data
+  // Prepare data for charts
   const categories = [...new Set(incomeData.map((income) => income.category))];
   const categoryTotals = categories.map((category) =>
     incomeData
@@ -73,11 +79,15 @@ export default function IncomeReport() {
       .reduce((sum, income) => sum + income.amount, 0)
   );
 
+  const totalIncome = categoryTotals.reduce((sum, total) => sum + total, 0);
+  const highestIncomeCategory =
+    categories[categoryTotals.indexOf(Math.max(...categoryTotals))];
+
   const barData = {
     labels: categories,
     datasets: [
       {
-        label: "Income by Category",
+        label: "Income",
         data: categoryTotals,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
@@ -90,7 +100,7 @@ export default function IncomeReport() {
     labels: categories,
     datasets: [
       {
-        label: "Income by Category",
+        label: "Income",
         data: categoryTotals,
         backgroundColor: [
           "#FF6384",
@@ -105,41 +115,74 @@ export default function IncomeReport() {
   };
 
   return (
-    <div className="p-4 mb-6 bg-white rounded shadow-md">
-      <h2 className="text-xl font-bold mb-4">Income Report</h2>
-      <div className="mt-4">
-        <h3 className="text-lg font-semibold mb-2">Bar Chart</h3>
-        <Bar
-          data={barData}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: { position: "top" },
-              tooltip: {
-                callbacks: {
-                  label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
-                },
-              },
-            },
-          }}
-        />
+    <div className="p-6 mb-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold text-gray-700 mb-6">Income Report</h2>
+
+      {/* Summary Section */}
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold text-gray-600 mb-2">Summary</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <p className="text-lg font-medium">Total Income</p>
+            <p className="text-2xl font-bold text-green-600">
+              ${totalIncome.toFixed(2)}
+            </p>
+          </div>
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <p className="text-lg font-medium">Highest Income Category</p>
+            <p className="text-2xl font-bold text-green-600">
+              {highestIncomeCategory}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="mt-4">
-        <h3 className="text-lg font-semibold mb-2">Pie Chart</h3>
-        <Pie
-          data={pieData}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: { position: "top" },
-              tooltip: {
-                callbacks: {
-                  label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-600 mb-4">
+            Bar Chart
+          </h3>
+          <div className="relative h-64">
+            <Bar
+              data={barData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: "top" },
+                  tooltip: {
+                    callbacks: {
+                      label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+                    },
+                  },
                 },
-              },
-            },
-          }}
-        />
+              }}
+            />
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-600 mb-4">
+            Pie Chart
+          </h3>
+          <div className="relative h-64">
+            <Pie
+              data={pieData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { position: "top" },
+                  tooltip: {
+                    callbacks: {
+                      label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+                    },
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

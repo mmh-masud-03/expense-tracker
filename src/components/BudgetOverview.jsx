@@ -1,47 +1,56 @@
 "use client";
 
+import { useState, useEffect, useMemo, useCallback } from "react";
 import useSWR from "swr";
-import { useState, useEffect } from "react";
 import {
   AiOutlineDollarCircle,
   AiOutlineExclamationCircle,
   AiOutlineLoading3Quarters,
 } from "react-icons/ai";
-import { BsFillCheckCircleFill } from "react-icons/bs";
+import { BsFillCheckCircleFill, BsFilterLeft } from "react-icons/bs";
+import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 const fetcher = async (url) => {
   const res = await fetch(url);
+  if (!res.ok) throw new Error("An error occurred while fetching the data.");
   return res.json();
 };
 
 export default function BudgetOverview() {
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
+  const [filters, setFilters] = useState({ month: "", year: "" });
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
   const limit = 10;
 
-  useEffect(() => {
-    fetchExpense();
-  }, []);
-
-  const { data, error } = useSWR(
-    `/api/budget?month=${selectedMonth}&year=${selectedYear}&page=${page}&limit=${limit}`,
+  const { data, error, isValidating } = useSWR(
+    `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`,
     fetcher,
     {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
       revalidateOnReconnect: true,
       refreshInterval: 30000,
     }
   );
 
+  useEffect(() => {
+    fetchExpense();
+  }, []);
+
   const fetchExpense = async () => {
-    const res = await fetch("/api/expenses");
-    const { expenses } = await res.json();
-    setExpenses(expenses);
+    try {
+      const res = await fetch("/api/expenses");
+      const { expenses } = await res.json();
+      setExpenses(expenses);
+    } catch (error) {
+      console.error("Failed to fetch expenses:", error);
+    }
   };
 
-  const aggregateData = (data) => {
+  const aggregateData = useCallback((data) => {
     return Object.values(
       data.reduce((acc, budget) => {
         const key = `${budget.month}-${budget.year}`;
@@ -52,19 +61,42 @@ export default function BudgetOverview() {
         return acc;
       }, {})
     );
+  }, []);
+
+  const sortedData = useMemo(() => {
+    if (!data) return [];
+    const aggregatedData = aggregateData(data.data);
+    if (sortConfig.key !== null) {
+      return [...aggregatedData].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return aggregatedData;
+  }, [data, sortConfig, aggregateData]);
+
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
   };
 
   if (error) return <ErrorMessage message="Failed to fetch budget data." />;
-  if (!data) return <LoadingMessage />;
-
-  const aggregatedBudgetData = aggregateData(data.data);
-  if (aggregatedBudgetData.length === 0) return <NoDataMessage />;
+  if (!data && isValidating) return <LoadingMessage />;
+  if (sortedData.length === 0) return <NoDataMessage />;
 
   const totalExpenses = expenses.reduce(
     (sum, expense) => sum + expense.amount,
     0
   );
-  const totalBudget = aggregatedBudgetData.reduce(
+  const totalBudget = sortedData.reduce(
     (acc, budget) => acc + budget.amount,
     0
   );
@@ -99,16 +131,16 @@ export default function BudgetOverview() {
         remainingBudget={remainingBudget}
       />
       <BudgetDetails
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
+        filters={filters}
+        setFilters={setFilters}
         months={months}
         years={years}
-        aggregatedBudgetData={aggregatedBudgetData}
+        sortedData={sortedData}
         page={page}
         setPage={setPage}
         totalPages={data.pages}
+        requestSort={requestSort}
+        sortConfig={sortConfig}
       />
     </div>
   );
@@ -159,7 +191,7 @@ function BudgetSummary({ totalBudget, totalExpenses, remainingBudget }) {
       <SummaryCard
         title="Remaining Budget"
         amount={remainingBudget}
-        bgColor="bg-blue-100"
+        bgColor="blue-100"
         iconColor="text-blue-500"
         Icon={BsFillCheckCircleFill}
       />
@@ -175,7 +207,9 @@ function SummaryCard({
   Icon = AiOutlineDollarCircle,
 }) {
   return (
-    <div className={`p-4 ${bgColor} rounded-lg shadow-sm flex items-center`}>
+    <div
+      className={`p-4 ${bgColor} rounded-lg shadow-sm flex items-center transition-all duration-300 hover:shadow-md`}
+    >
       <Icon className={`${iconColor} w-10 h-10 mr-4`} />
       <div>
         <p className="text-lg font-semibold">{title}</p>
@@ -206,7 +240,7 @@ function BudgetProgressBar({ totalBudget, remainingBudget }) {
       <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
         <div
           style={{ width: `${percentage}%` }}
-          className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
+          className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
         ></div>
       </div>
     </div>
@@ -214,25 +248,28 @@ function BudgetProgressBar({ totalBudget, remainingBudget }) {
 }
 
 function BudgetDetails({
-  selectedMonth,
-  setSelectedMonth,
-  selectedYear,
-  setSelectedYear,
+  filters,
+  setFilters,
   months,
   years,
-  aggregatedBudgetData,
+  sortedData,
   page,
   setPage,
   totalPages,
+  requestSort,
+  sortConfig,
 }) {
   return (
     <div className="mt-6">
       <h3 className="text-lg font-semibold mb-4">Details</h3>
-      <div className="mb-4 flex space-x-4">
+      <div className="mb-4 flex flex-wrap items-center space-x-4">
+        <BsFilterLeft className="text-gray-500 w-6 h-6" />
         <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          className="px-4 py-2 border rounded"
+          value={filters.month}
+          onChange={(e) =>
+            setFilters((prev) => ({ ...prev, month: e.target.value }))
+          }
+          className="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Months</option>
           {months.map((month) => (
@@ -242,9 +279,11 @@ function BudgetDetails({
           ))}
         </select>
         <select
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-          className="px-4 py-2 border rounded"
+          value={filters.year}
+          onChange={(e) =>
+            setFilters((prev) => ({ ...prev, year: e.target.value }))
+          }
+          className="px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Years</option>
           {years.map((year) => (
@@ -254,25 +293,66 @@ function BudgetDetails({
           ))}
         </select>
       </div>
-      <BudgetTable aggregatedBudgetData={aggregatedBudgetData} />
+      <BudgetTable
+        sortedData={sortedData}
+        requestSort={requestSort}
+        sortConfig={sortConfig}
+      />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>
   );
 }
 
-function BudgetTable({ aggregatedBudgetData }) {
+function BudgetTable({ sortedData, requestSort, sortConfig }) {
+  const getClassNamesFor = (name) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === name ? sortConfig.direction : undefined;
+  };
+
   return (
     <div className="overflow-auto rounded-lg shadow">
       <table className="min-w-full bg-white">
         <thead className="bg-gray-200 text-gray-600">
           <tr>
-            <th className="py-3 px-4 uppercase text-sm text-left">Month</th>
-            <th className="py-3 px-4 uppercase text-sm text-left">Year</th>
-            <th className="py-3 px-4 uppercase text-sm text-left">Amount</th>
+            <th
+              className="py-3 px-4 uppercase text-sm text-left cursor-pointer hover:bg-gray-300"
+              onClick={() => requestSort("month")}
+            >
+              Month{" "}
+              {getClassNamesFor("month") === "ascending" ? (
+                <FaSortAmountUp className="inline" />
+              ) : (
+                <FaSortAmountDown className="inline" />
+              )}
+            </th>
+            <th
+              className="py-3 px-4 uppercase text-sm text-left cursor-pointer hover:bg-gray-300"
+              onClick={() => requestSort("year")}
+            >
+              Year{" "}
+              {getClassNamesFor("year") === "ascending" ? (
+                <FaSortAmountUp className="inline" />
+              ) : (
+                <FaSortAmountDown className="inline" />
+              )}
+            </th>
+            <th
+              className="py-3 px-4 uppercase text-sm text-left cursor-pointer hover:bg-gray-300"
+              onClick={() => requestSort("amount")}
+            >
+              Amount{" "}
+              {getClassNamesFor("amount") === "ascending" ? (
+                <FaSortAmountUp className="inline" />
+              ) : (
+                <FaSortAmountDown className="inline" />
+              )}
+            </th>
           </tr>
         </thead>
         <tbody className="text-gray-700">
-          {aggregatedBudgetData.map((budget, index) => (
+          {sortedData.map((budget, index) => (
             <tr
               key={`${budget.month}-${budget.year}-${index}`}
               className={`hover:bg-gray-100 ${
@@ -292,19 +372,19 @@ function BudgetTable({ aggregatedBudgetData }) {
 
 function Pagination({ page, setPage, totalPages }) {
   return (
-    <div className="flex justify-between mt-4">
+    <div className="flex justify-between items-center mt-4">
       <button
         onClick={() => setPage(page - 1)}
         disabled={page === 1}
         className={`px-4 py-2 rounded ${
           page === 1
-            ? "bg-gray-300"
+            ? "bg-gray-300 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
-        }`}
+        } transition-colors duration-200`}
       >
         Previous
       </button>
-      <span className="px-4 py-2">
+      <span className="px-4 py-2 bg-gray-100 rounded">
         Page {page} of {totalPages}
       </span>
       <button
@@ -312,9 +392,9 @@ function Pagination({ page, setPage, totalPages }) {
         disabled={page === totalPages}
         className={`px-4 py-2 rounded ${
           page === totalPages
-            ? "bg-gray-300"
+            ? "bg-gray-300 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
-        }`}
+        } transition-colors duration-200`}
       >
         Next
       </button>
