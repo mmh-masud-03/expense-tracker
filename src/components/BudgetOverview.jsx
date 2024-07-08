@@ -174,6 +174,9 @@ function NoDataMessage() {
 }
 
 function BudgetSummary({ totalBudget, totalExpenses, remainingBudget }) {
+  const isOverBudget = remainingBudget < 0;
+  const displayRemainingBudget = isOverBudget ? 0 : remainingBudget;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <SummaryCard
@@ -190,11 +193,56 @@ function BudgetSummary({ totalBudget, totalExpenses, remainingBudget }) {
       />
       <SummaryCard
         title="Remaining Budget"
-        amount={remainingBudget}
-        bgColor="blue-100"
-        iconColor="text-blue-500"
-        Icon={BsFillCheckCircleFill}
+        amount={displayRemainingBudget}
+        bgColor={isOverBudget ? "bg-red-100" : "bg-blue-100"}
+        iconColor={isOverBudget ? "text-red-500" : "text-blue-500"}
+        Icon={isOverBudget ? AiOutlineExclamationCircle : BsFillCheckCircleFill}
       />
+      {isOverBudget && (
+        <div className="col-span-1 md:col-span-3 p-4 bg-red-200 text-red-800 rounded-lg shadow-md mt-4">
+          <AiOutlineExclamationCircle className="inline w-6 h-6 mr-2" />
+          Warning: Expenses exceed the budget by{" "}
+          {Math.abs(remainingBudget).toFixed(2)} TK.
+        </div>
+      )}
+    </div>
+  );
+}
+
+function BudgetProgressBar({ totalBudget, remainingBudget }) {
+  const isOverBudget = remainingBudget < 0;
+  const percentage =
+    totalBudget > 0 ? Math.min((remainingBudget / totalBudget) * 100, 100) : 0;
+  const progressColor = isOverBudget ? "bg-red-500" : "bg-blue-500";
+
+  return (
+    <div className="relative pt-1 mt-6">
+      <div className="flex mb-2 items-center justify-between">
+        <div>
+          <span
+            className={`text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-${
+              isOverBudget ? "red" : "blue"
+            }-600 bg-${isOverBudget ? "red" : "blue"}-200`}
+          >
+            {isOverBudget ? "Over Budget" : "Remaining"}
+          </span>
+        </div>
+        <div className="text-right">
+          <span
+            className={`text-xs font-semibold inline-block text-${
+              isOverBudget ? "red" : "blue"
+            }-600`}
+          >
+            {isOverBudget ? "0.00" : percentage.toFixed(2)}%
+          </span>
+        </div>
+      </div>
+      <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+        <div
+          style={{ width: `${percentage}%` }}
+          className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${progressColor} transition-all duration-500 ease-in-out`}
+        ></div>
+      </div>
     </div>
   );
 }
@@ -214,34 +262,6 @@ function SummaryCard({
       <div>
         <p className="text-lg font-semibold">{title}</p>
         <p className="text-2xl font-bold">{amount.toFixed(2)} TK</p>
-      </div>
-    </div>
-  );
-}
-
-function BudgetProgressBar({ totalBudget, remainingBudget }) {
-  const percentage =
-    totalBudget > 0 ? (remainingBudget / totalBudget) * 100 : 0;
-
-  return (
-    <div className="relative pt-1 mt-6">
-      <div className="flex mb-2 items-center justify-between">
-        <div>
-          <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
-            Remaining
-          </span>
-        </div>
-        <div className="text-right">
-          <span className="text-xs font-semibold inline-block text-blue-600">
-            {percentage.toFixed(2)}%
-          </span>
-        </div>
-      </div>
-      <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
-        <div
-          style={{ width: `${percentage}%` }}
-          className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
-        ></div>
       </div>
     </div>
   );
