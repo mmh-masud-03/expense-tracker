@@ -92,15 +92,19 @@ export default function FinancialDashboard() {
     "Dec",
   ];
 
-  const incomeByMonth = months.map((month, index) =>
+  const incomeByMonth = months.map((month) =>
     incomeData
-      .filter((income) => new Date(income.date).getMonth() === index)
+      .filter(
+        (income) => new Date(income.date).getMonth() === months.indexOf(month)
+      )
       .reduce((sum, income) => sum + income.amount, 0)
   );
 
-  const expensesByMonth = months.map((month, index) =>
+  const expensesByMonth = months.map((month) =>
     expenseData
-      .filter((expense) => new Date(expense.date).getMonth() === index)
+      .filter(
+        (expense) => new Date(expense.date).getMonth() === months.indexOf(month)
+      )
       .reduce((sum, expense) => sum + expense.amount, 0)
   );
 
@@ -143,20 +147,40 @@ export default function FinancialDashboard() {
     ],
   };
 
+  // Sort and deduplicate budget data
+  const sortedBudgetData = budgetData
+    .sort(
+      (a, b) =>
+        new Date(a.year, months.indexOf(a.month)) -
+        new Date(b.year, months.indexOf(b.month))
+    )
+    .reduce((acc, curr) => {
+      const key = `${curr.month} ${curr.year}`;
+      if (!acc[key]) acc[key] = { ...curr, amount: 0 };
+      acc[key].amount += curr.amount;
+      return acc;
+    }, {});
+
+  // Prepare data for budget vs actual expenses chart
+  const labels = Object.keys(sortedBudgetData);
+  const budgetAmounts = labels.map((key) => sortedBudgetData[key].amount);
+  const actualExpenses = labels.map((key) => {
+    const [month, year] = key.split(" ");
+    const monthIndex = months.indexOf(month.slice(0, 3));
+    return expensesByMonth[monthIndex] || 0;
+  });
+
   const budgetVsActualData = {
-    labels: budgetData.map((budget) => `${budget.month} ${budget.year}`),
+    labels,
     datasets: [
       {
         label: "Budget",
-        data: budgetData.map((budget) => budget.amount),
+        data: budgetAmounts,
         backgroundColor: "rgba(54, 162, 235, 0.6)",
       },
       {
         label: "Actual Expenses",
-        data: budgetData.map((budget) => {
-          const monthIndex = months.indexOf(budget.month.slice(0, 3));
-          return expensesByMonth[monthIndex] || 0;
-        }),
+        data: actualExpenses,
         backgroundColor: "rgba(255, 99, 132, 0.6)",
       },
     ],
@@ -191,57 +215,55 @@ export default function FinancialDashboard() {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
+    <div className="p-6 bg-gray-100 min-h-screen flex flex-col gap-y-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Financial Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Income vs Expenses</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-[60vh]">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full">
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Income vs Expenses
+          </h2>
           <Line data={incomeVsExpensesData} options={{ responsive: true }} />
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Savings Rate</h2>
-          <Doughnut
-            data={savingsRateData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: { position: "bottom" },
-                tooltip: {
-                  callbacks: {
-                    label: (context) =>
-                      `${context.label}: ${context.raw.toFixed(2)}%`,
+        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Savings Rate
+          </h2>
+          <div className="h-64 w-64">
+            <Doughnut
+              data={savingsRateData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { position: "bottom" },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) =>
+                        `${context.label}: ${context.raw.toFixed(2)}%`,
+                    },
                   },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
           <p className="text-center mt-4 text-2xl font-bold text-green-600">
             {savingsRate.toFixed(2)}%
           </p>
         </div>
+      </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg md:col-span-2">
-          <h2 className="text-xl font-semibold mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-8">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full">
+          <h2 className="text-xl font-semibold mb-4 text-center">
             Budget vs Actual Expenses
           </h2>
           <Bar
             data={budgetVsActualData}
             options={{
               responsive: true,
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: (tooltipItem) =>
-                      `${tooltipItem.dataset.label}: $${tooltipItem.raw.toFixed(
-                        2
-                      )}`,
-                  },
-                },
-              },
               scales: {
                 x: { stacked: true },
                 y: { stacked: true },
@@ -250,9 +272,11 @@ export default function FinancialDashboard() {
           />
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-lg md:col-span-2 flex justify-center items-center">
-          <div className="w-96 h-96">
-            <h2 className="text-xl font-semibold mb-4">Expenses by Category</h2>
+        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Expenses by Category
+          </h2>
+          <div className="h-80 w-80">
             <Doughnut
               data={expensesByCategoryData}
               options={{
@@ -266,20 +290,20 @@ export default function FinancialDashboard() {
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-3">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Income</h3>
           <p className="text-3xl font-bold text-green-600">
             ${totalIncome.toFixed(2)}
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Expenses</h3>
           <p className="text-3xl font-bold text-red-600">
             ${totalExpenses.toFixed(2)}
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Net Savings</h3>
           <p className="text-3xl font-bold text-blue-600">
             ${(totalIncome - totalExpenses).toFixed(2)}

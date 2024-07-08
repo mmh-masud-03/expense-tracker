@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={opensans.className}>
         <div className="flex min-h-screen">
-          <Sidebar />
+          {/* <Sidebar /> */}
           <div className="flex-1">
             <Navbar />
             <main className="p-6">{children}</main>
