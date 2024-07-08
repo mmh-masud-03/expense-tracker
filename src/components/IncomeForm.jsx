@@ -42,71 +42,103 @@ export default function IncomeForm({ id }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-md p-8 bg-white rounded shadow-md"
-    >
-      {error && <span className="text-red-300">{error}</span>}
-      <div className="mb-4">
-        <label className="block mb-2 text-sm font-bold text-gray-700">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <span className="block sm:inline">{error}</span>
+        </div>
+      )}
+      <div>
+        <label
+          htmlFor="title"
+          className="block text-base font-medium text-gray-700 mb-1"
+        >
           Title
         </label>
         <input
           type="text"
+          name="title"
+          id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="mt-1 pl-7 text-base outline-none border-b-4 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm  border-gray-300 rounded-md"
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block mb-2 text-sm font-bold text-gray-700">
+      <div>
+        <label
+          htmlFor="amount"
+          className="block text-base font-medium text-gray-700 mb-1"
+        >
           Amount
         </label>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          required
-        />
+        <div className="mt-1 relative rounded-md shadow-sm">
+          {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span className="text-gray-500 sm:text-sm">$</span>
+          </div> */}
+          <input
+            type="number"
+            name="amount"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="text-base outline-none border-b-4 focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12  border-gray-300 rounded-md"
+            placeholder="0.00"
+            required
+          />
+        </div>
       </div>
-      <div className="mb-4">
-        <label className="block mb-2 text-sm font-bold text-gray-700">
+      <div>
+        <label
+          htmlFor="category"
+          className="block text-base font-medium text-gray-700 mb-1"
+        >
           Category
         </label>
         <select
+          id="category"
+          name="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="mt-1 outline-none block w-full pl-3 pr-10 py-2 text-base border-b-4 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500  rounded-md"
           required
         >
           <option value="">Select Category</option>
-          <option value="Business">Business</option>
-          <option value="Job">Job</option>
-          <option value="Project">Project</option>
-          <option value="Freelance">Freelance</option>
-          <option value="Other">Other</option>
+          {["Business", "Job", "Project", "Freelance", "Other"].map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
       </div>
-      <div className="mb-4">
-        <label className="block mb-2 text-sm font-bold text-gray-700">
+      <div>
+        <label
+          htmlFor="date"
+          className="block text-base font-medium text-gray-700 mb-1"
+        >
           Date
         </label>
         <input
           type="date"
+          name="date"
+          id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full px-3 py-2 border rounded"
+          className="mt-1 pl-7 text-base outline-none border-b-4 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm border-gray-300 rounded-md"
           required
         />
       </div>
-      <button
-        type="submit"
-        className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded"
-      >
-        {id ? "Update Income" : "Add Income"}
-      </button>
+      <div className="pt-2">
+        <button
+          type="submit"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
+        >
+          {id ? "Update Income" : "Add Income"}
+        </button>
+      </div>
     </form>
   );
 }

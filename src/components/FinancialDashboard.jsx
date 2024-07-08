@@ -13,7 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
+import FormModal from "./FormModal";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,6 +32,7 @@ export default function FinancialDashboard() {
   const [budgetData, setBudgetData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,6 +117,7 @@ export default function FinancialDashboard() {
     (sum, expense) => sum + expense.amount,
     0
   );
+  const netSavings = totalIncome - totalExpenses;
   const savingsRate =
     totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
 
@@ -219,7 +221,13 @@ export default function FinancialDashboard() {
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Financial Dashboard
       </h1>
-
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Add
+      </button>
+      <FormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-[60vh]">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full">
           <h2 className="text-xl font-semibold mb-4 text-center">
@@ -294,19 +302,23 @@ export default function FinancialDashboard() {
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Income</h3>
           <p className="text-3xl font-bold text-green-600">
-            ${totalIncome.toFixed(2)}
+            {totalIncome.toFixed(2)} Tk.
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Expenses</h3>
           <p className="text-3xl font-bold text-red-600">
-            ${totalExpenses.toFixed(2)}
+            {totalExpenses.toFixed(2)} TK.
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Net Savings</h3>
-          <p className="text-3xl font-bold text-blue-600">
-            ${(totalIncome - totalExpenses).toFixed(2)}
+          <p
+            className={`text-3xl font-bold ${
+              netSavings < 0 ? "text-red-600" : "text-blue-600"
+            }`}
+          >
+            {netSavings.toFixed(2)} Tk.
           </p>
         </div>
       </div>
