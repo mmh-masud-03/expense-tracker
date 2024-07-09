@@ -66,7 +66,7 @@ export default function BudgetForm({ id }) {
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="border-b-4 outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 text-base border-gray-300 rounded-md"
+            className="border-b-2 outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 text-base border-gray-300 rounded-md"
             placeholder="0.00"
             required
           />
@@ -84,7 +84,7 @@ export default function BudgetForm({ id }) {
           name="month"
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="mt-1 border-b-4 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500  rounded-md"
+          className="mt-1 border-b-2 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500  rounded-md"
           required
         >
           <option value="">Select Month</option>
@@ -121,7 +121,7 @@ export default function BudgetForm({ id }) {
           id="year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
-          className="mt-1 border-b-4 outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md pl-7 pr-12"
+          className="mt-1 border-b-2 outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md pl-7"
           placeholder="YYYY"
           required
           maxLength={4}

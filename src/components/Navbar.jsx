@@ -21,9 +21,9 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-white font-bold text-xl">
+              <Link href={"/"} className="text-white font-bold text-xl">
                 Expense Tracker
-              </span>
+              </Link>
             </div>
           </div>
           <div className="hidden md:flex items-center">

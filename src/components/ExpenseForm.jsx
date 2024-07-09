@@ -67,7 +67,7 @@ export default function ExpenseForm({ id }) {
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 pl-7 pr-12 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-4 border-gray-300 rounded-md"
+          className="mt-1 pl-7 pr-12 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-2 border-gray-300 rounded-md"
           required
         />
       </div>
@@ -88,7 +88,7 @@ export default function ExpenseForm({ id }) {
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 text-base outline-none border-b-4 border-gray-300 rounded-md"
+            className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7  text-base outline-none border-b-2 border-gray-300 rounded-md"
             placeholder="0.00"
             required
           />
@@ -106,7 +106,7 @@ export default function ExpenseForm({ id }) {
           name="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="mt-1 pl-6 block w-full pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 outline-none border-b-4 rounded-md"
+          className="mt-1 pl-6 block w-full pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 outline-none border-b-2 rounded-md"
           required
         >
           <option value="">Select Category</option>
@@ -130,7 +130,7 @@ export default function ExpenseForm({ id }) {
           id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="mt-1 pl-7  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-4 border-gray-300 rounded-md"
+          className="mt-1 pl-7  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-2 border-gray-300 rounded-md"
           required
         />
       </div>

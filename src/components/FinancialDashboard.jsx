@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Line, Bar, Doughnut } from "react-chartjs-2";
+import FormModal from "./FormModal";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +14,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import FormModal from "./FormModal";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -216,6 +217,12 @@ export default function FinancialDashboard() {
     ],
   };
 
+  // Calculate notices
+  const exceededIncome = totalExpenses > totalIncome;
+  const exceededBudget = actualExpenses.some(
+    (expense, index) => expense > budgetAmounts[index]
+  );
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col gap-y-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
@@ -223,11 +230,25 @@ export default function FinancialDashboard() {
       </h1>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
+        className="px-4 py-2 bg-blue-500 text-white rounded w-20 place-self-end"
       >
         Add
       </button>
       <FormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {exceededIncome && (
+        <div className="p-4 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          Warning: Your total expenses (${totalExpenses.toFixed(2)}) have
+          exceeded your total income (${totalIncome.toFixed(2)}) by $
+          {(totalExpenses - totalIncome).toFixed(2)}.
+        </div>
+      )}
+
+      {exceededBudget && (
+        <div className="p-4 mb-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
+          Notice: Your expenses have exceeded the budget for one or more months.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 h-[60vh]">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full">
           <h2 className="text-xl font-semibold mb-4 text-center">
@@ -302,13 +323,13 @@ export default function FinancialDashboard() {
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Income</h3>
           <p className="text-3xl font-bold text-green-600">
-            {totalIncome.toFixed(2)} Tk.
+            ${totalIncome.toFixed(2)}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Expenses</h3>
           <p className="text-3xl font-bold text-red-600">
-            {totalExpenses.toFixed(2)} TK.
+            ${totalExpenses.toFixed(2)}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -318,7 +339,7 @@ export default function FinancialDashboard() {
               netSavings < 0 ? "text-red-600" : "text-blue-600"
             }`}
           >
-            {netSavings.toFixed(2)} Tk.
+            ${netSavings.toFixed(2)}
           </p>
         </div>
       </div>
