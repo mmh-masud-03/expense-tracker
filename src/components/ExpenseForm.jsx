@@ -110,7 +110,31 @@ export default function ExpenseForm({ id }) {
           required
         >
           <option value="">Select Category</option>
-          {["Food", "Travel", "Bills", "Entertainment", "Other"].map((cat) => (
+          {[
+            "Food",
+            "Travel",
+            "Bills",
+            "Entertainment",
+            "Education",
+            "Healthcare",
+            "Shopping",
+            "Utilities",
+            "Transport",
+            "Housing",
+            "Clothing",
+            "Insurance",
+            "Debt Repayment",
+            "Personal Care",
+            "Gifts & Donations",
+            "Childcare",
+            "Pet Care",
+            "Subscriptions",
+            "Emergency",
+            "Festivals & Celebrations",
+            "Technology",
+            "Miscellaneous",
+            "Others",
+          ].map((cat) => (
             <option key={cat} value={cat}>
               {cat}
             </option>
