@@ -107,7 +107,28 @@ export default function IncomeForm({ id }) {
           required
         >
           <option value="">Select Category</option>
-          {["Business", "Job", "Project", "Freelance", "Other"].map((cat) => (
+          {[
+            "Business",
+            "Job",
+            "Project",
+            "Freelance",
+            "Investment",
+            "Rental",
+            "Savings",
+            "Gift",
+            "Pension",
+            "Consulting",
+            "Tutoring",
+            "Government Benefits",
+            "Scholarship",
+            "Lottery & Prize",
+            "Part-Time Job",
+            "Sale of Assets",
+            "Agriculture",
+            "Transportation Services",
+            "Crafts & Homemade Goods",
+            "Others",
+          ].map((cat) => (
             <option key={cat} value={cat}>
               {cat}
             </option>
