@@ -6,7 +6,7 @@ import IncomeReport from "@/components/IncomeReport";
 export default function Reports() {
   return (
     <div className="p-6">
-      <ReportFilters />
+      {/* <ReportFilters /> */}
       <ExpenseReport />
       <IncomeReport />
     </div>

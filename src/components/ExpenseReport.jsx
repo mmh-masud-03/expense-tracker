@@ -186,11 +186,11 @@ export default function ExpenseReport() {
   };
 
   return (
-    <div className="p-6 mb-6 bg-white rounded-lg shadow-md">
+    <div className="p-6 relative mb-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-700 mb-6">Expense Report</h2>
       <button
         onClick={generatePDF}
-        className=" mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        className="absolute right-3 top-6 mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
       >
         Export to PDF
       </button>
@@ -201,7 +201,7 @@ export default function ExpenseReport() {
           <div className="p-4 bg-gray-100 rounded shadow">
             <p className="text-lg font-medium">Total Expenses</p>
             <p className="text-2xl font-bold text-red-600">
-              ${totalExpense.toFixed(2)}
+              BDT {totalExpense.toFixed(2)}
             </p>
           </div>
           <div className="p-4 bg-gray-100 rounded shadow">

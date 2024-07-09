@@ -13,7 +13,8 @@ import {
 } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { FaEdit, FaTrash } from "react-icons/fa";
+import ExpenseForm from "./ExpenseForm";
 export default function ExpenseList() {
   const [expenses, setExpenses] = useState([]);
   const [sortBy, setSortBy] = useState("date");
@@ -21,6 +22,8 @@ export default function ExpenseList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null);
   const [overview, setOverview] = useState({
     totalAmount: 0,
     averageAmount: 0,
@@ -82,7 +85,27 @@ export default function ExpenseList() {
     () => Object.keys(overview.categoryCounts),
     [overview.categoryCounts]
   );
+  const handleUpdate = (expense) => {
+    setSelectedExpense(expense);
+    setIsModalOpen(true);
+  };
 
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this expense?")) {
+      try {
+        const res = await fetch(`/api/expenses/${id}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          fetchExpenses(currentPage);
+        } else {
+          console.error("Failed to delete expense");
+        }
+      } catch (error) {
+        console.error("Error deleting expense", error);
+      }
+    }
+  };
   return (
     <div className="p-6 mb-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Expense Tracker</h2>
@@ -228,6 +251,20 @@ export default function ExpenseList() {
                     <div className="font-bold text-lg text-gray-800">
                       {expense.amount.toFixed(2)} Tk
                     </div>
+                    <div className="flex-shrink-0 ml-4 space-x-2">
+                      <button
+                        onClick={() => handleUpdate(expense)}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(expense._id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -264,6 +301,27 @@ export default function ExpenseList() {
             </button>
           </div>
         </>
+      )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {selectedExpense ? "Update Expense" : "Add Expense"}
+              </h3>
+              <div className="mt-2 px-7 py-3">
+                <ExpenseForm
+                  expense={selectedExpense}
+                  onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedExpense(null);
+                    fetchExpenses(currentPage);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

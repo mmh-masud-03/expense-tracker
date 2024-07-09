@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaDollarSign, FaCalendarDay, FaTag } from "react-icons/fa";
+import {
+  FaDollarSign,
+  FaCalendarDay,
+  FaTag,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
+import IncomeForm from "./IncomeForm";
 
 export default function IncomeList() {
   const [incomes, setIncomes] = useState([]);
@@ -13,6 +20,8 @@ export default function IncomeList() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedIncome, setSelectedIncome] = useState(null);
 
   const fetchIncome = async (page = 1) => {
     setLoading(true);
@@ -38,6 +47,28 @@ export default function IncomeList() {
     fetchIncome(currentPage);
   }, [currentPage]);
 
+  const handleUpdate = (income) => {
+    setSelectedIncome(income);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this income?")) {
+      try {
+        const res = await fetch(`/api/income/${id}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          fetchIncome(currentPage);
+        } else {
+          setError("Failed to delete income");
+        }
+      } catch (error) {
+        setError("Error deleting income");
+      }
+    }
+  };
+
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
 
@@ -45,12 +76,37 @@ export default function IncomeList() {
     <div className="p-6 mb-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Income</h2>
       <OverviewSection overview={overview} />
-      <IncomeListSection incomes={incomes} />
+      <IncomeListSection
+        incomes={incomes}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+      />
       <PaginationControls
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={fetchIncome}
       />
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {selectedIncome ? "Update Income" : "Add Income"}
+              </h3>
+              <div className="mt-2 px-7 py-3">
+                <IncomeForm
+                  income={selectedIncome}
+                  onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedIncome(null);
+                    fetchIncome(currentPage);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -101,21 +157,26 @@ function OverviewItem({ label, value, color }) {
   );
 }
 
-function IncomeListSection({ incomes }) {
+function IncomeListSection({ incomes, onUpdate, onDelete }) {
   if (incomes.length === 0) {
     return <div className="text-gray-500">No income found</div>;
   }
 
   return (
     <div className="space-y-4">
-      {incomes.map((income, index) => (
-        <IncomeItem key={index} income={income} />
+      {incomes.map((income) => (
+        <IncomeItem
+          key={income._id}
+          income={income}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );
 }
 
-function IncomeItem({ income }) {
+function IncomeItem({ income, onUpdate, onDelete }) {
   return (
     <div className="p-4 bg-gray-50 rounded-lg shadow-md flex items-start space-x-4 border border-gray-200 hover:bg-gray-100 transition ease-in-out duration-300">
       <div className="flex-shrink-0">
@@ -134,6 +195,20 @@ function IncomeItem({ income }) {
       </div>
       <div className="font-bold text-lg text-gray-800">
         {income.amount.toFixed(2)} Tk
+      </div>
+      <div className="flex-shrink-0 ml-4 space-x-2">
+        <button
+          onClick={() => onUpdate(income)}
+          className="text-blue-500 hover:text-blue-700"
+        >
+          <FaEdit />
+        </button>
+        <button
+          onClick={() => onDelete(income._id)}
+          className="text-red-500 hover:text-red-700"
+        >
+          <FaTrash />
+        </button>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ExpenseForm({ id }) {
+export default function ExpenseForm({ expense, onClose }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
@@ -11,44 +11,57 @@ export default function ExpenseForm({ id }) {
   const router = useRouter();
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    setDate(today);
-  }, []);
-
-  const data = {
-    user: "66879847549a77c835e4254f",
-    title,
-    amount,
-    category,
-    date,
-  };
+    if (expense) {
+      setTitle(expense.title);
+      setAmount(expense.amount);
+      setCategory(expense.category);
+      setDate(new Date(expense.date).toISOString().split("T")[0]);
+    } else {
+      const today = new Date().toISOString().split("T")[0];
+      setDate(today);
+    }
+  }, [expense]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/expenses/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const data = {
+      user: "66879847549a77c835e4254f",
+      title,
+      amount,
+      category,
+      date,
+    };
 
-    if (res.ok) {
-      console.log("Expense Created");
-      // You can redirect or update UI after successful creation
-      router.push("/expenses"); // Redirect to expenses list page
-    } else {
-      const errorData = await res.json();
-      setError(errorData.error);
-      console.error("Error creating expense");
+    const url = expense
+      ? `/api/expenses/${expense._id}`
+      : "/api/expenses/create";
+    const method = expense ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        console.log(expense ? "Expense Updated" : "Expense Created");
+        onClose();
+      } else {
+        const errorData = await res.json();
+        setError(errorData.error);
+        console.error("Error processing expense");
+      }
+    } catch (error) {
+      console.error("Error processing expense", error);
+      setError("An unexpected error occurred");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 bg-slate-300/80 rounded p-6 max-h-[80vh] max-w-[30vw]"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-50 w-full px-4">
       {error && (
         <div
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -68,9 +81,10 @@ export default function ExpenseForm({ id }) {
           type="text"
           name="title"
           id="title"
+          placeholder="Enter title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 pl-7 pr-12 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-2 border-gray-300 rounded-md"
+          className="mt-1 h-8 pl-7 pr-12 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-2 border-gray-300 rounded-md"
           required
         />
       </div>
@@ -91,8 +105,8 @@ export default function ExpenseForm({ id }) {
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7  text-base outline-none border-b-2 border-gray-300 rounded-md"
-            placeholder="0.00"
+            className="h-8 focus:ring-blue-500 focus:border-blue-500 block w-full pl-7  text-base outline-none border-b-2 border-gray-300 rounded-md"
+            placeholder="Enter amount"
             required
           />
         </div>
@@ -157,16 +171,23 @@ export default function ExpenseForm({ id }) {
           id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="mt-1 pl-7  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-2 border-gray-300 rounded-md"
+          className="mt-1 pl-7 h-8  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base outline-none border-b-2 border-gray-300 rounded-md"
           required
         />
       </div>
-      <div className="pt-2">
+      <div className="pt-2 flex justify-between">
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+          className="flex-1 mr-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
         >
-          {id ? "Update Expense" : "Add Expense"}
+          {expense ? "Update Expense" : "Add Expense"}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex-1 ml-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+        >
+          Cancel
         </button>
       </div>
     </form>

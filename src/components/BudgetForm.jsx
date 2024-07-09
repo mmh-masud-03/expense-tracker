@@ -40,10 +40,7 @@ export default function BudgetForm({ id }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 bg-slate-300/80 rounded p-6 max-h-[80vh] max-w-[30vw]"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-50 w-full px-4">
       {error && (
         <div
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -69,8 +66,8 @@ export default function BudgetForm({ id }) {
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="border-b-2 outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 text-base border-gray-300 rounded-md"
-            placeholder="0.00"
+            className="border-b-2 outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 text-base border-gray-300 rounded-md h-10"
+            placeholder="Enter amount"
             required
           />
         </div>
@@ -87,7 +84,7 @@ export default function BudgetForm({ id }) {
           name="month"
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="mt-1 border-b-2 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500  rounded-md"
+          className="mt-1 border-b-2 block w-full pl-6 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500  rounded-md"
           required
         >
           <option value="">Select Month</option>
@@ -124,8 +121,8 @@ export default function BudgetForm({ id }) {
           id="year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
-          className="mt-1 border-b-2 outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md pl-7"
-          placeholder="YYYY"
+          className="mt-1 border-b-2 outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md pl-7 h-10"
+          placeholder="Enter year (YYYY)"
           required
           maxLength={4}
         />
