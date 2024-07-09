@@ -33,6 +33,7 @@ export default function BudgetOverview() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
+  const [confirmModal, setConfirmModal] = useState(false);
   const limit = 10;
 
   const { data, error, isValidating } = useSWR(
@@ -103,22 +104,20 @@ export default function BudgetOverview() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this budget?")) {
-      try {
-        const res = await fetch(`/api/budget/${id}`, {
-          method: "DELETE",
-        });
-        if (res.ok) {
-          mutate(
-            `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`
-          );
-          toast("Budget deleted successfully", { type: "success" });
-        } else {
-          console.error("Failed to delete budget");
-        }
-      } catch (error) {
-        console.error("Error deleting budget", error);
+    try {
+      const res = await fetch(`/api/budget/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        mutate(
+          `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`
+        );
+        toast("Budget deleted successfully", { type: "success" });
+      } else {
+        console.error("Failed to delete budget");
       }
+    } catch (error) {
+      console.error("Error deleting budget", error);
     }
   };
 
@@ -177,6 +176,8 @@ export default function BudgetOverview() {
         sortConfig={sortConfig}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
+        confirmModal={confirmModal}
+        setConfirmModal={setConfirmModal}
       />
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
@@ -350,6 +351,8 @@ function BudgetDetails({
   sortConfig,
   onUpdate,
   onDelete,
+  confirmModal,
+  setConfirmModal,
 }) {
   return (
     <div className="mt-6">
@@ -391,6 +394,8 @@ function BudgetDetails({
         sortConfig={sortConfig}
         onUpdate={onUpdate}
         onDelete={onDelete}
+        confirmModal={confirmModal}
+        setConfirmModal={setConfirmModal}
       />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>
@@ -403,6 +408,8 @@ function BudgetTable({
   sortConfig,
   onUpdate,
   onDelete,
+  confirmModal,
+  setConfirmModal,
 }) {
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
@@ -471,11 +478,37 @@ function BudgetTable({
                   <FaEdit />
                 </button>
                 <button
-                  onClick={() => onDelete(budget._id)}
+                  onClick={() => setConfirmModal(true)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <FaTrash />
                 </button>
+                {confirmModal && (
+                  <div className="fixed inset-0 flex items-center justify-center z-10 bg-transparent bg-opacity-75">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
+                      <h2 className="text-xl font-semibold mb-4">
+                        Confirm Deletion
+                      </h2>
+                      <p className="mb-6">
+                        Are you sure you want to delete this budget?
+                      </p>
+                      <div className="flex justify-end space-x-4">
+                        <button
+                          onClick={() => onDelete(budget._id)}
+                          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={() => setConfirmModal(false)}
+                          className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </td>
             </tr>
           ))}

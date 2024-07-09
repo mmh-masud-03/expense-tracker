@@ -25,6 +25,7 @@ export default function ExpenseList() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
+  const [confirmModal, setConfirmModal] = useState(false);
   const [overview, setOverview] = useState({
     totalAmount: 0,
     averageAmount: 0,
@@ -92,20 +93,19 @@ export default function ExpenseList() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this expense?")) {
-      try {
-        const res = await fetch(`/api/expenses/${id}`, {
-          method: "DELETE",
-        });
-        if (res.ok) {
-          fetchExpenses(currentPage);
-          toast("Expense deleted successfully", { type: "success" });
-        } else {
-          console.error("Failed to delete expense");
-        }
-      } catch (error) {
-        console.error("Error deleting expense", error);
+    try {
+      const res = await fetch(`/api/expenses/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        fetchExpenses(currentPage);
+        toast("Expense deleted successfully", { type: "success" });
+        setConfirmModal(false);
+      } else {
+        console.error("Failed to delete expense");
       }
+    } catch (error) {
+      console.error("Error deleting expense", error);
     }
   };
   return (
@@ -261,11 +261,37 @@ export default function ExpenseList() {
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(expense._id)}
+                        onClick={() => setConfirmModal(true)}
                         className="text-red-500 hover:text-red-700"
                       >
                         <FaTrash />
                       </button>
+                      {confirmModal && (
+                        <div className="fixed inset-0 flex items-center justify-center z-10 bg-transparent bg-opacity-75">
+                          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
+                            <h2 className="text-xl font-semibold mb-4">
+                              Confirm Deletion
+                            </h2>
+                            <p className="mb-6">
+                              Are you sure you want to delete this expense?
+                            </p>
+                            <div className="flex justify-end space-x-4">
+                              <button
+                                onClick={() => handleDelete(expense._id)}
+                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
+                              >
+                                Yes
+                              </button>
+                              <button
+                                onClick={() => setConfirmModal(false)}
+                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 ))}

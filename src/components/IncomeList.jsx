@@ -22,6 +22,7 @@ export default function IncomeList() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState(null);
+  const [confirmModal, setConfirmModal] = useState(false);
 
   const fetchIncome = async (page = 1) => {
     setLoading(true);
@@ -53,20 +54,19 @@ export default function IncomeList() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this income?")) {
-      try {
-        const res = await fetch(`/api/income/${id}`, {
-          method: "DELETE",
-        });
-        if (res.ok) {
-          fetchIncome(currentPage);
-          toast("Income deleted successfully", { type: "success" });
-        } else {
-          setError("Failed to delete income");
-        }
-      } catch (error) {
-        setError("Error deleting income");
+    try {
+      const res = await fetch(`/api/income/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        fetchIncome(currentPage);
+        setConfirmModal(false);
+        toast("Income deleted successfully", { type: "success" });
+      } else {
+        setError("Failed to delete income");
       }
+    } catch (error) {
+      setError("Error deleting income");
     }
   };
 
@@ -81,6 +81,8 @@ export default function IncomeList() {
         incomes={incomes}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
+        confirmModal={confirmModal}
+        setConfirmModal={setConfirmModal}
       />
       <PaginationControls
         currentPage={currentPage}
@@ -170,7 +172,13 @@ function OverviewItem({ label, value, color }) {
   );
 }
 
-function IncomeListSection({ incomes, onUpdate, onDelete }) {
+function IncomeListSection({
+  incomes,
+  onUpdate,
+  onDelete,
+  confirmModal,
+  setConfirmModal,
+}) {
   if (incomes.length === 0) {
     return <div className="text-gray-500">No income found</div>;
   }
@@ -183,13 +191,21 @@ function IncomeListSection({ incomes, onUpdate, onDelete }) {
           income={income}
           onUpdate={onUpdate}
           onDelete={onDelete}
+          confirmModal={confirmModal}
+          setConfirmModal={setConfirmModal}
         />
       ))}
     </div>
   );
 }
 
-function IncomeItem({ income, onUpdate, onDelete }) {
+function IncomeItem({
+  income,
+  onUpdate,
+  onDelete,
+  confirmModal,
+  setConfirmModal,
+}) {
   return (
     <div className="p-4 bg-gray-50 rounded-lg shadow-md flex items-start space-x-4 border border-gray-200 hover:bg-gray-100 transition ease-in-out duration-300">
       <div className="flex-shrink-0">
@@ -217,11 +233,35 @@ function IncomeItem({ income, onUpdate, onDelete }) {
           <FaEdit />
         </button>
         <button
-          onClick={() => onDelete(income._id)}
+          onClick={() => setConfirmModal(true)}
           className="text-red-500 hover:text-red-700"
         >
           <FaTrash />
         </button>
+        {confirmModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-10 bg-transparent bg-opacity-75">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
+              <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+              <p className="mb-6">
+                Are you sure you want to delete this income?
+              </p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => onDelete(income._id)}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setConfirmModal(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
