@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { mutate } from "swr";
 
 export default function IncomeForm({ income, onClose }) {
   const [title, setTitle] = useState("");
@@ -46,6 +48,10 @@ export default function IncomeForm({ income, onClose }) {
 
       if (res.ok) {
         console.log(income ? "Income Updated" : "Income Created");
+        toast(income ? "Income Updated" : "Income Created", {
+          type: "success",
+        });
+        mutate("/api/income");
         onClose();
       } else {
         const errorData = await res.json();

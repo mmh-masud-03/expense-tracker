@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import {
   FaDollarSign,
@@ -9,6 +8,7 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import IncomeForm from "./IncomeForm";
+import { toast } from "react-toastify";
 
 export default function IncomeList() {
   const [incomes, setIncomes] = useState([]);
@@ -60,6 +60,7 @@ export default function IncomeList() {
         });
         if (res.ok) {
           fetchIncome(currentPage);
+          toast("Income deleted successfully", { type: "success" });
         } else {
           setError("Failed to delete income");
         }
@@ -93,7 +94,19 @@ export default function IncomeList() {
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {selectedIncome ? "Update Income" : "Add Income"}
               </h3>
-              <div className="mt-2 px-7 py-3">
+
+              <div className="mt-2 text-left py-3">
+                <div className="absolute top-2 right-2">
+                  <button
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setSelectedIncome(null);
+                    }}
+                    className="text-red-500 hover:text-red-700 text-2xl"
+                  >
+                    &times;
+                  </button>
+                </div>
                 <IncomeForm
                   income={selectedIncome}
                   onClose={() => {

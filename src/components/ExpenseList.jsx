@@ -15,6 +15,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ExpenseForm from "./ExpenseForm";
+import { toast } from "react-toastify";
 export default function ExpenseList() {
   const [expenses, setExpenses] = useState([]);
   const [sortBy, setSortBy] = useState("date");
@@ -98,6 +99,7 @@ export default function ExpenseList() {
         });
         if (res.ok) {
           fetchExpenses(currentPage);
+          toast("Expense deleted successfully", { type: "success" });
         } else {
           console.error("Failed to delete expense");
         }
@@ -309,7 +311,18 @@ export default function ExpenseList() {
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {selectedExpense ? "Update Expense" : "Add Expense"}
               </h3>
-              <div className="mt-2 px-7 py-3">
+              <div className="mt-2  py-3 text-left">
+                <div className="absolute top-2 right-2">
+                  <button
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setSelectedExpense(null);
+                    }}
+                    className="text-red-500 hover:text-red-700 text-2xl"
+                  >
+                    &times;
+                  </button>
+                </div>
                 <ExpenseForm
                   expense={selectedExpense}
                   onClose={() => {

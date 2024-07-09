@@ -3,6 +3,9 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import AddFinanceButton from "@/components/AddFinanceButton";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const inter = Inter({ subsets: ["latin"] });
 const opensans = Open_Sans({ subsets: ["latin"] });
 
@@ -20,7 +23,7 @@ export default function RootLayout({ children }) {
           <div className="flex-1">
             <Navbar />
             <main className="p-6 mt-10">
-              {children} <AddFinanceButton />{" "}
+              {children} <AddFinanceButton /> <ToastContainer />
             </main>
           </div>
         </div>

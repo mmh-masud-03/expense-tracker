@@ -1,41 +1,55 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { mutate } from "swr";
-
-export default function BudgetForm({ id }) {
+import { toast } from "react-toastify";
+export default function BudgetForm({ budget, onClose }) {
   const [amount, setAmount] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
-  const [error, setError] = useState(false);
-  const router = useRouter();
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (budget) {
+      setAmount(budget.amount);
+      setMonth(budget.month);
+      setYear(budget.year);
+    }
+  }, [budget]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = {
       user: "66879847549a77c835e4254f", // Replace with dynamic user ID
-      amount,
+      amount: parseFloat(amount),
       month,
-      year,
+      year: parseInt(year),
     };
 
-    const res = await fetch("/api/budget/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const url = budget ? `/api/budget/${budget._id}` : "/api/budget/create";
+    const method = budget ? "PUT" : "POST";
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      setError(errorData.error);
-    } else {
-      setAmount("");
-      setMonth("");
-      setYear("");
-      mutate("/api/budget"); // Trigger a revalidation of the budget data
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        mutate("/api/budget"); // Trigger a revalidation of the budget data
+        onClose();
+        toast(budget ? "Budget Updated" : "Budget Created", {
+          type: "success",
+        });
+      } else {
+        const errorData = await res.json();
+        setError(errorData.error);
+      }
+    } catch (error) {
+      console.error("Error processing budget", error);
+      setError("An unexpected error occurred");
     }
   };
 
@@ -57,16 +71,13 @@ export default function BudgetForm({ id }) {
           Amount
         </label>
         <div className="mt-1 relative rounded-md shadow-sm">
-          {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <span className="text-gray-500 sm:text-sm"></span>
-          </div> */}
           <input
             type="number"
             name="amount"
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="border-b-2 outline-none focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 text-base border-gray-300 rounded-md h-10"
+            className="text-base h-8 outline-none border-b-2 focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 border-gray-300 rounded-md"
             placeholder="Enter amount"
             required
           />
@@ -84,7 +95,7 @@ export default function BudgetForm({ id }) {
           name="month"
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="mt-1 border-b-2 block w-full pl-6 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500  rounded-md"
+          className="mt-1 outline-none block w-full pl-6 pr-10 py-2 text-base border-b-2 border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md"
           required
         >
           <option value="">Select Month</option>
@@ -121,18 +132,26 @@ export default function BudgetForm({ id }) {
           id="year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
-          className="mt-1 border-b-2 outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md pl-7 h-10"
+          className="mt-1 h-8 pl-7 text-base outline-none border-b-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm border-gray-300 rounded-md"
           placeholder="Enter year (YYYY)"
           required
-          maxLength={4}
+          min="2000"
+          max="2100"
         />
       </div>
-      <div className="pt-2">
+      <div className="pt-2 flex justify-between">
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+          className="flex-1 mr-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
         >
-          {id ? "Update Budget" : "Add Budget"}
+          {budget ? "Update Budget" : "Add Budget"}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex-1 ml-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+        >
+          Cancel
         </button>
       </div>
     </form>

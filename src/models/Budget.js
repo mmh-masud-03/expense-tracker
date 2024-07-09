@@ -34,5 +34,8 @@ const BudgetSchema = new mongoose.Schema({
   },
 });
 
+// Add a compound unique index
+BudgetSchema.index({ user: 1, month: 1, year: 1 }, { unique: true });
+
 const Budget = mongoose.models.Budget || mongoose.model("Budget", BudgetSchema);
 export default Budget;

@@ -32,7 +32,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out flex items-center ${
+                className={`text-white hover:bg-blue-700 px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base ${
                   pathname === item.href ? "bg-blue-700" : ""
                 }`}
               >

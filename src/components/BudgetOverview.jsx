@@ -1,14 +1,21 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import {
   AiOutlineDollarCircle,
   AiOutlineExclamationCircle,
   AiOutlineLoading3Quarters,
 } from "react-icons/ai";
 import { BsFillCheckCircleFill, BsFilterLeft } from "react-icons/bs";
-import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import {
+  FaSortAmountDown,
+  FaSortAmountUp,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
+import BudgetForm from "./BudgetForm"; // Make sure to import the BudgetForm component
+import { toast } from "react-toastify";
 
 const fetcher = async (url) => {
   const res = await fetch(url);
@@ -24,6 +31,8 @@ export default function BudgetOverview() {
     key: null,
     direction: "ascending",
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBudget, setSelectedBudget] = useState(null);
   const limit = 10;
 
   const { data, error, isValidating } = useSWR(
@@ -88,6 +97,31 @@ export default function BudgetOverview() {
     setSortConfig({ key, direction });
   };
 
+  const handleUpdate = (budget) => {
+    setSelectedBudget(budget);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this budget?")) {
+      try {
+        const res = await fetch(`/api/budget/${id}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          mutate(
+            `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`
+          );
+          toast("Budget deleted successfully", { type: "success" });
+        } else {
+          console.error("Failed to delete budget");
+        }
+      } catch (error) {
+        console.error("Error deleting budget", error);
+      }
+    }
+  };
+
   if (error) return <ErrorMessage message="Failed to fetch budget data." />;
   if (!data && isValidating) return <LoadingMessage />;
   if (sortedData.length === 0) return <NoDataMessage />;
@@ -141,7 +175,43 @@ export default function BudgetOverview() {
         totalPages={data.pages}
         requestSort={requestSort}
         sortConfig={sortConfig}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
       />
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {selectedBudget ? "Update Budget" : "Add Budget"}
+              </h3>
+              <div className="absolute top-2 right-2">
+                <button
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setSelectedBudget(null);
+                  }}
+                  className="text-red-500 hover:text-red-700 text-2xl"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="mt-2 text-left py-3">
+                <BudgetForm
+                  budget={selectedBudget}
+                  onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedBudget(null);
+                    mutate(
+                      `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`
+                    );
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -278,6 +348,8 @@ function BudgetDetails({
   totalPages,
   requestSort,
   sortConfig,
+  onUpdate,
+  onDelete,
 }) {
   return (
     <div className="mt-6">
@@ -317,13 +389,21 @@ function BudgetDetails({
         sortedData={sortedData}
         requestSort={requestSort}
         sortConfig={sortConfig}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
       />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>
   );
 }
 
-function BudgetTable({ sortedData, requestSort, sortConfig }) {
+function BudgetTable({
+  sortedData,
+  requestSort,
+  sortConfig,
+  onUpdate,
+  onDelete,
+}) {
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
       return;
@@ -369,6 +449,7 @@ function BudgetTable({ sortedData, requestSort, sortConfig }) {
                 <FaSortAmountDown className="inline" />
               )}
             </th>
+            <th className="py-3 px-4 uppercase text-sm text-left">Actions</th>
           </tr>
         </thead>
         <tbody className="text-gray-700">
@@ -382,6 +463,20 @@ function BudgetTable({ sortedData, requestSort, sortConfig }) {
               <td className="py-3 px-4">{budget.month}</td>
               <td className="py-3 px-4">{budget.year}</td>
               <td className="py-3 px-4">{budget.amount.toFixed(2)} TK</td>
+              <td className="py-3 px-4">
+                <button
+                  onClick={() => onUpdate(budget)}
+                  className="mr-2 text-blue-500 hover:text-blue-700"
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  onClick={() => onDelete(budget._id)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <FaTrash />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

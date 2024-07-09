@@ -16,12 +16,30 @@ export const POST = async (req) => {
       );
     }
 
-    const newBudget = await Budget.create({ user, amount, month, year });
-    return new Response(JSON.stringify(newBudget), { status: 201 });
+    const updatedBudget = await Budget.findOneAndUpdate(
+      { user, month, year },
+      { amount },
+      { new: true, upsert: true, runValidators: true }
+    );
+
+    return new Response(JSON.stringify(updatedBudget), { status: 200 });
   } catch (err) {
     console.error(err);
-    return new Response(JSON.stringify({ error: "Error creating budget" }), {
-      status: 500,
-    });
+    if (err.code === 11000) {
+      return new Response(
+        JSON.stringify({
+          error: "Budget for this month and year already exists",
+        }),
+        {
+          status: 409,
+        }
+      );
+    }
+    return new Response(
+      JSON.stringify({ error: "Error creating/updating budget" }),
+      {
+        status: 500,
+      }
+    );
   }
 };

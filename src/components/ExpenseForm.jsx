@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { mutate } from "swr";
+import { toast } from "react-toastify";
 
 export default function ExpenseForm({ expense, onClose }) {
   const [title, setTitle] = useState("");
@@ -47,8 +49,11 @@ export default function ExpenseForm({ expense, onClose }) {
       });
 
       if (res.ok) {
-        console.log(expense ? "Expense Updated" : "Expense Created");
         onClose();
+        toast(expense ? "Expense Updated" : "Expense Created", {
+          type: "success",
+        });
+        mutate("/api/expenses");
       } else {
         const errorData = await res.json();
         setError(errorData.error);
@@ -178,7 +183,7 @@ export default function ExpenseForm({ expense, onClose }) {
       <div className="pt-2 flex justify-between">
         <button
           type="submit"
-          className="flex-1 mr-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+          className="flex-1 mr-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
         >
           {expense ? "Update Expense" : "Add Expense"}
         </button>

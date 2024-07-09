@@ -218,7 +218,7 @@ export default function IncomeReport() {
                   legend: { position: "top" },
                   tooltip: {
                     callbacks: {
-                      label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+                      label: (tooltipItem) => `Amount: ${tooltipItem.raw} Tk`,
                     },
                   },
                 },
@@ -240,7 +240,7 @@ export default function IncomeReport() {
                   legend: { position: "top" },
                   tooltip: {
                     callbacks: {
-                      label: (tooltipItem) => `Amount: $${tooltipItem.raw}`,
+                      label: (tooltipItem) => `Amount: ${tooltipItem.raw} Tk`,
                     },
                   },
                 },
