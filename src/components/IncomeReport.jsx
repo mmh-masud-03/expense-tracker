@@ -12,6 +12,7 @@ import {
   ArcElement,
 } from "chart.js";
 import { GetAllIncome } from "@/utils/helper";
+import jsPDF from "jspdf";
 
 ChartJS.register(
   CategoryScale,
@@ -32,8 +33,8 @@ export default function IncomeReport() {
     const fetchIncomeData = async () => {
       try {
         const { incomes } = await GetAllIncome({
-          sortBy: "amount", // Adjust sorting criteria as needed
-          sortOrder: "desc", // Sort in descending order
+          sortBy: "amount",
+          sortOrder: "desc",
         });
         setIncomeData(incomes);
       } catch (err) {
@@ -46,6 +47,46 @@ export default function IncomeReport() {
 
     fetchIncomeData();
   }, []);
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    let yOffset = 20;
+
+    // Add title
+    doc.setFontSize(18);
+    doc.text("Income Report", 20, yOffset);
+    yOffset += 10;
+
+    // Add summary
+    doc.setFontSize(14);
+    doc.text(`Total Income: $${totalIncome.toFixed(2)}`, 20, yOffset);
+    yOffset += 10;
+    doc.text(`Highest Income Category: ${highestIncomeCategory}`, 20, yOffset);
+    yOffset += 20;
+
+    // Add income details
+    doc.setFontSize(12);
+    doc.text("Income Details:", 20, yOffset);
+    yOffset += 10;
+
+    incomeData.forEach((income, index) => {
+      if (yOffset > 270) {
+        doc.addPage();
+        yOffset = 20;
+      }
+      doc.text(
+        `${index + 1}. ${income.title} - $${income.amount.toFixed(2)} (${
+          income.category
+        })`,
+        20,
+        yOffset
+      );
+      yOffset += 10;
+    });
+
+    // Save the PDF
+    doc.save("income_report.pdf");
+  };
 
   if (loading) {
     return (
@@ -133,6 +174,14 @@ export default function IncomeReport() {
   return (
     <div className="p-6 mb-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-700 mb-6">Income Report</h2>
+
+      {/* Export Button */}
+      <button
+        onClick={generatePDF}
+        className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+      >
+        Export to PDF
+      </button>
 
       {/* Summary Section */}
       <div className="mb-6">

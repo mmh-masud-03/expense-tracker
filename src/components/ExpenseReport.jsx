@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
+import jsPDF from "jspdf";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -54,6 +56,49 @@ export default function ExpenseReport() {
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    let yOffset = 20;
+
+    // Add title
+    doc.setFontSize(18);
+    doc.text("Expense Report", 20, yOffset);
+    yOffset += 10;
+
+    // Add summary
+    doc.setFontSize(14);
+    doc.text(`Total Expenses: $${totalExpense.toFixed(2)}`, 20, yOffset);
+    yOffset += 10;
+    doc.text(
+      `Highest Expense Category: ${highestExpenseCategory}`,
+      20,
+      yOffset
+    );
+    yOffset += 20;
+
+    // Add expense details
+    doc.setFontSize(12);
+    doc.text("Expense Details:", 20, yOffset);
+    yOffset += 10;
+
+    expenseData.forEach((expense, index) => {
+      if (yOffset > 270) {
+        doc.addPage();
+        yOffset = 20;
+      }
+      doc.text(
+        `${index + 1}. ${expense.title} - $${expense.amount.toFixed(2)} (${
+          expense.category
+        })`,
+        20,
+        yOffset
+      );
+      yOffset += 10;
+    });
+
+    // Save the PDF
+    doc.save("expense_report.pdf");
+  };
 
   useEffect(() => {
     const fetchExpenseData = async () => {
@@ -143,7 +188,12 @@ export default function ExpenseReport() {
   return (
     <div className="p-6 mb-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-700 mb-6">Expense Report</h2>
-
+      <button
+        onClick={generatePDF}
+        className=" mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        Export to PDF
+      </button>
       {/* Summary Section */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-600 mb-2">Summary</h3>
