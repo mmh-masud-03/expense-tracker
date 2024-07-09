@@ -195,7 +195,25 @@ export default function FinancialDashboard() {
     "Travel",
     "Bills",
     "Entertainment",
-    "Other",
+    "Education",
+    "Healthcare",
+    "Shopping",
+    "Utilities",
+    "Transport",
+    "Housing",
+    "Clothing",
+    "Insurance",
+    "Debt Repayment",
+    "Personal Care",
+    "Gifts & Donations",
+    "Childcare",
+    "Pet Care",
+    "Subscriptions",
+    "Emergency",
+    "Festivals & Celebrations",
+    "Technology",
+    "Miscellaneous",
+    "Others",
   ];
   const expensesByCategoryData = {
     labels: expenseCategories,
@@ -212,11 +230,28 @@ export default function FinancialDashboard() {
           "rgba(255, 206, 86, 0.6)",
           "rgba(75, 192, 192, 0.6)",
           "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+          "rgba(199, 199, 199, 0.6)",
+          "rgba(83, 102, 255, 0.6)",
+          "rgba(220, 20, 60, 0.6)",
+          "rgba(60, 179, 113, 0.6)",
+          "rgba(244, 164, 96, 0.6)",
+          "rgba(127, 255, 212, 0.6)",
+          "rgba(186, 85, 211, 0.6)",
+          "rgba(70, 130, 180, 0.6)",
+          "rgba(255, 215, 0, 0.6)",
+          "rgba(255, 69, 0, 0.6)",
+          "rgba(34, 139, 34, 0.6)",
+          "rgba(218, 112, 214, 0.6)",
+          "rgba(95, 158, 160, 0.6)",
+          "rgba(240, 230, 140, 0.6)",
+          "rgba(210, 105, 30, 0.6)",
+          "rgba(147, 112, 219, 0.6)",
+          "rgba(0, 191, 255, 0.6)",
         ],
       },
     ],
   };
-
   // Calculate notices
   const exceededIncome = totalExpenses > totalIncome;
   const exceededBudget = actualExpenses.some(
@@ -312,6 +347,18 @@ export default function FinancialDashboard() {
                 responsive: true,
                 plugins: {
                   legend: { position: "right" },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) =>
+                        `${context.label}: ${context.raw.toLocaleString(
+                          "en-US",
+                          {
+                            style: "currency",
+                            currency: "BDT",
+                          }
+                        )}`,
+                    },
+                  },
                 },
               }}
             />
