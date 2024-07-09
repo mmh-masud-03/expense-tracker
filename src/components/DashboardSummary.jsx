@@ -91,12 +91,6 @@ export default function DashboardSummary() {
       color: "red",
     },
     {
-      title: "Remaining Budget",
-      amount: remainingBudget,
-      icon: BsFillCheckCircleFill,
-      color: "blue",
-    },
-    {
       title: "Total Income",
       amount: totalIncome,
       icon: FaWallet,
@@ -129,6 +123,45 @@ export default function DashboardSummary() {
             </p>
           </div>
         ))}
+        {remainingBudget >= 0 ? (
+          <div
+            className={`p-6 bg-blue-50 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105`}
+          >
+            <div className="flex items-center mb-4">
+              <BsFillCheckCircleFill
+                className={`text-blue-500 w-10 h-10 mr-4`}
+              />
+              <h3 className={`text-lg font-semibold text-blue-700`}>
+                Remaining Budget
+              </h3>
+            </div>
+            <p className={`text-xl font-bold text-blue-600`}>
+              {remainingBudget.toLocaleString("en-US", {
+                style: "currency",
+                currency: "BDT",
+              })}
+            </p>
+          </div>
+        ) : (
+          <div
+            className={`p-6 bg-red-50 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105`}
+          >
+            <div className="flex items-center mb-4">
+              <AiOutlineExclamationCircle
+                className={`text-red-500 w-10 h-10 mr-4`}
+              />
+              <h3 className={`text-lg font-semibold text-red-700`}>
+                Over Budget
+              </h3>
+            </div>
+            <p className={`text-xl font-bold text-red-600`}>
+              {Math.abs(remainingBudget).toLocaleString("en-US", {
+                style: "currency",
+                currency: "BDT",
+              })}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
