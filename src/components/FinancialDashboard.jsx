@@ -33,7 +33,6 @@ export default function FinancialDashboard() {
   const [budgetData, setBudgetData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -263,13 +262,13 @@ export default function FinancialDashboard() {
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Financial Dashboard
       </h1>
-      <button
+      {/* <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-500 text-white rounded w-20 place-self-end"
+        className="px-4 py-2 bg-blue-500 text-white rounded w-28 place-self-end"
       >
         Add
-      </button>
-      <FormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </button> */}
+      {/* <FormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
       {exceededIncome && (
         <div className="p-4 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
           Warning: Your total expenses (Tk {totalExpenses.toFixed(2)}) have

@@ -2,6 +2,7 @@ import { Inter, Open_Sans } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
+import AddFinanceButton from "@/components/AddFinanceButton";
 const inter = Inter({ subsets: ["latin"] });
 const opensans = Open_Sans({ subsets: ["latin"] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({ children }) {
           {/* <Sidebar /> */}
           <div className="flex-1">
             <Navbar />
-            <main className="p-6">{children}</main>
+            <main className="p-6 mt-10">
+              {children} <AddFinanceButton />{" "}
+            </main>
           </div>
         </div>
       </body>

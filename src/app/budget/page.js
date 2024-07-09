@@ -6,7 +6,7 @@ export default function Budget() {
   return (
     <div className="p-6">
       <BudgetOverview />
-      <BudgetForm />
+      {/* <BudgetForm /> */}
     </div>
   );
 }

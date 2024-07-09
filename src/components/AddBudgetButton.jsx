@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaTimes } from "react-icons/fa";
-import IncomeForm from "./IncomeForm";
+import BudgetForm from "./BudgetForm";
 
 export default function AddExpenseButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,9 +35,9 @@ export default function AddExpenseButton() {
                 <FaTimes size={24} />
               </button>
               <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                Add New Income
+                Add New Budget
               </h2>
-              <IncomeForm onClose={toggleModal} />
+              <BudgetForm onClose={toggleModal} />
             </motion.div>
           </motion.div>
         )}

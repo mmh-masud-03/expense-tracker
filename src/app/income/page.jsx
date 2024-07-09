@@ -5,7 +5,7 @@ import AddIncomeButton from "@/components/AddIncomeButton";
 export default function Income() {
   return (
     <div className="p-6">
-      <AddIncomeButton />
+      {/* <AddIncomeButton /> */}
       <IncomeList />
     </div>
   );

@@ -4,7 +4,7 @@ import AddExpenseButton from "@/components/AddExpenseButton";
 export default function Expenses() {
   return (
     <div className="p-6">
-      <AddExpenseButton />
+      {/* <AddExpenseButton /> */}
       <ExpenseList />
     </div>
   );
