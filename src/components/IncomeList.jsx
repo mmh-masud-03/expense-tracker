@@ -133,7 +133,7 @@ function IncomeItem({ income }) {
         </div>
       </div>
       <div className="font-bold text-lg text-gray-800">
-        BDT {income.amount.toFixed(2)}
+        {income.amount.toFixed(2)} Tk
       </div>
     </div>
   );

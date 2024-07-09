@@ -106,7 +106,7 @@ export default function ExpenseList() {
               Total Expenses
             </div>
             <div className="text-3xl font-bold text-green-600">
-              ${overview.totalAmount.toFixed(2)}
+              BDT {overview.totalAmount.toFixed(2)}
             </div>
           </motion.div>
           <motion.div
@@ -117,7 +117,7 @@ export default function ExpenseList() {
               Average Expense
             </div>
             <div className="text-3xl font-bold text-blue-600">
-              ${overview.averageAmount.toFixed(2)}
+              BDT {overview.averageAmount.toFixed(2)}
             </div>
           </motion.div>
           <motion.div
@@ -226,7 +226,7 @@ export default function ExpenseList() {
                       </div>
                     </div>
                     <div className="font-bold text-lg text-gray-800">
-                      ${expense.amount.toFixed(2)}
+                      {expense.amount.toFixed(2)} Tk
                     </div>
                   </motion.div>
                 ))}

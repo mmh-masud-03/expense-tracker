@@ -272,8 +272,8 @@ export default function FinancialDashboard() {
       <FormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       {exceededIncome && (
         <div className="p-4 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          Warning: Your total expenses (${totalExpenses.toFixed(2)}) have
-          exceeded your total income (${totalIncome.toFixed(2)}) by $
+          Warning: Your total expenses (Tk {totalExpenses.toFixed(2)}) have
+          exceeded your total income (Tk {totalIncome.toFixed(2)}) by Tk{" "}
           {(totalExpenses - totalIncome).toFixed(2)}.
         </div>
       )}
@@ -370,25 +370,38 @@ export default function FinancialDashboard() {
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Income</h3>
           <p className="text-3xl font-bold text-green-600">
-            ${totalIncome.toFixed(2)}
+            BDT {totalIncome.toFixed(2)}
           </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
           <h3 className="text-lg font-semibold mb-2">Total Expenses</h3>
           <p className="text-3xl font-bold text-red-600">
-            ${totalExpenses.toFixed(2)}
+            BDT {totalExpenses.toFixed(2)}
           </p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h3 className="text-lg font-semibold mb-2">Net Savings</h3>
-          <p
-            className={`text-3xl font-bold ${
-              netSavings < 0 ? "text-red-600" : "text-blue-600"
-            }`}
-          >
-            ${netSavings.toFixed(2)}
-          </p>
-        </div>
+        {exceededBudget ? (
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-lg font-semibold mb-2">Net Savings</h3>
+            <p
+              className={`text-3xl font-bold ${
+                netSavings < 0 ? "text-red-600" : "text-blue-600"
+              }`}
+            >
+              Budget Exceeded
+            </p>
+          </div>
+        ) : (
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 className="text-lg font-semibold mb-2">Net Savings</h3>
+            <p
+              className={`text-3xl font-bold ${
+                netSavings < 0 ? "text-red-600" : "text-blue-600"
+              }`}
+            >
+              BDT {netSavings.toFixed(2)}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

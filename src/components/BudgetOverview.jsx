@@ -261,7 +261,7 @@ function SummaryCard({
       <Icon className={`${iconColor} w-10 h-10 mr-4`} />
       <div>
         <p className="text-lg font-semibold">{title}</p>
-        <p className="text-2xl font-bold">{amount.toFixed(2)} TK</p>
+        <p className="text-2xl font-bold">BDT {amount.toFixed(2)}</p>
       </div>
     </div>
   );
