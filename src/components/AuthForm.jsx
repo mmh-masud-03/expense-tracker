@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 export default function AuthForm({ type }) {
   const [name, setName] = useState("");
@@ -10,29 +12,42 @@ export default function AuthForm({ type }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint =
-      type === "register" ? "/api/auth/register" : "/api/auth/login";
-    const payload = {
-      email,
-      password,
-    };
     if (type === "register") {
-      payload.username = name;
-    }
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: name,
+          email,
+          password,
+        }),
+      });
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (res.ok) {
-      console.log(type === "register" ? "Registered" : "Logged in");
-      router.push("/dashboard");
+      if (res.ok) {
+        console.log("Registered");
+        toast("Registered", { type: "success" });
+        router.push("/dashboard");
+      } else {
+        console.error("Error:", res.statusText);
+        toast(res.statusText, { type: "error" });
+      }
     } else {
-      console.error("Error:", res.statusText);
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result?.error) {
+        console.error("Error:", result.error);
+        toast(result.error, { type: "error" });
+      } else {
+        console.log("Logged in");
+        toast("Logged in", { type: "success" });
+        router.push("/dashboard");
+      }
     }
   };
 

@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import AddFinanceButton from "@/components/AddFinanceButton";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import AuthProvider from "@/utils/AuthProvider";
 const inter = Inter({ subsets: ["latin"] });
 const opensans = Open_Sans({ subsets: ["latin"] });
 
@@ -18,15 +18,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={opensans.className}>
-        <div className="flex min-h-screen">
-          {/* <Sidebar /> */}
-          <div className="flex-1">
-            <Navbar />
-            <main className="p-6 mt-10">
-              {children} <AddFinanceButton /> <ToastContainer />
-            </main>
+        <AuthProvider>
+          <div className="flex min-h-screen">
+            {/* <Sidebar /> */}
+            <div className="flex-1">
+              <Navbar />
+              <main className="p-6 mt-10">
+                {children} <AddFinanceButton /> <ToastContainer />
+              </main>
+            </div>
           </div>
-        </div>
+        </AuthProvider>
       </body>
     </html>
   );
