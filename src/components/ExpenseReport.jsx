@@ -23,6 +23,33 @@ ChartJS.register(
   ArcElement
 );
 
+// Define colors for each category
+const categoryColors = {
+  Food: "#FF6384", // Red
+  Travel: "#36A2EB", // Blue
+  Bills: "#FFCE56", // Yellow
+  Entertainment: "#4BC0C0", // Teal
+  Education: "#9966FF", // Purple
+  Healthcare: "#FF9F40", // Orange
+  Shopping: "#E7E9AC", // Light Green
+  Utilities: "#C9CBCF", // Gray
+  Transport: "#FF6347", // Tomato
+  Housing: "#40E0D0", // Turquoise
+  Clothing: "#FFD700", // Gold
+  Insurance: "#ADFF2F", // Green Yellow
+  Debt_Repayment: "#FF69B4", // Hot Pink
+  Personal_Care: "#7B68EE", // Medium Slate Blue
+  Gifts_and_Donations: "#FF4500", // Orange Red
+  Childcare: "#DA70D6", // Orchid
+  Pet_Care: "#C71585", // Medium Violet Red
+  Subscriptions: "#00FA9A", // Medium Spring Green
+  Emergency: "#FF1493", // Deep Pink
+  Festivals_and_Celebrations: "#1E90FF", // Dodger Blue
+  Technology: "#32CD32", // Lime Green
+  Miscellaneous: "#8A2BE2", // Blue Violet
+  Others: "#A9A9A9", // Dark Gray
+};
+
 export default function ExpenseReport() {
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -85,14 +112,18 @@ export default function ExpenseReport() {
   const highestExpenseCategory =
     categories[categoryTotals.indexOf(Math.max(...categoryTotals))];
 
+  const colors = categories.map(
+    (category) => categoryColors[category] || "#A9A9A9"
+  ); // Default color if not found
+
   const barData = {
     labels: categories,
     datasets: [
       {
         label: "Expenses",
         data: categoryTotals,
-        backgroundColor: "rgba(255, 99, 132, 0.6)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: colors,
+        borderColor: colors.map((color) => color),
         borderWidth: 1,
       },
     ],
@@ -104,14 +135,7 @@ export default function ExpenseReport() {
       {
         label: "Expenses",
         data: categoryTotals,
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-          "#FF9F40",
-        ],
+        backgroundColor: colors,
       },
     ],
   };
