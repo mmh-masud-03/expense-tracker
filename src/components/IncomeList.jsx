@@ -22,7 +22,7 @@ export default function IncomeList() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState(null);
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ open: false, id: null });
 
   const fetchIncome = async (page = 1) => {
     setLoading(true);
@@ -59,7 +59,7 @@ export default function IncomeList() {
         method: "DELETE",
       });
       if (res.ok) {
-        setConfirmModal(false);
+        setConfirmModal({ open: false, id: null });
         toast("Income deleted successfully", { type: "success" });
         fetchIncome(currentPage);
       } else {
@@ -80,7 +80,7 @@ export default function IncomeList() {
       <IncomeListSection
         incomes={incomes}
         onUpdate={handleUpdate}
-        onDelete={handleDelete}
+        handleDelete={handleDelete}
         confirmModal={confirmModal}
         setConfirmModal={setConfirmModal}
       />
@@ -125,7 +125,29 @@ export default function IncomeList() {
     </div>
   );
 }
-
+function ConfirmDeleteModal({ onConfirm, onCancel, handleDelete }) {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded shadow-md">
+        <p>Are you sure you want to delete this budget?</p>
+        <div className="flex justify-end mt-4">
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+            onClick={onConfirm}
+          >
+            Yes, delete it
+          </button>
+          <button
+            className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 function LoadingState() {
   return (
     <div className="p-4 mb-6 bg-white rounded shadow-md flex items-center justify-center">
@@ -175,7 +197,7 @@ function OverviewItem({ label, value, color }) {
 function IncomeListSection({
   incomes,
   onUpdate,
-  onDelete,
+  handleDelete,
   confirmModal,
   setConfirmModal,
 }) {
@@ -190,7 +212,7 @@ function IncomeListSection({
           key={income._id}
           income={income}
           onUpdate={onUpdate}
-          onDelete={onDelete}
+          handleDelete={handleDelete}
           confirmModal={confirmModal}
           setConfirmModal={setConfirmModal}
         />
@@ -202,7 +224,7 @@ function IncomeListSection({
 function IncomeItem({
   income,
   onUpdate,
-  onDelete,
+  handleDelete,
   confirmModal,
   setConfirmModal,
 }) {
@@ -233,34 +255,16 @@ function IncomeItem({
           <FaEdit />
         </button>
         <button
-          onClick={() => setConfirmModal(true)}
           className="text-red-500 hover:text-red-700"
+          onClick={() => setConfirmModal({ open: true, id: income._id })}
         >
           <FaTrash />
         </button>
-        {confirmModal && (
-          <div className="fixed inset-0 flex items-center justify-center z-10 bg-transparent bg-opacity-75">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
-              <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
-              <p className="mb-6">
-                Are you sure you want to delete this income?
-              </p>
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() => onDelete(income._id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => setConfirmModal(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
+        {confirmModal.open && confirmModal.id === income._id && (
+          <ConfirmDeleteModal
+            onConfirm={() => handleDelete(confirmModal.id)}
+            onCancel={() => setConfirmModal({ open: false, id: null })}
+          />
         )}
       </div>
     </div>

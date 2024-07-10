@@ -98,9 +98,9 @@ export default function ExpenseList() {
         method: "DELETE",
       });
       if (res.ok) {
-        fetchExpenses(currentPage);
         toast("Expense deleted successfully", { type: "success" });
         setConfirmModal({ open: false, id: null });
+        fetchExpenses(currentPage);
       } else {
         console.error("Failed to delete expense");
       }
