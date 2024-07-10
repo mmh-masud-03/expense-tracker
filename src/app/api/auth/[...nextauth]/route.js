@@ -1,3 +1,4 @@
+// app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { ConnectToDB } from "@/utils/connect";
@@ -48,7 +49,9 @@ const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id;
+      if (token?.id) {
+        session.user.id = token.id;
+      }
       return session;
     },
   },

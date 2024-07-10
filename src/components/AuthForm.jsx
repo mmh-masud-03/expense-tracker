@@ -103,11 +103,11 @@ export default function AuthForm({ type }) {
       </button>
       <div className="mt-3 flex">
         {type === "register" ? (
-          <Link className="text-blue-600 m-auto " href={"/auth/login"}>
+          <Link className="text-blue-600 m-auto " href={"/login"}>
             Already have an account? Login here.
           </Link>
         ) : (
-          <Link className="text-blue-600 m-auto" href={"/auth/register"}>
+          <Link className="text-blue-600 m-auto" href={"/register"}>
             Don&apos;t have an account? Register here
           </Link>
         )}

@@ -64,13 +64,13 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link
-                    href="/auth/login"
+                    href="/login"
                     className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
                   >
                     Login
                   </Link>
                   <Link
-                    href="/auth/register"
+                    href="/register"
                     className="bg-white text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
                   >
                     Register
@@ -127,14 +127,14 @@ export default function Navbar() {
           ) : (
             <>
               <Link
-                href="/auth/login"
+                href="/login"
                 className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsOpen(false)}
               >
                 Login
               </Link>
               <Link
-                href="/auth/register"
+                href="/register"
                 className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsOpen(false)}
               >

@@ -1,5 +1,5 @@
 import { Inter, Open_Sans } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import AddFinanceButton from "@/components/AddFinanceButton";
