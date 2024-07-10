@@ -25,7 +25,7 @@ export default function ExpenseList() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ open: false, id: null });
   const [overview, setOverview] = useState({
     totalAmount: 0,
     averageAmount: 0,
@@ -100,7 +100,7 @@ export default function ExpenseList() {
       if (res.ok) {
         fetchExpenses(currentPage);
         toast("Expense deleted successfully", { type: "success" });
-        setConfirmModal(false);
+        setConfirmModal({ open: false, id: null });
       } else {
         console.error("Failed to delete expense");
       }
@@ -108,6 +108,30 @@ export default function ExpenseList() {
       console.error("Error deleting expense", error);
     }
   };
+  function ConfirmDeleteModal({ onConfirm, onCancel }) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded shadow-md">
+          <p>Are you sure you want to delete this expense?</p>
+          <div className="flex justify-end mt-4">
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+              onClick={onConfirm}
+            >
+              Yes, delete it
+            </button>
+            <button
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 mb-6 bg-white rounded-lg shadow-lg container mx-auto">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Expense Tracker</h2>
@@ -261,36 +285,20 @@ export default function ExpenseList() {
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => setConfirmModal(true)}
                         className="text-red-500 hover:text-red-700"
+                        onClick={() =>
+                          setConfirmModal({ open: true, id: expense._id })
+                        }
                       >
                         <FaTrash />
                       </button>
-                      {confirmModal && (
-                        <div className="fixed inset-0 flex items-center justify-center z-10 bg-transparent bg-opacity-75">
-                          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
-                            <h2 className="text-xl font-semibold mb-4">
-                              Confirm Deletion
-                            </h2>
-                            <p className="mb-6">
-                              Are you sure you want to delete this expense?
-                            </p>
-                            <div className="flex justify-end space-x-4">
-                              <button
-                                onClick={() => handleDelete(expense._id)}
-                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
-                              >
-                                Yes
-                              </button>
-                              <button
-                                onClick={() => setConfirmModal(false)}
-                                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                      {confirmModal.open && confirmModal.id === expense._id && (
+                        <ConfirmDeleteModal
+                          onConfirm={() => handleDelete(confirmModal.id)}
+                          onCancel={() =>
+                            setConfirmModal({ open: false, id: null })
+                          }
+                        />
                       )}
                     </div>
                   </motion.div>
