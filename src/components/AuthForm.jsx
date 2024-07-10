@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function AuthForm({ type }) {
   const [name, setName] = useState("");
@@ -100,6 +101,17 @@ export default function AuthForm({ type }) {
       >
         {type === "login" ? "Login" : "Register"}
       </button>
+      <div className="mt-3 flex">
+        {type === "register" ? (
+          <Link className="text-blue-600 m-auto " href={"/auth/login"}>
+            Already have an account? Login here.
+          </Link>
+        ) : (
+          <Link className="text-blue-600 m-auto" href={"/auth/register"}>
+            Don&apos;t have an account? Register here
+          </Link>
+        )}
+      </div>
     </form>
   );
 }

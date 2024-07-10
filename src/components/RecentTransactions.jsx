@@ -44,36 +44,57 @@ export default function RecentTransactions() {
     fetchRecentData();
   }, []);
 
-  const TransactionCard = ({ title, icon: Icon, data, color }) => (
-    <div
-      className={`bg-white p-6 rounded-xl shadow-md border-l-4 border-${color}-500`}
-    >
-      <div className="flex items-center mb-4">
-        <Icon className={`text-${color}-500 w-8 h-8 mr-3`} />
-        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+  const colorClassMapping = {
+    blue: {
+      border: "border-blue-500",
+      text: "text-blue-500",
+      amountText: "text-blue-600",
+    },
+    green: {
+      border: "border-green-500",
+      text: "text-green-500",
+      amountText: "text-green-600",
+    },
+    red: {
+      border: "border-red-500",
+      text: "text-red-500",
+      amountText: "text-red-600",
+    },
+  };
+
+  const TransactionCard = ({ title, icon: Icon, data, color }) => {
+    const colorClasses = colorClassMapping[color];
+    return (
+      <div
+        className={`bg-white p-6 rounded-xl shadow-md border-l-4 ${colorClasses.border}`}
+      >
+        <div className="flex items-center mb-4">
+          <Icon className={`w-8 h-8 mr-3 ${colorClasses.text}`} />
+          <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+        </div>
+        {data.length > 0 ? (
+          <ul className="space-y-3">
+            {data.map((item) => (
+              <li key={item._id} className="border-b border-gray-200 pb-2">
+                <p className={`font-medium ${colorClasses.amountText}`}>
+                  {item.amount
+                    ? `BDT ${item.amount.toFixed(2)}`
+                    : `BDT ${item.totalAmount?.toFixed(2)}`}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {item.title || `${item._id?.month} ${item._id?.year}`}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500 italic">
+            No recent {title.toLowerCase()} found.
+          </p>
+        )}
       </div>
-      {data.length > 0 ? (
-        <ul className="space-y-3">
-          {data.map((item) => (
-            <li key={item._id} className="border-b border-gray-200 pb-2">
-              <p className={`font-medium text-${color}-600`}>
-                {item.amount
-                  ? `BDT ${item.amount.toFixed(2)}`
-                  : `BDT ${item.totalAmount?.toFixed(2)}`}
-              </p>
-              <p className="text-sm text-gray-500">
-                {item.title || `${item._id?.month} ${item._id?.year}`}
-              </p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-gray-500 italic">
-          No recent {title.toLowerCase()} found.
-        </p>
-      )}
-    </div>
-  );
+    );
+  };
 
   if (loading) {
     return (

@@ -1,13 +1,16 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import { useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { usePathname } from "next/navigation";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { getUserId } from "@/utils/UtilityFunction";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
   const pathname = usePathname();
-
+  const userId = getUserId();
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: "📊" },
     { href: "/expenses", label: "Expenses", icon: "💸" },
@@ -41,18 +44,39 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="ml-4 flex items-center space-x-2">
-              <Link
-                href="/auth/login"
-                className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
-              >
-                Login
-              </Link>
-              <Link
-                href="/auth/register"
-                className="bg-white text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
-              >
-                Register
-              </Link>
+              {session ? (
+                <>
+                  <button
+                    onClick={() => signOut()}
+                    className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                  >
+                    Logout
+                  </button>
+                  {session?.user && (
+                    <Link
+                      href={`/profile.${session?.user?._id}`}
+                      className="text-white p-1 border-2 rounded-lg"
+                    >
+                      {session?.user?.name}
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/auth/register"
+                    className="bg-white text-blue-600 hover:bg-blue-100 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           <div className="md:hidden flex items-center">
@@ -90,20 +114,34 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/auth/login"
-            className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Login
-          </Link>
-          <Link
-            href="/auth/register"
-            className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Register
-          </Link>
+          {session ? (
+            <button
+              onClick={() => {
+                signOut();
+                setIsOpen(false);
+              }}
+              className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </Link>
+              <Link
+                href="/auth/register"
+                className="text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

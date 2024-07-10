@@ -59,9 +59,9 @@ export default function IncomeList() {
         method: "DELETE",
       });
       if (res.ok) {
-        fetchIncome(currentPage);
         setConfirmModal(false);
         toast("Income deleted successfully", { type: "success" });
+        fetchIncome(currentPage);
       } else {
         setError("Failed to delete income");
       }

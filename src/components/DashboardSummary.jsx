@@ -7,7 +7,7 @@ import {
 } from "react-icons/ai";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { FaMoneyBillWave, FaWallet } from "react-icons/fa";
-
+import { useSession } from "next-auth/react";
 const fetcher = async (url) => {
   const res = await fetch(url);
   const data = await res.json();
@@ -15,6 +15,10 @@ const fetcher = async (url) => {
 };
 
 export default function DashboardSummary() {
+  const session = useSession();
+  const { data } = session;
+  console.log(data?.user?.email);
+
   const { data: budgetData, error: budgetError } = useSWR(
     "/api/budget",
     fetcher
@@ -101,7 +105,7 @@ export default function DashboardSummary() {
   return (
     <div className="p-6 mb-8 bg-white rounded-xl shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
-        Dashboard Summary
+        Dashboard Summary {session.user?.email}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {summaryItems.map((item, index) => (

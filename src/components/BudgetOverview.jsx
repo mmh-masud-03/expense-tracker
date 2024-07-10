@@ -109,6 +109,7 @@ export default function BudgetOverview() {
         method: "DELETE",
       });
       if (res.ok) {
+        setConfirmModal(false);
         mutate(
           `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`
         );

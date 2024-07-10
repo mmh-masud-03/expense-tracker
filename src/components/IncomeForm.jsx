@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { mutate } from "swr";
+import { getUserId } from "@/utils/UtilityFunction";
 
 export default function IncomeForm({ income, onClose }) {
   const [title, setTitle] = useState("");
@@ -10,8 +10,7 @@ export default function IncomeForm({ income, onClose }) {
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
-
+  const userId = getUserId();
   useEffect(() => {
     if (income) {
       setTitle(income.title);
@@ -27,7 +26,7 @@ export default function IncomeForm({ income, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      user: "66879847549a77c835e4254f", // Replace with dynamic user ID
+      user: userId, // Replace with dynamic user ID
       title,
       amount,
       category,
@@ -51,7 +50,7 @@ export default function IncomeForm({ income, onClose }) {
         toast(income ? "Income Updated" : "Income Created", {
           type: "success",
         });
-        mutate("/api/income");
+        mutate("/api/income?sortBy=date&sortOrder=desc&page=1&limit=10");
         onClose();
       } else {
         const errorData = await res.json();

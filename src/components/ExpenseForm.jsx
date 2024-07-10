@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import { toast } from "react-toastify";
-
+import { getUserId } from "@/utils/UtilityFunction";
 export default function ExpenseForm({ expense, onClose }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -11,6 +11,7 @@ export default function ExpenseForm({ expense, onClose }) {
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const userId = getUserId();
 
   useEffect(() => {
     if (expense) {
@@ -27,7 +28,7 @@ export default function ExpenseForm({ expense, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      user: "66879847549a77c835e4254f",
+      user: userId,
       title,
       amount,
       category,

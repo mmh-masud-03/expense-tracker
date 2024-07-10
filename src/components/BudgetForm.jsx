@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import { mutate } from "swr";
 import { toast } from "react-toastify";
+import { getUserId } from "@/utils/UtilityFunction";
 export default function BudgetForm({ budget, onClose }) {
   const [amount, setAmount] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [error, setError] = useState("");
-
+  const userId = getUserId();
   useEffect(() => {
     if (budget) {
       setAmount(budget.amount);
@@ -19,7 +20,7 @@ export default function BudgetForm({ budget, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      user: "66879847549a77c835e4254f", // Replace with dynamic user ID
+      user: userId, // Replace with dynamic user ID
       amount: parseFloat(amount),
       month,
       year: parseInt(year),
