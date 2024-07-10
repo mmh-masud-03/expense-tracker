@@ -33,7 +33,7 @@ export default function BudgetOverview() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ open: false, id: null });
   const limit = 10;
 
   const { data, error, isValidating } = useSWR(
@@ -109,7 +109,7 @@ export default function BudgetOverview() {
         method: "DELETE",
       });
       if (res.ok) {
-        setConfirmModal(false);
+        setConfirmModal({ open: false, id: null });
         mutate(
           `/api/budget?month=${filters.month}&year=${filters.year}&page=${page}&limit=${limit}`
         );
@@ -176,7 +176,7 @@ export default function BudgetOverview() {
         requestSort={requestSort}
         sortConfig={sortConfig}
         onUpdate={handleUpdate}
-        onDelete={handleDelete}
+        handleDelete={handleDelete}
         confirmModal={confirmModal}
         setConfirmModal={setConfirmModal}
       />
@@ -351,7 +351,7 @@ function BudgetDetails({
   requestSort,
   sortConfig,
   onUpdate,
-  onDelete,
+  handleDelete,
   confirmModal,
   setConfirmModal,
 }) {
@@ -394,7 +394,7 @@ function BudgetDetails({
         requestSort={requestSort}
         sortConfig={sortConfig}
         onUpdate={onUpdate}
-        onDelete={onDelete}
+        handleDelete={handleDelete}
         confirmModal={confirmModal}
         setConfirmModal={setConfirmModal}
       />
@@ -408,7 +408,7 @@ function BudgetTable({
   requestSort,
   sortConfig,
   onUpdate,
-  onDelete,
+  handleDelete,
   confirmModal,
   setConfirmModal,
 }) {
@@ -418,6 +418,29 @@ function BudgetTable({
     }
     return sortConfig.key === name ? sortConfig.direction : undefined;
   };
+  function ConfirmDeleteModal({ onConfirm, onCancel }) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded shadow-md">
+          <p>Are you sure you want to delete this budget?</p>
+          <div className="flex justify-end mt-4">
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+              onClick={onConfirm}
+            >
+              Yes, delete it
+            </button>
+            <button
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-auto rounded-lg shadow">
@@ -479,12 +502,21 @@ function BudgetTable({
                   <FaEdit />
                 </button>
                 <button
-                  onClick={() => setConfirmModal(true)}
                   className="text-red-500 hover:text-red-700"
+                  onClick={() =>
+                    setConfirmModal({ open: true, id: budget._id })
+                  }
                 >
                   <FaTrash />
                 </button>
-                {confirmModal && (
+                {confirmModal.open && confirmModal.id === budget._id && (
+                  <ConfirmDeleteModal
+                    onConfirm={() => handleDelete(confirmModal.id)}
+                    onCancel={() => setConfirmModal({ open: false, id: null })}
+                  />
+                )}
+
+                {/* {confirmModal && (
                   <div className="fixed inset-0 flex items-center justify-center z-10 bg-transparent bg-opacity-75">
                     <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
                       <h2 className="text-xl font-semibold mb-4">
@@ -509,7 +541,7 @@ function BudgetTable({
                       </div>
                     </div>
                   </div>
-                )}
+                )} */}
               </td>
             </tr>
           ))}

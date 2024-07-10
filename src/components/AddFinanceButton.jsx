@@ -1,15 +1,22 @@
 "use client";
 import { useState } from "react";
-import { FaBriefcase, FaMoneyBillWave, FaCoins, FaPlus, FaTimes } from "react-icons/fa";
+import {
+  FaBriefcase,
+  FaMoneyBillWave,
+  FaCoins,
+  FaPlus,
+  FaTimes,
+} from "react-icons/fa";
 import BudgetForm from "./BudgetForm";
 import IncomeForm from "./IncomeForm";
 import ExpenseForm from "./ExpenseForm";
 import { motion, AnimatePresence } from "framer-motion";
+import { getUserId } from "@/utils/UtilityFunction";
 
 export default function AddFinanceButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeForm, setActiveForm] = useState("budget");
-
+  const userId = getUserId();
   const toggleModal = () => setIsOpen(!isOpen);
 
   const formTypes = [
@@ -51,7 +58,8 @@ export default function AddFinanceButton() {
             >
               <div className="flex justify-between items-center p-4 border-b">
                 <h2 className="text-xl font-semibold">
-                  Add New {activeForm.charAt(0).toUpperCase() + activeForm.slice(1)}
+                  Add New{" "}
+                  {activeForm.charAt(0).toUpperCase() + activeForm.slice(1)}
                 </h2>
                 <button
                   onClick={toggleModal}
@@ -90,7 +98,11 @@ export default function AddFinanceButton() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={toggleModal}
-        className="fixed bottom-6 right-6 p-4 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+        className={
+          userId
+            ? `fixed bottom-6 right-6 p-4 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50`
+            : `hidden`
+        }
         aria-label="Add finance item"
       >
         <FaPlus size={24} />

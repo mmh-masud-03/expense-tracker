@@ -6,7 +6,6 @@ import AddFinanceButton from "@/components/AddFinanceButton";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "@/utils/AuthProvider";
-const inter = Inter({ subsets: ["latin"] });
 const opensans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata = {
