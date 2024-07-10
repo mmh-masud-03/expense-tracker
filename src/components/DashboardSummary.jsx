@@ -103,7 +103,7 @@ export default function DashboardSummary() {
   ];
 
   return (
-    <div className="p-6 mb-8 bg-white rounded-xl shadow-lg">
+    <div className="p-6 mb-8 bg-white rounded-xl shadow-lg container mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Dashboard Summary {session.user?.email}
       </h2>

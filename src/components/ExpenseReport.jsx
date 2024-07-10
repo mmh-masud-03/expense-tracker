@@ -186,7 +186,7 @@ export default function ExpenseReport() {
   };
 
   return (
-    <div className="p-6 relative mb-6 bg-white rounded-lg shadow-md">
+    <div className="p-6 container mx-auto relative mb-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-700 mb-6">Expense Report</h2>
       <button
         onClick={generatePDF}

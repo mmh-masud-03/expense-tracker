@@ -109,7 +109,7 @@ export default function ExpenseList() {
     }
   };
   return (
-    <div className="p-6 mb-6 bg-white rounded-lg shadow-lg">
+    <div className="p-6 mb-6 bg-white rounded-lg shadow-lg container mx-auto">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Expense Tracker</h2>
 
       {/* Overview Section */}

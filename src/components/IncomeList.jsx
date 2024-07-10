@@ -74,7 +74,7 @@ export default function IncomeList() {
   if (error) return <ErrorState error={error} />;
 
   return (
-    <div className="p-6 mb-6 bg-white rounded-lg shadow-lg">
+    <div className="p-6 container mx-auto mb-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Income</h2>
       <OverviewSection overview={overview} />
       <IncomeListSection

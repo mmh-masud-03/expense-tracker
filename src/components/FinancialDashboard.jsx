@@ -258,7 +258,7 @@ export default function FinancialDashboard() {
   );
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen flex flex-col gap-y-8">
+    <div className="p-6 container mx-auto bg-gray-100 min-h-screen flex flex-col gap-y-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Financial Dashboard
       </h1>

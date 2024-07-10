@@ -116,7 +116,7 @@ export default function RecentTransactions() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 rounded-xl shadow-lg my-10">
+    <div className="p-6 container mx-auto bg-gray-50 rounded-xl shadow-lg my-10">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Recent Transactions
       </h2>

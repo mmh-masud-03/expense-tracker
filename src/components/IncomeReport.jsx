@@ -172,7 +172,7 @@ export default function IncomeReport() {
   };
 
   return (
-    <div className="relative p-6 mb-6 bg-white rounded-lg shadow-md">
+    <div className="container mx-auto relative p-6 mb-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-700 mb-6">Income Report</h2>
 
       {/* Export Button */}
