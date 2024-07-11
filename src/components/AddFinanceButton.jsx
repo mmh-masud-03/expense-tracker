@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaBriefcase,
   FaMoneyBillWave,
@@ -11,10 +11,25 @@ import BudgetForm from "./BudgetForm";
 import IncomeForm from "./IncomeForm";
 import ExpenseForm from "./ExpenseForm";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export default function AddFinanceButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeForm, setActiveForm] = useState("budget");
+  const [activeForm, setActiveForm] = useState(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname === "/budget") {
+      setActiveForm("budget");
+    } else if (pathname === "/expenses") {
+      setActiveForm("expense");
+    } else if (pathname === "/income") {
+      setActiveForm("income");
+    } else {
+      setActiveForm("expense");
+    }
+  }, [pathname]);
+
   const toggleModal = () => setIsOpen(!isOpen);
 
   const formTypes = [
@@ -57,7 +72,8 @@ export default function AddFinanceButton() {
               <div className="flex justify-between items-center p-4 border-b">
                 <h2 className="text-xl font-semibold">
                   Add New{" "}
-                  {activeForm.charAt(0).toUpperCase() + activeForm.slice(1)}
+                  {activeForm &&
+                    activeForm.charAt(0).toUpperCase() + activeForm.slice(1)}
                 </h2>
                 <button
                   onClick={toggleModal}
