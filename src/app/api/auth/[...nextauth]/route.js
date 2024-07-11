@@ -34,7 +34,11 @@ const authOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return { id: user._id, name: user.username, email: user.email };
+        return {
+          id: user._id.toString(),
+          name: user.username,
+          email: user.email,
+        };
       },
     }),
   ],
@@ -56,7 +60,7 @@ const authOptions = {
     },
   },
   pages: {
-    signIn: "/auth/login",
+    signIn: "/login",
   },
 };
 
