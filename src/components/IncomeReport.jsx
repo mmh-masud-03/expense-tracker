@@ -11,10 +11,10 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { GetAllIncome } from "@/utils/helper";
 import jsPDF from "jspdf";
 import { useSession } from "next-auth/react";
-
+import { FaCalendarAlt, FaDownload } from "react-icons/fa";
+import ImprovedDatePicker from "./ImprovedDatePicker";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -249,51 +249,27 @@ export default function IncomeReport() {
 
   return (
     <div className="container mx-auto relative p-6 mb-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-700 mb-6">Income Report</h2>
+      <h2 className="text-3xl font-bold text-gray-700 mb-12 text-center">
+        Income Report
+      </h2>
 
       {/* Export Button */}
       <button
         onClick={generatePDF}
-        className=" absolute top-6 right-3 mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+        className=" absolute top-16 right-3 mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
       >
         Download Report
       </button>
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-600 mb-2">
+      <div className="mb-6 w-2/3">
+        <h3 className="text-xl font-semibold text-gray-600 mb-4">
           Select Date Range
         </h3>
-        <div className="flex space-x-4">
-          <div>
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Start Date
-            </label>
-            <input
-              type="date"
-              id="startDate"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              End Date
-            </label>
-            <input
-              type="date"
-              id="endDate"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-        </div>
+        <ImprovedDatePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+        />
       </div>
       {/* Summary Section */}
       <div className="mb-6">
@@ -302,7 +278,13 @@ export default function IncomeReport() {
           <div className="p-4 bg-gray-100 rounded shadow">
             <p className="text-lg font-medium">Date Range</p>
             <p className="text-xl font-bold text-green-600">
-              {startDate} to {endDate}
+              {startDate}{" "}
+              {startDate === "" ? (
+                <span>Select a date range</span>
+              ) : (
+                <span> to</span>
+              )}
+              {endDate}
             </p>
           </div>
           <div className="p-4 bg-gray-100 rounded shadow">
@@ -323,7 +305,7 @@ export default function IncomeReport() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h3 className="text-lg font-semibold text-gray-600 mb-4">
-            Bar Chart
+            Income by Category
           </h3>
           <div className="relative h-64">
             <Bar
@@ -345,7 +327,7 @@ export default function IncomeReport() {
         </div>
         <div>
           <h3 className="text-lg font-semibold text-gray-600 mb-4">
-            Pie Chart
+            Income by Category (Pie Chart)
           </h3>
           <div className="relative h-64">
             <Pie

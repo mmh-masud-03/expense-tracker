@@ -15,6 +15,7 @@ import {
 } from "chart.js";
 import { GetAllExpenses } from "@/utils/helper";
 import { useSession } from "next-auth/react";
+import ImprovedDatePicker from "./ImprovedDatePicker";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -272,51 +273,31 @@ export default function ExpenseReport() {
       >
         Download Report
       </button>
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-600 mb-2">
+      <div className="mb-6 w-2/3">
+        <h3 className="text-xl font-semibold text-gray-600 mb-4">
           Select Date Range
         </h3>
-        <div className="flex space-x-4">
-          <div>
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Start Date
-            </label>
-            <input
-              type="date"
-              id="startDate"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              End Date
-            </label>
-            <input
-              type="date"
-              id="endDate"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </div>
-        </div>
+        <ImprovedDatePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+        />
       </div>
       {/* Summary Section */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-600 mb-2">Summary</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-gray-100 rounded shadow">
             <p className="text-lg font-medium">Date Range</p>
             <p className="text-xl font-bold text-green-600">
-              {startDate} to {endDate}
+              {startDate}
+              {startDate === "" ? (
+                <span>Select a date range</span>
+              ) : (
+                <span> to</span>
+              )}{" "}
+              {endDate}
             </p>
           </div>
           <div className="p-4 bg-gray-100 rounded shadow">
