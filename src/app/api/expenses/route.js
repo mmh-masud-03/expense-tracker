@@ -1,9 +1,18 @@
+import { getTokenFromRequest } from "@/utils/authHelper";
 import Expense from "@/models/Expense";
 import { ConnectToDB } from "@/utils/connect";
 
 export const GET = async (req) => {
   try {
     await ConnectToDB();
+
+    const token = await getTokenFromRequest(req);
+
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
 
     const url = new URL(req.url, `http://${req.headers.host}`);
     const sortBy = url.searchParams.get("sortBy") || "date";
@@ -20,7 +29,7 @@ export const GET = async (req) => {
       sortCriteria.date = sortOrder === "asc" ? 1 : -1;
     }
 
-    const filterCriteria = {};
+    const filterCriteria = { user: token.id };
     if (search) {
       filterCriteria.title = { $regex: search, $options: "i" };
     }
@@ -45,8 +54,8 @@ export const GET = async (req) => {
       { status: 200 }
     );
   } catch (err) {
-    console.error(err);
-    return new Response(JSON.stringify("Error getting expenses"), {
+    console.error("Error in GET expense route:", err);
+    return new Response(JSON.stringify({ error: "Error getting expenses" }), {
       status: 500,
     });
   }

@@ -1,4 +1,5 @@
 import Budget from "@/models/Budget";
+import { getTokenFromRequest } from "@/utils/authHelper";
 import { ConnectToDB } from "@/utils/connect";
 
 export const PUT = async (req, { params }) => {
@@ -6,7 +7,13 @@ export const PUT = async (req, { params }) => {
     const { id } = params;
     const body = await req.json();
     const { amount, month, year } = body;
+    const token = await getTokenFromRequest(req);
 
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
     if (!id || !amount || !month || !year) {
       return new Response(
         JSON.stringify({ error: "All fields are required" }),

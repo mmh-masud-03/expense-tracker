@@ -1,8 +1,16 @@
 import Expense from "@/models/Expense";
+import { getTokenFromRequest } from "@/utils/authHelper";
 import { ConnectToDB } from "@/utils/connect";
 
 export const PUT = async (req, { params }) => {
   try {
+    const token = await getTokenFromRequest(req);
+
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
     const { id } = params;
     const body = await req.json();
     const { title, amount, category, date } = body;

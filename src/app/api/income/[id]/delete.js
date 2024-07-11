@@ -1,8 +1,16 @@
 import Income from "@/models/Income";
+import { getTokenFromRequest } from "@/utils/authHelper";
 import { ConnectToDB } from "@/utils/connect";
 
 export const DELETE = async (req, { params }) => {
   try {
+    const token = await getTokenFromRequest(req);
+
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
     const { id } = params;
     await ConnectToDB();
     const deleteIncome = await Income.findByIdAndDelete(id);
