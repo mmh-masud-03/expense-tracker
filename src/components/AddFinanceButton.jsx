@@ -11,12 +11,10 @@ import BudgetForm from "./BudgetForm";
 import IncomeForm from "./IncomeForm";
 import ExpenseForm from "./ExpenseForm";
 import { motion, AnimatePresence } from "framer-motion";
-import { getUserId } from "@/utils/UtilityFunction";
 
 export default function AddFinanceButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeForm, setActiveForm] = useState("budget");
-  const userId = getUserId();
   const toggleModal = () => setIsOpen(!isOpen);
 
   const formTypes = [
@@ -99,9 +97,7 @@ export default function AddFinanceButton() {
         whileTap={{ scale: 0.9 }}
         onClick={toggleModal}
         className={
-          userId
-            ? `fixed bottom-6 right-6 p-4 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50`
-            : `hidden`
+          "fixed bottom-6 right-6 p-4 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
         }
         aria-label="Add finance item"
       >

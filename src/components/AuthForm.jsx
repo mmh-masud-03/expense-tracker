@@ -27,11 +27,9 @@ export default function AuthForm({ type }) {
       });
 
       if (res.ok) {
-        console.log("Registered");
+        router.push("/login");
         toast("Registered", { type: "success" });
-        router.push("/dashboard");
       } else {
-        console.error("Error:", res.statusText);
         toast(res.statusText, { type: "error" });
       }
     } else {
@@ -45,9 +43,8 @@ export default function AuthForm({ type }) {
         console.error("Error:", result.error);
         toast(result.error, { type: "error" });
       } else {
-        console.log("Logged in");
+        router.push("/home");
         toast("Logged in", { type: "success" });
-        router.push("/dashboard");
       }
     }
   };

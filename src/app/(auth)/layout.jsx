@@ -1,5 +1,6 @@
 import { Inter, Open_Sans } from "next/font/google";
 import "../globals.css";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const opensans = Open_Sans({ subsets: ["latin"] });
 
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
       <body className={opensans.className}>
         <main className="min-h-[100vh] bg-slate-600 flex items-center">
           {children}
+          <ToastContainer />
         </main>
       </body>
     </html>
