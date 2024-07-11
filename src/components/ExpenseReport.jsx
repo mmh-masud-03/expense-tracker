@@ -56,6 +56,8 @@ export default function ExpenseReport() {
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const { data: session } = useSession();
   const username = session?.user?.name;
   const email = session?.user?.email;
@@ -78,6 +80,11 @@ export default function ExpenseReport() {
     doc.setFontSize(24);
     doc.setTextColor(44, 62, 80); // Dark blue
     centeredText("Expense Report", yOffset);
+    yOffset += 15;
+
+    doc.setFontSize(12);
+    doc.setTextColor(34, 139, 34); // Forest Green
+    centeredText(`Date Range: ${startDate} to ${endDate}`, yOffset);
     yOffset += 15;
 
     // Add user info
@@ -174,10 +181,10 @@ export default function ExpenseReport() {
   useEffect(() => {
     const fetchExpenseData = async () => {
       try {
-        const { expenses } = await GetAllExpenses({
-          sortBy: "amount", // Adjust sorting criteria as needed
-          sortOrder: "desc", // Sort in descending order
-        });
+        const res = await fetch(
+          `/api/reports/expenses?startDate=${startDate}&endDate=${endDate}`
+        );
+        const { expenses } = await res.json();
         setExpenseData(expenses);
       } catch (err) {
         setError("Failed to fetch expense data.");
@@ -188,7 +195,7 @@ export default function ExpenseReport() {
     };
 
     fetchExpenseData();
-  }, []);
+  }, [startDate, endDate]);
 
   if (loading) {
     return (
@@ -265,10 +272,53 @@ export default function ExpenseReport() {
       >
         Download Report
       </button>
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          Select Date Range
+        </h3>
+        <div className="flex space-x-4">
+          <div>
+            <label
+              htmlFor="startDate"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Start Date
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="endDate"
+              className="block text-sm font-medium text-gray-700"
+            >
+              End Date
+            </label>
+            <input
+              type="date"
+              id="endDate"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+          </div>
+        </div>
+      </div>
       {/* Summary Section */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-600 mb-2">Summary</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <p className="text-lg font-medium">Date Range</p>
+            <p className="text-xl font-bold text-green-600">
+              {startDate} to {endDate}
+            </p>
+          </div>
           <div className="p-4 bg-gray-100 rounded shadow">
             <p className="text-lg font-medium">Total Expenses</p>
             <p className="text-2xl font-bold text-red-600">

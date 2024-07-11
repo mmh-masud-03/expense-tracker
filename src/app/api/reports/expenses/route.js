@@ -1,60 +1,79 @@
-import { ConnectToDB } from "@/utils/connect";
+import { getTokenFromRequest } from "@/utils/authHelper";
 import Expense from "@/models/Expense";
-import jwt from "jsonwebtoken";
+import { ConnectToDB } from "@/utils/connect";
 
 export const GET = async (req) => {
   try {
     await ConnectToDB();
 
-    const authorizationHeader = req.headers.get("Authorization");
-    if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+    const token = await getTokenFromRequest(req);
+
+    if (!token) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
 
-    const token = authorizationHeader.split(" ")[1];
-    let userId;
-    try {
-      const decoded = jwt.verify(token, "your-secret-key");
-      userId = decoded.id;
-    } catch (err) {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-      });
-    }
-
-    const url = new URL(req.url);
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const sortBy = url.searchParams.get("sortBy") || "date";
+    const sortOrder = url.searchParams.get("sortOrder") || "desc";
+    const page = parseInt(url.searchParams.get("page")) || 1;
+    const limit = parseInt(url.searchParams.get("limit")) || 10;
+    const search = url.searchParams.get("search") || "";
+    const category = url.searchParams.get("category") || "";
     const startDate = url.searchParams.get("startDate");
     const endDate = url.searchParams.get("endDate");
-    const category = url.searchParams.get("category");
 
-    const query = { user: userId };
-    if (startDate) {
-      query.date = { $gte: new Date(startDate) };
+    const sortCriteria = {};
+    if (sortBy === "amount") {
+      sortCriteria.amount = sortOrder === "asc" ? 1 : -1;
+    } else {
+      sortCriteria.date = sortOrder === "asc" ? 1 : -1;
     }
-    if (endDate) {
-      query.date = query.date || {};
-      query.date.$lte = new Date(endDate);
+
+    const filterCriteria = { user: token.id };
+    if (search) {
+      filterCriteria.title = { $regex: search, $options: "i" };
     }
     if (category) {
-      query.category = category;
+      filterCriteria.category = category;
+    }
+    if (startDate && endDate) {
+      filterCriteria.date = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
     }
 
-    const expenses = await Expense.find(query);
+    const expenses = await Expense.find(filterCriteria)
+      .sort(sortCriteria)
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    const responseData = expenses.map((expense) => ({
-      id: expense._id,
-      title: expense.title,
-      amount: expense.amount,
-      category: expense.category,
-      date: expense.date.toISOString(),
-    }));
+    const totalExpenses = await Expense.countDocuments(filterCriteria);
 
-    return new Response(JSON.stringify(responseData), { status: 200 });
+    // Calculate total expense amount
+    const totalExpenseAmount = await Expense.aggregate([
+      { $match: filterCriteria },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    const totalAmount =
+      totalExpenseAmount.length > 0 ? totalExpenseAmount[0].total : 0;
+
+    return new Response(
+      JSON.stringify({
+        expenses,
+        totalPages: Math.ceil(totalExpenses / limit),
+        currentPage: page,
+        totalExpenses,
+        totalAmount,
+      }),
+      { status: 200 }
+    );
   } catch (err) {
-    console.error(err);
-    return new Response(JSON.stringify({ error: "Server Error" }), {
+    console.error("Error in GET expense route:", err);
+    return new Response(JSON.stringify({ error: "Error getting expenses" }), {
       status: 500,
     });
   }

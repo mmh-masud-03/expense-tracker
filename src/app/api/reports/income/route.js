@@ -1,67 +1,68 @@
-import { ConnectToDB } from "@/utils/connect";
 import Income from "@/models/Income";
-import jwt from "jsonwebtoken";
+import { ConnectToDB } from "@/utils/connect";
+import { getTokenFromRequest } from "@/utils/authHelper";
+import mongoose from "mongoose";
 
 export const GET = async (req) => {
   try {
-    // Connect to the database
     await ConnectToDB();
-
-    // Extract Authorization header
-    const authorizationHeader = req.headers.get("Authorization");
-    if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
+    const token = await getTokenFromRequest(req);
+    if (!token) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
-
-    const token = authorizationHeader.split(" ")[1];
-    let userId;
-    try {
-      // Verify the token (replace 'your-secret-key' with your actual secret key)
-      const decoded = jwt.verify(token, "your-secret-key");
-      userId = decoded.id;
-    } catch (err) {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-      });
-    }
-
-    // Extract query parameters
-    const url = new URL(req.url);
+    // Parse query parameters
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const page = parseInt(url.searchParams.get("page")) || 1;
+    const limit = parseInt(url.searchParams.get("limit")) || 10;
     const startDate = url.searchParams.get("startDate");
     const endDate = url.searchParams.get("endDate");
-    const category = url.searchParams.get("category");
 
-    // Build query object
-    const query = { user: userId };
-    if (startDate) {
-      query.date = { $gte: new Date(startDate) };
+    // Calculate the number of items to skip
+    const skip = (page - 1) * limit;
+
+    // Prepare the query object
+    let query = { user: new mongoose.Types.ObjectId(token.id) };
+
+    // Add date range to query if provided
+    if (startDate && endDate) {
+      query.date = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
     }
-    if (endDate) {
-      query.date = query.date || {};
-      query.date.$lte = new Date(endDate);
-    }
-    if (category) {
-      query.category = category;
-    }
 
-    // Fetch income entries based on query
-    const incomeEntries = await Income.find(query);
+    // Fetch paginated income data
+    const incomes = await Income.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ date: -1 });
 
-    // Format response data
-    const responseData = incomeEntries.map((income) => ({
-      id: income._id,
-      title: income.title,
-      amount: income.amount,
-      category: income.category,
-      date: income.date.toISOString(),
-    }));
+    // Calculate total income amount
+    const totalIncomeAmount = await Income.aggregate([
+      { $match: query },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
 
-    // Send response
-    return new Response(JSON.stringify(responseData), { status: 200 });
+    const totalAmount =
+      totalIncomeAmount.length > 0 ? totalIncomeAmount[0].total : 0;
+
+    // Count total number of income documents
+    const totalDocuments = await Income.countDocuments(query);
+
+    // Return response with income data, pagination info, and total amount
+    return new Response(
+      JSON.stringify({
+        incomes,
+        totalPages: Math.ceil(totalDocuments / limit),
+        currentPage: page,
+        totalAmount,
+      }),
+      { status: 200 }
+    );
   } catch (err) {
-    console.error(err);
+    console.error("Error:", err);
     return new Response(JSON.stringify({ error: "Server Error" }), {
       status: 500,
     });
