@@ -66,7 +66,14 @@ export default function ExpenseReport() {
 
     doc.setFontSize(12);
     doc.setTextColor(52, 73, 90); // Forest Green
-    centeredText(`Date Range: ${startDate} to ${endDate}`, yOffset);
+    centeredText(
+      `Date Range: ${
+        startDate !== "" || endDate !== ""
+          ? `${startDate} to ${endDate}`
+          : "All Data"
+      }`,
+      yOffset
+    );
     yOffset += 15;
 
     // Add summary

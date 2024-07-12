@@ -83,7 +83,14 @@ export default function IncomeReport() {
 
     doc.setFontSize(12);
     doc.setTextColor(34, 139, 34); // Forest Green
-    centeredText(`Date Range: ${startDate} to ${endDate}`, yOffset);
+    centeredText(
+      `Date Range: ${
+        startDate !== "" || endDate !== ""
+          ? `${startDate} to ${endDate}`
+          : "All Data"
+      }`,
+      yOffset
+    );
     yOffset += 15;
 
     // Add summary
