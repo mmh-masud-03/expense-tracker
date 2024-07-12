@@ -98,7 +98,7 @@ export default function RecentTransactions() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className=" container mx-auto flex justify-center items-center h-64">
         <AiOutlineLoading3Quarters className="w-10 h-10 text-blue-500 animate-spin" />
       </div>
     );
@@ -106,7 +106,7 @@ export default function RecentTransactions() {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-100 rounded-xl shadow-lg text-red-700">
+      <div className="container mx-auto p-6 bg-red-100 rounded-xl shadow-lg text-red-700">
         <p className="font-semibold">{error}</p>
         <p>
           Please try again later or contact support if the problem persists.

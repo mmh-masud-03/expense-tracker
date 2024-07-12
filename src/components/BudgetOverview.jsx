@@ -220,7 +220,7 @@ export default function BudgetOverview() {
 
 function ErrorMessage({ message }) {
   return (
-    <div className="p-4 mb-6 bg-red-100 rounded-lg shadow-md flex items-center">
+    <div className="container mx-auto p-4 mb-6 bg-red-100 rounded-lg shadow-md flex items-center">
       <AiOutlineExclamationCircle className="text-red-500 w-6 h-6 mr-2" />
       <span>Error: {message}</span>
     </div>
@@ -229,7 +229,7 @@ function ErrorMessage({ message }) {
 
 function LoadingMessage() {
   return (
-    <div className="p-4 mb-6 bg-white rounded-lg shadow-md flex items-center justify-center">
+    <div className="container mx-auto p-4 mb-6 bg-white rounded-lg shadow-md flex items-center justify-center">
       <AiOutlineLoading3Quarters className="w-6 h-6 mr-2 animate-spin" />
       <span>Loading...</span>
     </div>
@@ -238,7 +238,7 @@ function LoadingMessage() {
 
 function NoDataMessage() {
   return (
-    <div className="p-4 mb-6 bg-white rounded-lg shadow-md flex items-center">
+    <div className="container mx-auto p-4 mb-6 bg-white rounded-lg shadow-md flex items-center">
       <AiOutlineExclamationCircle className="text-gray-500 w-6 h-6 mr-2" />
       <span>No budget data available</span>
     </div>

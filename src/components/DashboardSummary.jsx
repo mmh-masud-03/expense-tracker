@@ -34,7 +34,7 @@ export default function DashboardSummary() {
 
   if (budgetError || expenseError || incomeError) {
     return (
-      <div className="p-6 mb-6 bg-red-100 rounded-lg shadow-lg flex items-center">
+      <div className="container mx-auto p-6 mb-6 bg-red-100 rounded-lg shadow-lg flex items-center">
         <AiOutlineExclamationCircle className="text-red-500 w-8 h-8 mr-4" />
         <span className="text-red-700 font-semibold">
           Error: Failed to fetch data. Please try again later.
@@ -45,7 +45,7 @@ export default function DashboardSummary() {
 
   if (!budgetData || !expenseData || !incomeData) {
     return (
-      <div className="p-6 mb-6 bg-white rounded-lg shadow-lg flex items-center justify-center">
+      <div className="container mx-auto p-6 mb-6 bg-white rounded-lg shadow-lg flex items-center justify-center">
         <AiOutlineLoading3Quarters className="w-8 h-8 mr-4 text-blue-500 animate-spin" />
         <span className="text-gray-700 font-semibold">
           Loading dashboard data...

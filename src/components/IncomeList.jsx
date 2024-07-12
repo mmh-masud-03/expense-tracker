@@ -150,7 +150,7 @@ function ConfirmDeleteModal({ onConfirm, onCancel, handleDelete }) {
 }
 function LoadingState() {
   return (
-    <div className="p-4 mb-6 bg-white rounded shadow-md flex items-center justify-center">
+    <div className="container mx-auto p-4 mb-6 bg-white rounded shadow-md flex items-center justify-center">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       <span className="ml-2">Loading...</span>
     </div>
@@ -159,7 +159,7 @@ function LoadingState() {
 
 function ErrorState({ error }) {
   return (
-    <div className="p-4 mb-6 bg-red-100 text-red-700 rounded shadow-md">
+    <div className="container mx-auto p-4 mb-6 bg-red-100 text-red-700 rounded shadow-md">
       Error: {error}
     </div>
   );

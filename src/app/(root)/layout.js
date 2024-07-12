@@ -22,8 +22,12 @@ export default function RootLayout({ children }) {
             {/* <Sidebar /> */}
             <div className="flex-1">
               <Navbar />
-              <main className="p-6 mt-10">
-                {children} <AddFinanceButton /> <ToastContainer />
+              <main className="p-6 mt-10 ">
+                {children}
+                <div className="container mx-auto">
+                  <AddFinanceButton />
+                </div>
+                <ToastContainer />
               </main>
             </div>
           </div>

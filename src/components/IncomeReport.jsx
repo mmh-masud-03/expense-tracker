@@ -173,7 +173,7 @@ export default function IncomeReport() {
   };
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64 bg-white rounded shadow-md">
+      <div className="container mx-auto flex justify-center items-center h-64 bg-white rounded shadow-md">
         <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
       </div>
     );
@@ -181,7 +181,7 @@ export default function IncomeReport() {
 
   if (error) {
     return (
-      <div className="p-4 mb-6 bg-white rounded shadow-md text-red-500">
+      <div className="container mx-auto p-4 mb-6 bg-white rounded shadow-md text-red-500">
         Error: {error}
       </div>
     );
