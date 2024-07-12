@@ -146,7 +146,7 @@ export default function ExpenseList() {
         <h3 className="text-2xl font-semibold mb-6 text-gray-800">
           Financial Overview
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="bg-white p-6 rounded-lg shadow-sm"
@@ -339,8 +339,8 @@ export default function ExpenseList() {
         </>
       )}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+          <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {selectedExpense ? "Update Expense" : "Add Expense"}

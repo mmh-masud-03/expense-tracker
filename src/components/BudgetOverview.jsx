@@ -181,8 +181,8 @@ export default function BudgetOverview() {
         setConfirmModal={setConfirmModal}
       />
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+          <div className="relative mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {selectedBudget ? "Update Budget" : "Add Budget"}
@@ -250,7 +250,7 @@ function BudgetSummary({ totalBudget, totalExpenses, remainingBudget }) {
   const displayRemainingBudget = isOverBudget ? 0 : remainingBudget;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
       <SummaryCard
         title="Total Budget"
         amount={totalBudget}
@@ -453,9 +453,9 @@ function BudgetTable({
             >
               Month{" "}
               {getClassNamesFor("month") === "ascending" ? (
-                <FaSortAmountUp className="inline" />
+                <FaSortAmountUp className="inline" size={12} />
               ) : (
-                <FaSortAmountDown className="inline" />
+                <FaSortAmountDown className="inline" size={12} />
               )}
             </th>
             <th
@@ -464,9 +464,9 @@ function BudgetTable({
             >
               Year{" "}
               {getClassNamesFor("year") === "ascending" ? (
-                <FaSortAmountUp className="inline" />
+                <FaSortAmountUp className="inline" size={12} />
               ) : (
-                <FaSortAmountDown className="inline" />
+                <FaSortAmountDown className="inline" size={12} />
               )}
             </th>
             <th
@@ -475,9 +475,9 @@ function BudgetTable({
             >
               Amount{" "}
               {getClassNamesFor("amount") === "ascending" ? (
-                <FaSortAmountUp className="inline" />
+                <FaSortAmountUp className="inline" size={12} />
               ) : (
-                <FaSortAmountDown className="inline" />
+                <FaSortAmountDown className="inline" size={12} />
               )}
             </th>
             <th className="py-3 px-4 uppercase text-sm text-left">Actions</th>
