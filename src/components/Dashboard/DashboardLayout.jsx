@@ -53,7 +53,7 @@ export default function DashboardLayout() {
         <SavingsRateChart savingsRate={savingsRate} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-20 md:mt-8">
         <BudgetVsActualChart data={data} />
         <ExpensesByCategoryChart data={data.expenseData} />
       </div>
@@ -63,6 +63,7 @@ export default function DashboardLayout() {
         totalExpenses={totalExpenses}
         netSavings={netSavings}
         exceededBudget={exceededBudget}
+        exceededIncome={exceededIncome}
       />
     </div>
   );

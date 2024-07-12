@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { mutate } from "swr";
 import { toast } from "react-toastify";
 import { getUserId } from "@/utils/UtilityFunction";
@@ -10,7 +9,6 @@ export default function ExpenseForm({ expense, onClose }) {
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
   const userId = getUserId();
 
   useEffect(() => {
@@ -54,7 +52,7 @@ export default function ExpenseForm({ expense, onClose }) {
         toast(expense ? "Expense Updated" : "Expense Created", {
           type: "success",
         });
-        mutate("/api/expenses");
+        mutate("/api/expenses?limit=100");
       } else {
         const errorData = await res.json();
         setError(errorData.error);

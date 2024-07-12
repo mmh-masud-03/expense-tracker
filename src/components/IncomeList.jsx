@@ -229,10 +229,10 @@ function IncomeItem({
   setConfirmModal,
 }) {
   return (
-    <div className="p-4 bg-gray-50 rounded-lg shadow-md flex items-start space-x-4 border border-gray-200 hover:bg-gray-100 transition ease-in-out duration-300">
-      <div className="flex-shrink-0">
+    <div className="p-4 bg-gray-50 rounded-lg shadow-md flex items-center lg:items-start space-x-4 border border-gray-200 hover:bg-gray-100 transition ease-in-out duration-300">
+      {/* <div className="flex-shrink-0">
         <FaDollarSign className="text-green-600 text-3xl" />
-      </div>
+      </div> */}
       <div className="flex-grow">
         <div className="font-semibold text-lg mb-1">{income.title}</div>
         <div className="text-gray-600 flex items-center space-x-2 mb-1">

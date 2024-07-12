@@ -26,33 +26,6 @@ ChartJS.register(
   ArcElement
 );
 
-// Define colors for each category
-const categoryColors = {
-  Food: "#FF6384", // Red
-  Travel: "#36A2EB", // Blue
-  Bills: "#FFCE56", // Yellow
-  Entertainment: "#4BC0C0", // Teal
-  Education: "#9966FF", // Purple
-  Healthcare: "#FF9F40", // Orange
-  Shopping: "#E7E9AC", // Light Green
-  Utilities: "#C9CBCF", // Gray
-  Transport: "#FF6347", // Tomato
-  Housing: "#40E0D0", // Turquoise
-  Clothing: "#FFD700", // Gold
-  Insurance: "#ADFF2F", // Green Yellow
-  Debt_Repayment: "#FF69B4", // Hot Pink
-  Personal_Care: "#7B68EE", // Medium Slate Blue
-  Gifts_and_Donations: "#FF4500", // Orange Red
-  Childcare: "#DA70D6", // Orchid
-  Pet_Care: "#C71585", // Medium Violet Red
-  Subscriptions: "#00FA9A", // Medium Spring Green
-  Emergency: "#FF1493", // Deep Pink
-  Festivals_and_Celebrations: "#1E90FF", // Dodger Blue
-  Technology: "#32CD32", // Lime Green
-  Miscellaneous: "#8A2BE2", // Blue Violet
-  Others: "#A9A9A9", // Dark Gray
-};
-
 export default function ExpenseReport() {
   const [expenseData, setExpenseData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -236,19 +209,37 @@ export default function ExpenseReport() {
   const highestExpenseCategory =
     categories[categoryTotals.indexOf(Math.max(...categoryTotals))];
 
-  const colors = categories.map(
-    (category) => categoryColors[category] || "#A9A9A9"
-  ); // Default color if not found
-
   const barData = {
     labels: categories,
     datasets: [
       {
         label: "Expenses",
         data: categoryTotals,
-        backgroundColor: colors,
-        borderColor: colors.map((color) => color),
-        borderWidth: 1,
+        backgroundColor: [
+          "#FF6384", // Red
+          "#36A2EB", // Blue
+          "#FFCE56", // Yellow
+          "#4BC0C0", // Teal
+          "#9966FF", // Purple
+          "#FF9F40", // Orange
+          "#E7E9AC", // Light Green
+          "#C9CBCF", // Gray
+          "#FF6347", // Tomato
+          "#40E0D0", // Turquoise
+          "#FFD700", // Gold
+          "#ADFF2F", // Green Yellow
+          "#FF69B4", // Hot Pink
+          "#7B68EE", // Medium Slate Blue
+          "#FF4500", // Orange Red
+          "#DA70D6", // Orchid
+          "#C71585", // Medium Violet Red
+          "#00FA9A", // Medium Spring Green
+          "#FF1493", // Deep Pink
+          "#1E90FF", // Dodger Blue
+          "#32CD32", // Lime Green
+          "#8A2BE2", // Blue Violet
+          "#A9A9A9", // Dark Gray
+        ],
       },
     ],
   };
@@ -259,33 +250,60 @@ export default function ExpenseReport() {
       {
         label: "Expenses",
         data: categoryTotals,
-        backgroundColor: colors,
+        backgroundColor: [
+          "#FF6384", // Red
+          "#36A2EB", // Blue
+          "#FFCE56", // Yellow
+          "#4BC0C0", // Teal
+          "#9966FF", // Purple
+          "#FF9F40", // Orange
+          "#E7E9AC", // Light Green
+          "#C9CBCF", // Gray
+          "#FF6347", // Tomato
+          "#40E0D0", // Turquoise
+          "#FFD700", // Gold
+          "#ADFF2F", // Green Yellow
+          "#FF69B4", // Hot Pink
+          "#7B68EE", // Medium Slate Blue
+          "#FF4500", // Orange Red
+          "#DA70D6", // Orchid
+          "#C71585", // Medium Violet Red
+          "#00FA9A", // Medium Spring Green
+          "#FF1493", // Deep Pink
+          "#1E90FF", // Dodger Blue
+          "#32CD32", // Lime Green
+          "#8A2BE2", // Blue Violet
+          "#A9A9A9", // Dark Gray
+        ],
       },
     ],
   };
 
   return (
     <div className="p-6 container mx-auto relative mb-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-700 mb-6">Expense Report</h2>
-      <button
-        onClick={generatePDF}
-        className="absolute right-3 top-6 mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-      >
-        Download Report
-      </button>
-      <div className="mb-6 w-2/3">
-        <h3 className="text-xl font-semibold text-gray-600 mb-4">
-          Select Date Range
-        </h3>
-        <ImprovedDatePicker
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-        />
+      <h2 className="text-3xl font-bold text-gray-700 mb-12 text-center">
+        Expense Report
+      </h2>
+      <div className="hidden mb-10 md:flex flex-row justify-between items-center">
+        <div className=" w-full lg:w-2/3">
+          <ImprovedDatePicker
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+          />
+        </div>
+        <div className="hidden md:flex h-12 mt-8">
+          <button
+            onClick={generatePDF}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          >
+            Download Report
+          </button>
+        </div>
       </div>
       {/* Summary Section */}
-      <div className="mb-6">
+      <div className="mb-10">
         <h3 className="text-xl font-semibold text-gray-600 mb-2">Summary</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-gray-100 rounded shadow">
@@ -319,7 +337,7 @@ export default function ExpenseReport() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h3 className="text-lg font-semibold text-gray-600 mb-4">
-            Bar Chart
+            Expense by Category
           </h3>
           <div className="relative h-64">
             <Bar
@@ -341,7 +359,7 @@ export default function ExpenseReport() {
         </div>
         <div>
           <h3 className="text-lg font-semibold text-gray-600 mb-4">
-            Pie Chart
+            Expense by Category (Pie Chart)
           </h3>
           <div className="relative h-64">
             <Pie
@@ -361,6 +379,14 @@ export default function ExpenseReport() {
             />
           </div>
         </div>
+      </div>
+      <div className="md:hidden mt-8">
+        <button
+          onClick={generatePDF}
+          className="absolute right-0 left-0 bottom-0 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+          Download Report
+        </button>
       </div>
     </div>
   );

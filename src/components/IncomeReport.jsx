@@ -206,7 +206,30 @@ export default function IncomeReport() {
       {
         label: "Income",
         data: categoryTotals,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+          "#FFBD6B",
+          "#C9CBCF",
+          "#FF6F61",
+          "#6B5B95",
+          "#D3B8AE",
+          "#FFB3E6",
+          "#C4E17F",
+          "#F7D6E0",
+          "#C4E17F",
+          "#D0E0D0",
+          "#F3C6D0",
+          "#E0B0FF",
+          "#FF4D4D",
+          "#7D8C7E",
+          "#E6D5D5",
+          "#9B9B77",
+        ],
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },
@@ -249,30 +272,29 @@ export default function IncomeReport() {
 
   return (
     <div className="container mx-auto relative p-6 mb-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-3xl font-bold text-gray-700 mb-12 text-center">
+      <h2 className="text-3xl font-bold text-gray-700  text-center mb-12">
         Income Report
       </h2>
-
-      {/* Export Button */}
-      <button
-        onClick={generatePDF}
-        className=" absolute top-16 right-3 mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-      >
-        Download Report
-      </button>
-      <div className="mb-6 w-2/3">
-        <h3 className="text-xl font-semibold text-gray-600 mb-4">
-          Select Date Range
-        </h3>
-        <ImprovedDatePicker
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-        />
+      <div className="hidden mb-10 md:flex flex-row justify-between items-center">
+        <div className=" w-full lg:w-2/3">
+          <ImprovedDatePicker
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+          />
+        </div>
+        <div className="hidden md:flex h-12 mt-8">
+          <button
+            onClick={generatePDF}
+            className=" px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          >
+            Download Report
+          </button>
+        </div>
       </div>
       {/* Summary Section */}
-      <div className="mb-6">
+      <div className="mb-10">
         <h3 className="text-xl font-semibold text-gray-600 mb-2">Summary</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-gray-100 rounded shadow">
@@ -347,6 +369,14 @@ export default function IncomeReport() {
             />
           </div>
         </div>
+      </div>
+      <div className="md:hidden mt-8">
+        <button
+          onClick={generatePDF}
+          className="absolute right-0 left-0 bottom-0 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+          Download Report
+        </button>
       </div>
     </div>
   );

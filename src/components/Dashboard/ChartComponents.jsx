@@ -65,6 +65,23 @@ export function SavingsRateChart({ savingsRate }) {
   );
 }
 
+// export function BudgetVsActualChart({ data }) {
+//   const chartData = prepareChartData(data, "budgetVsActual");
+//   return (
+//     <div className="bg-white p-6 rounded-lg shadow-lg w-full">
+//       <h2 className="text-xl font-semibold mb-4 text-center">
+//         Budget vs Actual Expenses
+//       </h2>
+//       <Bar
+//         data={chartData}
+//         options={{
+//           responsive: true,
+//           scales: { x: { stacked: true }, y: { stacked: true } },
+//         }}
+//       />
+//     </div>
+//   );
+// }
 export function BudgetVsActualChart({ data }) {
   const chartData = prepareChartData(data, "budgetVsActual");
   return (
@@ -76,7 +93,23 @@ export function BudgetVsActualChart({ data }) {
         data={chartData}
         options={{
           responsive: true,
-          scales: { x: { stacked: true }, y: { stacked: true } },
+          scales: {
+            x: {
+              stacked: false,
+            },
+            y: {
+              stacked: false,
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+            },
+          },
+          barPercentage: 0.8,
+          categoryPercentage: 0.9,
         }}
       />
     </div>

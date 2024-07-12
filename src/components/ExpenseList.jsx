@@ -254,11 +254,11 @@ export default function ExpenseList() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="p-4 bg-white rounded-lg shadow-sm flex items-start space-x-4 border border-gray-200 hover:shadow-md transition ease-in-out duration-300"
+                    className="p-4 bg-white rounded-lg shadow-sm flex items-center lg:items-start space-x-4 border border-gray-200 hover:shadow-md transition ease-in-out duration-300"
                   >
-                    <div className="flex-shrink-0">
+                    {/* <div className="flex-shrink-0">
                       <FaDollarSign className="text-green-500 text-3xl" />
-                    </div>
+                    </div> */}
                     <div className="flex-grow">
                       <div className="font-semibold text-lg mb-1 text-gray-800">
                         {expense.title}
