@@ -39,7 +39,7 @@ export default function DashboardLayout() {
   } = calculateFinancialSummary(data);
 
   return (
-    <div className="p-6 container mx-auto bg-gray-100 min-h-screen flex flex-col gap-y-8">
+    <div className="p-6 container mx-auto bg-slate-100 min-h-screen flex flex-col gap-y-8">
       <DashboardHeader />
       <Notices
         exceededIncome={exceededIncome}

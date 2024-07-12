@@ -153,7 +153,7 @@ export default function BudgetOverview() {
   const years = [...new Set(data.data.map((budget) => budget.year))];
 
   return (
-    <div className="p-6 mb-6 container mx-auto bg-white rounded-lg shadow-lg transition-shadow hover:shadow-xl">
+    <div className="p-6 mb-6 container mx-auto bg-slate-100 rounded-lg shadow-lg transition-shadow hover:shadow-xl">
       <h2 className="text-2xl font-bold mb-4">Budget Overview</h2>
       <BudgetSummary
         totalBudget={totalBudget}
@@ -250,7 +250,7 @@ function BudgetSummary({ totalBudget, totalExpenses, remainingBudget }) {
   const displayRemainingBudget = isOverBudget ? 0 : remainingBudget;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
       <SummaryCard
         title="Total Budget"
         amount={totalBudget}

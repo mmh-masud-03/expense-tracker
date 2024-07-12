@@ -1,14 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  FaDollarSign,
-  FaCalendarDay,
-  FaTag,
-  FaEdit,
-  FaTrash,
-} from "react-icons/fa";
+import { FaSort, FaSortUp, FaSortDown, FaEdit, FaTrash } from "react-icons/fa";
 import IncomeForm from "./IncomeForm";
 import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function IncomeList() {
   const [incomes, setIncomes] = useState([]);
@@ -23,11 +18,15 @@ export default function IncomeList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ open: false, id: null });
+  const [sortBy, setSortBy] = useState("date");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const fetchIncome = async (page = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/income?page=${page}&limit=10`);
+      const res = await fetch(
+        `/api/income?page=${page}&limit=10&sortBy=${sortBy}&sortOrder=${sortOrder}`
+      );
       if (!res.ok) throw new Error("Failed to fetch income data");
       const { incomes, totalPages, totalAmount } = await res.json();
       setIncomes(incomes);
@@ -46,7 +45,7 @@ export default function IncomeList() {
 
   useEffect(() => {
     fetchIncome(currentPage);
-  }, [currentPage]);
+  }, [currentPage, sortBy, sortOrder]);
 
   const handleUpdate = (income) => {
     setSelectedIncome(income);
@@ -70,25 +69,154 @@ export default function IncomeList() {
     }
   };
 
+  const handleSort = (newSortBy) => {
+    setSortBy(newSortBy);
+    setSortOrder(sortBy === newSortBy && sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const SortIcon = ({ column }) => {
+    if (sortBy !== column) return <FaSort className="text-gray-400" />;
+    return sortOrder === "asc" ? (
+      <FaSortUp className="text-blue-500" />
+    ) : (
+      <FaSortDown className="text-blue-500" />
+    );
+  };
+
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
 
   return (
-    <div className="p-6 container mx-auto mb-6 bg-white rounded-lg shadow-lg">
+    <div className="p-6 container mx-auto mb-6 bg-slate-200/60 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Income</h2>
       <OverviewSection overview={overview} />
-      <IncomeListSection
-        incomes={incomes}
-        onUpdate={handleUpdate}
-        handleDelete={handleDelete}
-        confirmModal={confirmModal}
-        setConfirmModal={setConfirmModal}
-      />
+
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                onClick={() => handleSort("title")}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>Title</span>
+                  <SortIcon column="title" />
+                </div>
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                onClick={() => handleSort("category")}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>Category</span>
+                  <SortIcon column="category" />
+                </div>
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                onClick={() => handleSort("amount")}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>Amount</span>
+                  <SortIcon column="amount" />
+                </div>
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                onClick={() => handleSort("date")}
+              >
+                <div className="flex items-center space-x-1">
+                  <span>Date</span>
+                  <SortIcon column="date" />
+                </div>
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <AnimatePresence>
+              {incomes.length > 0 ? (
+                incomes.map((income, index) => (
+                  <motion.tr
+                    key={income._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {income.title}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        {income.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {income.amount.toFixed(2)} Tk
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">
+                        {new Date(income.date).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => handleUpdate(income)}
+                        className="text-indigo-600 hover:text-indigo-900 mr-4"
+                      >
+                        <FaEdit className="inline-block" />
+                      </button>
+                      <button
+                        onClick={() =>
+                          setConfirmModal({ open: true, id: income._id })
+                        }
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        <FaTrash className="inline-block" />
+                      </button>
+                    </td>
+                  </motion.tr>
+                ))
+              ) : (
+                <motion.tr
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <td
+                    colSpan="5"
+                    className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
+                  >
+                    No income found
+                  </td>
+                </motion.tr>
+              )}
+            </AnimatePresence>
+          </tbody>
+        </table>
+      </div>
+
       <PaginationControls
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={fetchIncome}
       />
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -96,7 +224,6 @@ export default function IncomeList() {
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {selectedIncome ? "Update Income" : "Add Income"}
               </h3>
-
               <div className="mt-2 text-left py-3">
                 <div className="absolute top-2 right-2">
                   <button
@@ -122,32 +249,17 @@ export default function IncomeList() {
           </div>
         </div>
       )}
+
+      {confirmModal.open && (
+        <ConfirmDeleteModal
+          onConfirm={() => handleDelete(confirmModal.id)}
+          onCancel={() => setConfirmModal({ open: false, id: null })}
+        />
+      )}
     </div>
   );
 }
-function ConfirmDeleteModal({ onConfirm, onCancel, handleDelete }) {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded shadow-md">
-        <p>Are you sure you want to delete this budget?</p>
-        <div className="flex justify-end mt-4">
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded mr-2"
-            onClick={onConfirm}
-          >
-            Yes, delete it
-          </button>
-          <button
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+
 function LoadingState() {
   return (
     <div className="container mx-auto p-4 mb-6 bg-white rounded shadow-md flex items-center justify-center">
@@ -194,78 +306,25 @@ function OverviewItem({ label, value, color }) {
   );
 }
 
-function IncomeListSection({
-  incomes,
-  onUpdate,
-  handleDelete,
-  confirmModal,
-  setConfirmModal,
-}) {
-  if (incomes.length === 0) {
-    return <div className="text-gray-500">No income found</div>;
-  }
-
+function ConfirmDeleteModal({ onConfirm, onCancel }) {
   return (
-    <div className="space-y-4">
-      {incomes.map((income) => (
-        <IncomeItem
-          key={income._id}
-          income={income}
-          onUpdate={onUpdate}
-          handleDelete={handleDelete}
-          confirmModal={confirmModal}
-          setConfirmModal={setConfirmModal}
-        />
-      ))}
-    </div>
-  );
-}
-
-function IncomeItem({
-  income,
-  onUpdate,
-  handleDelete,
-  confirmModal,
-  setConfirmModal,
-}) {
-  return (
-    <div className="p-4 bg-gray-50 rounded-lg shadow-md flex items-center lg:items-start space-x-4 border border-gray-200 hover:bg-gray-100 transition ease-in-out duration-300">
-      {/* <div className="flex-shrink-0">
-        <FaDollarSign className="text-green-600 text-3xl" />
-      </div> */}
-      <div className="flex-grow">
-        <div className="font-semibold text-lg mb-1">{income.title}</div>
-        <div className="text-gray-600 flex items-center space-x-2 mb-1">
-          <FaTag className="text-gray-500" />
-          <span>{income.category}</span>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded shadow-md">
+        <p>Are you sure you want to delete this income?</p>
+        <div className="flex justify-end mt-4">
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+            onClick={onConfirm}
+          >
+            Yes, delete it
+          </button>
+          <button
+            className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
         </div>
-        <div className="text-gray-600 flex items-center space-x-2">
-          <FaCalendarDay className="text-gray-500" />
-          <span>{new Date(income.date).toLocaleDateString()}</span>
-        </div>
-      </div>
-      <div className="font-bold text-lg text-gray-800">
-        {income.amount.toFixed(2)} Tk
-      </div>
-      <div className="flex-shrink-0 ml-4 space-x-2">
-        <button
-          onClick={() => onUpdate(income)}
-          className="text-blue-500 hover:text-blue-700"
-        >
-          <FaEdit />
-        </button>
-        <button
-          className="text-red-500 hover:text-red-700"
-          onClick={() => setConfirmModal({ open: true, id: income._id })}
-        >
-          <FaTrash />
-        </button>
-        {confirmModal.open && confirmModal.id === income._id && (
-          <ConfirmDeleteModal
-            onConfirm={() => handleDelete(confirmModal.id)}
-            onCancel={() => setConfirmModal({ open: false, id: null })}
-          />
-        )}
       </div>
     </div>
   );

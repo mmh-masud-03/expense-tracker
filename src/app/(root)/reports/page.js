@@ -5,7 +5,7 @@ import IncomeReport from "@/components/IncomeReport";
 
 export default function Reports() {
   return (
-    <div className="p-6  flex flex-col gap-y-16">
+    <div className="p-6 bg-slate-100 flex flex-col gap-y-16">
       {/* <ReportFilters /> */}
       <ExpenseReport />
       <IncomeReport />
