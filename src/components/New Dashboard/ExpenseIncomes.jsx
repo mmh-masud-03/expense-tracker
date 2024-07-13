@@ -1,38 +1,83 @@
-// components/ExpenseIncomes.js
-export default function ExpenseIncomes() {
+import React from "react";
+
+const ExpenseIncomes = () => {
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm">
-      <h2 className="text-xl font-bold mb-4">Expense & Incomes</h2>
+    <div className="bg-slate-100 rounded-lg shadow-md p-6 w-80">
+      <h2 className="text-xl font-semibold mb-4">Expense & Incomes</h2>
+
       <div className="space-y-4">
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-600">
-              Total incomes this month
-            </span>
-            <span className="text-green-500 font-bold">+$2,992.00</span>
+        <div className="flex items-center">
+          <div className="w-8 h-8 mr-4">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="none"
+                stroke="#ddd"
+                strokeWidth="2"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="none"
+                stroke="#3498db"
+                strokeWidth="2"
+                strokeDasharray="65,35"
+                strokeDashoffset="25"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div
-              className="bg-green-500 h-2.5 rounded-full"
-              style={{ width: "75%" }}
-            ></div>
+          <div>
+            <p className="text-green-500 font-semibold text-lg">+$2,992.00</p>
+            <p className="text-sm text-gray-500">Total incomes this month</p>
           </div>
         </div>
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-600">
-              Total outcomes this month
-            </span>
-            <span className="text-red-500 font-bold">-$1,419.00</span>
+
+        <div className="flex items-center">
+          <div className="w-8 h-8 mr-4">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="none"
+                stroke="#ddd"
+                strokeWidth="2"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="none"
+                stroke="#e74c3c"
+                strokeWidth="2"
+                strokeDasharray="50,50"
+                strokeDashoffset="25"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div
-              className="bg-red-500 h-2.5 rounded-full"
-              style={{ width: "35%" }}
-            ></div>
+          <div>
+            <p className="text-purple-500 font-semibold text-lg">-$1,419.00</p>
+            <p className="text-sm text-gray-500">Total outcomes this month</p>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default ExpenseIncomes;
