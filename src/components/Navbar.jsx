@@ -13,6 +13,7 @@ import {
   FaWallet,
   FaCalendarAlt,
   FaChartLine,
+  FaReceipt,
 } from "react-icons/fa";
 
 export default function Navbar() {
@@ -29,6 +30,7 @@ export default function Navbar() {
     { href: "/income", label: "Income", icon: FaWallet },
     { href: "/budget", label: "Budget", icon: FaCalendarAlt },
     { href: "/reports", label: "Reports", icon: FaChartLine },
+    { href: "/savings", label: "Savings", icon: FaReceipt },
   ];
 
   useEffect(() => {
