@@ -1,5 +1,5 @@
 "use client";
-import useFinancialData from "./useFinancialData";
+import useFinancialData from "../../utils/useFinancialData";
 import {
   IncomeVsExpensesChart,
   SavingsRateChart,

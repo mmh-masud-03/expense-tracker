@@ -1,10 +1,10 @@
 import React from "react";
+import { FiInfo } from "react-icons/fi";
 
 const ExpenseIncomes = () => {
   return (
-    <div className="bg-slate-100 rounded-lg shadow-md p-6 w-80">
-      <h2 className="text-xl font-semibold mb-4">Expense & Incomes</h2>
-
+    <div className="bg-slate-100 rounded-lg shadow-md p-4 w-1/2 h-44 relative">
+      <h2 className="text-xl font-semibold mb-2">Expense & Incomes</h2>
       <div className="space-y-4">
         <div className="flex items-center">
           <div className="w-8 h-8 mr-4">
@@ -76,6 +76,9 @@ const ExpenseIncomes = () => {
           </div>
         </div>
       </div>
+      <button className="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
+        <FiInfo size={24} />
+      </button>
     </div>
   );
 };

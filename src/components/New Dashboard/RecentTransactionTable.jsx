@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaWallet, FaMoneyBillWave, FaChartBar } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-export default function RecentTransactions() {
+export default function RecentTransactionTable() {
   const [recentBudgets, setRecentBudgets] = useState([]);
   const [recentIncomes, setRecentIncomes] = useState([]);
   const [recentExpenses, setRecentExpenses] = useState([]);
@@ -15,9 +15,9 @@ export default function RecentTransactions() {
       try {
         const [budgetResponse, incomeResponse, expenseResponse] =
           await Promise.all([
-            fetch("/api/budget/recent?limit=5"),
-            fetch("/api/income/recent?limit=5"),
-            fetch("/api/expenses/recent?limit=5"),
+            fetch("/api/budget/recent?limit=3"),
+            fetch("/api/income/recent?limit=3"),
+            fetch("/api/expenses/recent?limit=3"),
           ]);
 
         if (!budgetResponse.ok || !incomeResponse.ok || !expenseResponse.ok) {
@@ -66,11 +66,11 @@ export default function RecentTransactions() {
     const colorClasses = colorClassMapping[color];
     return (
       <div
-        className={`bg-white p-6 rounded-xl shadow-md border-l-4 ${colorClasses.border}`}
+        className={`bg-white p-3 rounded-xl shadow-md border-l-4 ${colorClasses.border}`}
       >
         <div className="flex items-center mb-4">
-          <Icon className={`w-8 h-8 mr-3 ${colorClasses.text}`} />
-          <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+          <Icon className={`w-6 h-6 mr-2 ${colorClasses.text}`} />
+          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         </div>
         {data.length > 0 ? (
           <ul className="space-y-3">
@@ -116,11 +116,11 @@ export default function RecentTransactions() {
   }
 
   return (
-    <div className="p-6 container mx-auto bg-slate-50 rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+    <div className="px- container mx-auto bg-slate-100 rounded-xl shadow-lg">
+      <h2 className="text-xl font-semibold py-4 text-gray-800">
         Recent Transactions
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <TransactionCard
           title="Recent Budgets"
           icon={FaChartBar}
