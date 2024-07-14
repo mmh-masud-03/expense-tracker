@@ -116,8 +116,8 @@ export default function RecentTransactionTable() {
   }
 
   return (
-    <div className="px- container mx-auto bg-slate-100 rounded-xl shadow-lg">
-      <h2 className="text-xl font-semibold py-4 text-gray-800">
+    <div className="px-5 container mx-auto bg-white rounded-xl shadow-lg">
+      <h2 className="text-xl font-semibold p-4 text-gray-800">
         Recent Transactions
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">

@@ -196,6 +196,7 @@ export default function SavingsForm({ saving, onClose }) {
               onChange={(e) => setAmountToAdd(e.target.value)}
               className="h-8 focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 text-base outline-none border-b-2 border-gray-300 rounded-md"
               placeholder="Enter amount to add"
+              min={0}
             />
           </div>
         </div>
@@ -203,7 +204,7 @@ export default function SavingsForm({ saving, onClose }) {
       <div className="pt-2 flex justify-between">
         <button
           type="submit"
-          className="flex-1 mr-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+          className="flex-1 mr-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
         >
           {saving ? "Update Savings" : "Add Savings"}
         </button>

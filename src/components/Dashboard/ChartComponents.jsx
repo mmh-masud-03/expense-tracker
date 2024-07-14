@@ -85,7 +85,7 @@ export function SavingsRateChart({ savingsRate }) {
 export function BudgetVsActualChart({ data }) {
   const chartData = prepareChartData(data, "budgetVsActual");
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full mt-10 lg:mt-0">
+    <div className="bg-white p-6 rounded-lg shadow-md w-full mt-10 lg:mt-0">
       <h2 className="text-xl font-semibold mb-4 text-center">
         Budget vs Actual Expenses
       </h2>

@@ -5,8 +5,8 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-y-7">
       {/* <FinancialDashboard /> */}
-      {/* <DashboardLayout /> */}
       <NewDashboard />
+      {/* <DashboardLayout /> */}
     </div>
   );
 }

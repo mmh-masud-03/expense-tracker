@@ -6,10 +6,13 @@ import {
   FaCoins,
   FaPlus,
   FaTimes,
+  FaSave,
+  FaPiggyBank,
 } from "react-icons/fa";
 import BudgetForm from "./BudgetForm";
 import IncomeForm from "./IncomeForm";
 import ExpenseForm from "./ExpenseForm";
+import SavingsForm from "./Savings/SavingsForm";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
@@ -36,6 +39,7 @@ export default function AddFinanceButton() {
     { id: "budget", icon: <FaBriefcase />, label: "Budget" },
     { id: "expense", icon: <FaMoneyBillWave />, label: "Expense" },
     { id: "income", icon: <FaCoins />, label: "Income" },
+    { id: "savings", icon: <FaPiggyBank />, label: "Savings" },
   ];
 
   const renderForm = () => {
@@ -46,6 +50,8 @@ export default function AddFinanceButton() {
         return <ExpenseForm onClose={toggleModal} />;
       case "income":
         return <IncomeForm onClose={toggleModal} />;
+      case "savings":
+        return <SavingsForm onClose={toggleModal} />;
       default:
         return null;
     }
@@ -66,7 +72,7 @@ export default function AddFinanceButton() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-lg w-full max-w-md mx-4 shadow-lg"
+              className="bg-white rounded-lg w-full max-w-lg mx-4 shadow-lg"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-center p-4 border-b">
