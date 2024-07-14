@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import SavingsForm from "./SavingsForm";
 import Modal from "./Modal";
 import HorizontalProgressBar from "./HorizontalProgressBar";
-import { FiInfo, FiPlusCircle } from "react-icons/fi";
+import { FiMoreVertical } from "react-icons/fi";
 import {
   FaLaptop,
   FaMobileAlt,
@@ -34,6 +34,7 @@ export default function AllSavings() {
   const [selectedSaving, setSelectedSaving] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAddAmountOpen, setIsAddAmountOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   if (error) return <div>Failed to load savings</div>;
   if (!data) return <div>Loading...</div>;
@@ -42,14 +43,22 @@ export default function AllSavings() {
     setSelectedSaving(saving);
     setIsAddAmountOpen(true);
   };
+
   const handleEdit = (saving) => {
     setSelectedSaving(saving);
     setIsFormOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteConfirm = (saving) => {
+    setSelectedSaving(saving);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!selectedSaving) return;
+
     try {
-      const res = await fetch(`/api/savings/${id}`, {
+      const res = await fetch(`/api/savings/${selectedSaving._id}`, {
         method: "DELETE",
       });
 
@@ -62,6 +71,8 @@ export default function AllSavings() {
     } catch (error) {
       toast("An unexpected error occurred", { type: "error" });
     }
+    setIsDeleteConfirmOpen(false);
+    setSelectedSaving(null);
   };
 
   const getCategoryInfo = (goalTitle) => {
@@ -104,12 +115,38 @@ export default function AllSavings() {
                 {saving.goalAmount.toLocaleString()}
               </p>
               <HorizontalProgressBar percentage={percentage} color={color} />
-              <button
-                onClick={() => handleAddAmount(saving)}
-                className="absolute top-2 right-2 rounded-full p-1"
-              >
-                <FiInfo size={15} />
-              </button>
+              <div className="absolute top-2 right-2">
+                <div className="relative">
+                  <button
+                    onClick={() => setSelectedSaving(saving)}
+                    className="rounded-full p-1"
+                  >
+                    <FiMoreVertical size={15} />
+                  </button>
+                  {selectedSaving === saving && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                      <button
+                        onClick={() => handleAddAmount(saving)}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Add Amount
+                      </button>
+                      <button
+                        onClick={() => handleEdit(saving)}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteConfirm(saving)}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           );
         })}
@@ -131,6 +168,33 @@ export default function AllSavings() {
             setSelectedSaving(null);
           }}
         />
+      </Modal>
+
+      <Modal
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => {
+          setIsDeleteConfirmOpen(false);
+          setSelectedSaving(null);
+        }}
+      >
+        <div className="p-4">
+          <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
+          <p>Are you sure you want to delete this savings plan?</p>
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => setIsDeleteConfirmOpen(false)}
+              className="mr-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

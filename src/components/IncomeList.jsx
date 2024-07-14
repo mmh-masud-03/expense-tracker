@@ -1,6 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
-import { FaSort, FaSortUp, FaSortDown, FaEdit, FaTrash } from "react-icons/fa";
+
+import { useEffect, useState, useMemo } from "react";
+import {
+  FaSort,
+  FaSortUp,
+  FaSortDown,
+  FaEdit,
+  FaTrash,
+  FaSearch,
+} from "react-icons/fa";
 import IncomeForm from "./IncomeForm";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,6 +18,7 @@ export default function IncomeList() {
   const [overview, setOverview] = useState({
     totalAmount: 0,
     averageAmount: 0,
+    categoryCounts: {},
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -20,19 +29,23 @@ export default function IncomeList() {
   const [confirmModal, setConfirmModal] = useState({ open: false, id: null });
   const [sortBy, setSortBy] = useState("date");
   const [sortOrder, setSortOrder] = useState("desc");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
 
   const fetchIncome = async (page = 1) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/income?page=${page}&limit=10&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        `/api/income?page=${page}&limit=10&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${searchTerm}&category=${filterCategory}`
       );
       if (!res.ok) throw new Error("Failed to fetch income data");
-      const { incomes, totalPages, totalAmount } = await res.json();
+      const { incomes, totalPages, totalAmount, categoryCounts } =
+        await res.json();
       setIncomes(incomes);
       setOverview({
         totalAmount,
         averageAmount: incomes.length > 0 ? totalAmount / incomes.length : 0,
+        categoryCounts,
       });
       setTotalPages(totalPages);
       setCurrentPage(page);
@@ -45,7 +58,7 @@ export default function IncomeList() {
 
   useEffect(() => {
     fetchIncome(currentPage);
-  }, [currentPage, sortBy, sortOrder]);
+  }, [currentPage, sortBy, sortOrder, searchTerm, filterCategory]);
 
   const handleUpdate = (income) => {
     setSelectedIncome(income);
@@ -83,6 +96,11 @@ export default function IncomeList() {
     );
   };
 
+  const categories = useMemo(
+    () => Object.keys(overview.categoryCounts),
+    [overview.categoryCounts]
+  );
+
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
 
@@ -90,6 +108,32 @@ export default function IncomeList() {
     <div className="p-6 container mx-auto mb-6 bg-slate-200/60 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Income</h2>
       <OverviewSection overview={overview} />
+
+      {/* Search and Filter */}
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-8">
+        <div className="relative flex-grow">
+          <input
+            type="text"
+            placeholder="Search income..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+          />
+          <FaSearch className="absolute left-3 top-3 text-gray-400" />
+        </div>
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="px-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+        >
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow-md">
         <table className="min-w-full divide-y divide-gray-200">
@@ -260,6 +304,39 @@ export default function IncomeList() {
   );
 }
 
+// ... (keep the existing helper components like LoadingState, ErrorState, ConfirmDeleteModal, and PaginationControls)
+
+// function OverviewSection({ overview }) {
+//   return (
+//     <div className="mb-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-md">
+//       <h3 className="text-2xl font-semibold mb-6 text-gray-800">Income Overview</h3>
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//         <motion.div whileHover={{ scale: 1.05 }} className="bg-white p-6 rounded-lg shadow-sm">
+//           <div className="text-lg font-bold mb-2 text-gray-600">Total Income</div>
+//           <div className="text-3xl font-bold text-green-600">BDT {overview.totalAmount.toFixed(2)}</div>
+//         </motion.div>
+//         <motion.div whileHover={{ scale: 1.05 }} className="bg-white p-6 rounded-lg shadow-sm">
+//           <div className="text-lg font-bold mb-2 text-gray-600">Average Income</div>
+//           <div className="text-3xl font-bold text-blue-600">BDT {overview.averageAmount.toFixed(2)}</div>
+//         </motion.div>
+//         <motion.div whileHover={{ scale: 1.05 }} className="bg-white p-6 rounded-lg shadow-sm">
+//           <div className="text-lg font-bold mb-2 text-gray-600">Top Categories</div>
+//           <ul className="space-y-2">
+//             {Object.entries(overview.categoryCounts)
+//               .slice(0, 3)
+//               .map(([category, count]) => (
+//                 <li key={category} className="text-gray-600 flex justify-between">
+//                   <span>{category}</span>
+//                   <span className="font-semibold">{count}</span>
+//                 </li>
+//               ))}
+//           </ul>
+//         </motion.div>
+//       </div>
+//     </div>
+//   );
+// }
+
 function LoadingState() {
   return (
     <div className="container mx-auto p-4 mb-6 bg-white rounded shadow-md flex items-center justify-center">
@@ -279,19 +356,54 @@ function ErrorState({ error }) {
 
 function OverviewSection({ overview }) {
   return (
-    <div className="mb-6 p-4 bg-blue-100 rounded-lg shadow-md">
-      <h3 className="text-xl font-semibold mb-2">Overview</h3>
-      <div className="flex justify-between text-gray-700">
-        <OverviewItem
-          label="Total Amount"
-          value={overview.totalAmount}
-          color="green"
-        />
-        <OverviewItem
-          label="Average Amount"
-          value={overview.averageAmount}
-          color="blue"
-        />
+    <div className="mb-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-md">
+      <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+        Income Overview
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-white p-6 rounded-lg shadow-sm"
+        >
+          <div className="text-lg font-bold mb-2 text-gray-600">
+            Total Income
+          </div>
+          <div className="text-3xl font-bold text-green-600">
+            BDT {overview.totalAmount.toFixed(2)}
+          </div>
+        </motion.div>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-white p-6 rounded-lg shadow-sm"
+        >
+          <div className="text-lg font-bold mb-2 text-gray-600">
+            Average Income
+          </div>
+          <div className="text-3xl font-bold text-blue-600">
+            BDT {overview.averageAmount.toFixed(2)}
+          </div>
+        </motion.div>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-white p-6 rounded-lg shadow-sm"
+        >
+          <div className="text-lg font-bold mb-2 text-gray-600">
+            Top Categories
+          </div>
+          <ul className="space-y-2">
+            {Object.entries(overview.categoryCounts)
+              .slice(0, 3)
+              .map(([category, count]) => (
+                <li
+                  key={category}
+                  className="text-gray-600 flex justify-between"
+                >
+                  <span>{category}</span>
+                  <span className="font-semibold">{count}</span>
+                </li>
+              ))}
+          </ul>
+        </motion.div>
       </div>
     </div>
   );
