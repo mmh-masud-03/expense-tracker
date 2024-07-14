@@ -1,5 +1,5 @@
 // app/expenses/add.js
-import ExpenseForm from "@/components/ExpenseForm";
+import ExpenseForm from "@/components/Expense/ExpenseForm";
 
 export default function AddExpense() {
   return (

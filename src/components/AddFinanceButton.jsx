@@ -9,9 +9,9 @@ import {
   FaSave,
   FaPiggyBank,
 } from "react-icons/fa";
-import BudgetForm from "./BudgetForm";
-import IncomeForm from "./IncomeForm";
-import ExpenseForm from "./ExpenseForm";
+import BudgetForm from "./Budget/BudgetForm";
+import IncomeForm from "./Income/IncomeForm";
+import ExpenseForm from "./Expense/ExpenseForm";
 import SavingsForm from "./Savings/SavingsForm";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";

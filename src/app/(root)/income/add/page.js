@@ -1,5 +1,5 @@
 // app/income/add.js
-import IncomeForm from "@/components/IncomeForm";
+import IncomeForm from "@/components/Income/IncomeForm";
 
 export default function AddIncome() {
   return (

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { FaBriefcase, FaMoneyBillWave, FaCoins } from "react-icons/fa";
-import BudgetForm from "./BudgetForm";
-import IncomeForm from "./IncomeForm";
-import ExpenseForm from "./ExpenseForm";
+import BudgetForm from "./Budget/BudgetForm";
+import IncomeForm from "./Income/IncomeForm";
+import ExpenseForm from "./Expense/ExpenseForm";
 
 export default function FormModal({ isOpen, onClose }) {
   const [activeForm, setActiveForm] = useState("budget");

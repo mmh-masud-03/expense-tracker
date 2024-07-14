@@ -1,19 +1,26 @@
 // app/page.js
 import DashboardSummary from "@/components/DashboardSummary";
 import RecentTransactions from "@/components/RecentTransactions";
-import BudgetOverview from "@/components/BudgetOverview";
-import IncomeList from "@/components/IncomeList";
-import ExpenseList from "@/components/ExpenseList";
+import BudgetOverview from "@/components/Budget/BudgetOverview";
+import IncomeList from "@/components/Income/IncomeList";
+import ExpenseList from "@/components/Expense/ExpenseList";
+import AllTransactionsDetailsPage from "@/components/All Transactions/AllTransactionsDetailsPage";
 
 export default function Home() {
   return (
-    <div className="p-6 flex flex-col overflow-clip container mx-auto">
-      <BudgetOverview />
+    // <div className="p-6 flex flex-col overflow-clip container mx-auto">
+    //   <BudgetOverview />
 
-      <div className="flex flex-row">
-        <IncomeList />
-        <ExpenseList />
-      </div>
-    </div>
+    //   <div className="flex flex-row gap-2 overflow-hidden w-full">
+    //     <div className="w-[50%]">
+    //       <IncomeList />
+    //     </div>
+    //     <div className="w-[50%]">
+    //       {" "}
+    //       <ExpenseList />
+    //     </div>
+    //   </div>
+    // </div>
+    <AllTransactionsDetailsPage />
   );
 }

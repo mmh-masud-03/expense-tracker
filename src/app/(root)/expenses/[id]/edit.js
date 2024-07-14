@@ -1,6 +1,6 @@
 // app/expenses/edit/[id].js
 import { useRouter } from "next/router";
-import ExpenseForm from "@/components/ExpenseForm";
+import ExpenseForm from "@/components/Expense/ExpenseForm";
 
 export default function EditExpense() {
   const router = useRouter();

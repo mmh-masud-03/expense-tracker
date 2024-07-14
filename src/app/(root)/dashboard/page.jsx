@@ -6,7 +6,7 @@ export default function Dashboard() {
     <div className="flex flex-col gap-y-7">
       {/* <FinancialDashboard /> */}
       <NewDashboard />
-      {/* <DashboardLayout /> */}
+      <DashboardLayout />
     </div>
   );
 }

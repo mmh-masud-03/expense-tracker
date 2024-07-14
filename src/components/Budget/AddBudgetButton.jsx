@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaTimes } from "react-icons/fa";
-import BudgetForm from "./BudgetForm";
+import BudgetForm from "./Budget/BudgetForm";
 
 export default function AddExpenseButton() {
   const [isOpen, setIsOpen] = useState(false);
