@@ -1,3 +1,5 @@
+import { AiOutlineDollarCircle } from "react-icons/ai";
+
 export default function SummaryCard({
   title,
   amount,

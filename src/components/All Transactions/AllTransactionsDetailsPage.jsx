@@ -38,7 +38,8 @@ function AllTransactionsDetailsPage() {
         (acc, budget) => acc + budget.amount,
         0
       );
-      const remainingBudget = budgetTotal - expensesTotal;
+      const remainingBudget =
+        budgetTotal - expensesTotal > 0 ? budgetTotal - expensesTotal : 0;
 
       const categoryIncomeCounts = incomeData.reduce((acc, income) => {
         acc[income.category] = (acc[income.category] || 0) + 1;
@@ -117,9 +118,9 @@ function AllTransactionsDetailsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" container mx-auto bg-gradient-to-br from-gray-100 to-gray-200 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-gray-900 text-left mb-10">
+        <h1 className="text-4xl font-extrabold text-gray-900 text-left mb-5">
           Financial <span className="text-blue-600">Overview</span>
         </h1>
 
@@ -148,7 +149,7 @@ function AllTransactionsDetailsPage() {
                       </h2>
                       <p className="mt-2 text-xl font-bold text-gray-900">
                         {typeof card.value === "number"
-                          ? `$${card.value.toFixed(2)}`
+                          ? `BDT ${card.value.toFixed(2)}`
                           : card.value}
                       </p>
                     </div>

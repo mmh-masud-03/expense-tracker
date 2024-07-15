@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import IncomeForm from "../Income/IncomeForm";
 import { toast } from "react-toastify";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function IncomeTable() {
   const [incomes, setIncomes] = useState([]);
@@ -98,218 +99,215 @@ export default function IncomeTable() {
     [overview.categoryCounts]
   );
 
-  if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
 
   return (
-    <div className="p-6 container mx-auto mb-6 bg-slate-200 rounded-lg shadow-lg">
-      <>
-        {/* Search and Filter */}
-        <div className="flex flex-col md:flex-row  mb-8">
-          <div className="relative flex-grow">
-            <input
-              type="text"
-              placeholder="Search income..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-            />
-            <FaSearch className="absolute left-3 top-3 text-gray-400" />
-          </div>
-          <select
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-          >
-            <option value="">All Categories</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+    <div className="pb-16 pt-6 px-16 flex flex-col container mx-auto mb-6 bg-slate-200 rounded-lg shadow-lg">
+      <span className="text-2xl font-semibold mb-6 text-center">
+        All Income
+      </span>
+      {/* Search and Filter */}
+      <div className="flex flex-col md:flex-row gap-8 mb-8">
+        <div className="relative flex-grow">
+          <input
+            type="text"
+            placeholder="Search income..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+          />
+          <FaSearch className="absolute left-3 top-3 text-gray-400" />
         </div>
-
-        <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort("title")}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Title</span>
-                    <SortIcon column="title" />
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort("category")}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Category</span>
-                    <SortIcon column="category" />
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort("amount")}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Amount</span>
-                    <SortIcon column="amount" />
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort("date")}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Date</span>
-                    <SortIcon column="date" />
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              <>
-                {incomes.length > 0 ? (
-                  incomes.map((income, index) => (
-                    <tr key={income._id}>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {income.title}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          {income.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {income.amount.toFixed(2)} Tk
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">
-                          {new Date(income.date).toLocaleDateString()}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => handleUpdate(income)}
-                          className="text-indigo-600 hover:text-indigo-900 mr-4"
-                        >
-                          <FaEdit className="inline-block" />
-                        </button>
-                        <button
-                          onClick={() =>
-                            setConfirmModal({ open: true, id: income._id })
-                          }
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <FaTrash className="inline-block" />
-                        </button>
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="px-6 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+        >
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <AiOutlineLoading3Quarters className="w-10 h-10 text-blue-500 animate-spin" />
+        </div>
+      ) : (
+        <>
+          <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-8 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort("title")}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Title</span>
+                      <SortIcon column="title" />
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort("category")}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Category</span>
+                      <SortIcon column="category" />
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort("amount")}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Amount</span>
+                      <SortIcon column="amount" />
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort("date")}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Date</span>
+                      <SortIcon column="date" />
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-8 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                <>
+                  {incomes.length > 0 ? (
+                    incomes.map((income, index) => (
+                      <tr key={income._id}>
+                        <td className="px-8 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {income.title}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            {income.category}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {income.amount.toFixed(2)} Tk
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-500">
+                            {new Date(income.date).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-8 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button
+                            onClick={() => handleUpdate(income)}
+                            className="text-indigo-600 hover:text-indigo-900 mr-4"
+                          >
+                            <FaEdit className="inline-block" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              setConfirmModal({ open: true, id: income._id })
+                            }
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <FaTrash className="inline-block" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
+                      >
+                        No income found
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
-                    >
-                      No income found
-                    </td>
-                  </tr>
-                )}
-              </>
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-8 flex justify-center items-center space-x-4">
-          <button
-            onClick={() => currentPage > 1 && fetchIncome(currentPage - 1)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
-            disabled={currentPage <= 1}
-          >
-            Previous
-          </button>
-          <span className="text-gray-600">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              currentPage < totalPages && fetchIncome(currentPage + 1)
-            }
-            className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
-            disabled={currentPage >= totalPages}
-          >
-            Next
-          </button>
-        </div>
-
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-            <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-              <div className="mt-3 text-center">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  {selectedIncome ? "Update Income" : "Add Income"}
-                </h3>
-                <div className="mt-2 text-left py-3">
-                  <div className="absolute top-2 right-2">
-                    <button
-                      onClick={() => {
-                        setIsModalOpen(false);
-                        setSelectedIncome(null);
-                      }}
-                      className="text-red-500 hover:text-red-700 text-2xl"
-                    >
-                      &times;
-                    </button>
-                  </div>
-                  <IncomeForm
-                    income={selectedIncome}
-                    onClose={() => {
+                  )}
+                </>
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-8 flex justify-center items-center space-x-4">
+            <button
+              onClick={() => currentPage > 1 && fetchIncome(currentPage - 1)}
+              className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
+              disabled={currentPage <= 1}
+            >
+              Previous
+            </button>
+            <span className="text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                currentPage < totalPages && fetchIncome(currentPage + 1)
+              }
+              className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
+              disabled={currentPage >= totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+          <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {selectedIncome ? "Update Income" : "Add Income"}
+              </h3>
+              <div className="mt-2 text-left py-3">
+                <div className="absolute top-2 right-2">
+                  <button
+                    onClick={() => {
                       setIsModalOpen(false);
                       setSelectedIncome(null);
-                      fetchIncome(currentPage);
                     }}
-                  />
+                    className="text-red-500 hover:text-red-700 text-2xl"
+                  >
+                    &times;
+                  </button>
                 </div>
+                <IncomeForm
+                  income={selectedIncome}
+                  onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedIncome(null);
+                    fetchIncome(currentPage);
+                  }}
+                />
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {confirmModal.open && (
-          <ConfirmDeleteModal
-            onConfirm={() => handleDelete(confirmModal.id)}
-            onCancel={() => setConfirmModal({ open: false, id: null })}
-          />
-        )}
-      </>
-    </div>
-  );
-}
-
-function LoadingState() {
-  return (
-    <div className="container mx-auto p-4 mb-6 bg-white rounded shadow-md flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      <span className="ml-2">Loading...</span>
+      {confirmModal.open && (
+        <ConfirmDeleteModal
+          onConfirm={() => handleDelete(confirmModal.id)}
+          onCancel={() => setConfirmModal({ open: false, id: null })}
+        />
+      )}
     </div>
   );
 }

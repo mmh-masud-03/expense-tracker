@@ -1,4 +1,6 @@
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 import SummaryCard from "./SummaryCard";
+import { BsFillCheckCircleFill } from "react-icons/bs";
 
 export default function BudgetSummary({
   totalBudget,

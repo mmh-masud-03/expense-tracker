@@ -134,10 +134,13 @@ export default function ExpenseTable() {
   }
 
   return (
-    <div className="p-6 mb-6 bg-slate-100 rounded-lg shadow-lg container mx-auto">
+    <div className="pb-16 pt-6 px-16 mb-6 flex flex-col bg-slate-100 rounded-lg shadow-lg container mx-auto">
       <>
+        <span className="text-2xl font-semibold mb-6 text-center">
+          All Expenses
+        </span>
         {/* Search and Filter */}
-        <div className="flex flex-col md:flex-row gap-1 mb-8">
+        <div className="flex flex-col md:flex-row gap-8 mb-8">
           <div className="relative flex-grow">
             <input
               type="text"

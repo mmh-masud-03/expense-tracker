@@ -30,7 +30,9 @@ export default function SavingsRate({ incomeData, expenseData }) {
     );
 
     const savingsRateValue =
-      totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
+      totalIncome - totalExpenses > 0
+        ? ((totalIncome - totalExpenses) / totalIncome) * 100
+        : 0;
 
     setSavingsRateData({
       labels: ["Savings", "Expenses"],
@@ -45,7 +47,15 @@ export default function SavingsRate({ incomeData, expenseData }) {
     });
     setSavingsRate(savingsRateValue);
   }, [incomeData, expenseData]);
-
+  const totalIncome = incomeData.reduce(
+    (sum, income) => sum + income.amount,
+    0
+  );
+  const totalExpense = expenseData.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
+  const totalSavings = totalIncome - totalExpense;
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between h-full">
       <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
@@ -99,11 +109,7 @@ export default function SavingsRate({ incomeData, expenseData }) {
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-600">Total Savings</p>
         <p className="text-xl font-bold text-green-600">
-          $
-          {(
-            incomeData.reduce((sum, income) => sum + income.amount, 0) -
-            expenseData.reduce((sum, expense) => sum + expense.amount, 0)
-          ).toFixed(2)}
+          BDT {totalSavings > 0 ? totalSavings.toFixed(2) : "0.00"}
         </p>
       </div>
     </div>

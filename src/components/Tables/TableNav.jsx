@@ -21,14 +21,14 @@ function TableNav() {
       case "expense":
         return <ExpenseTable />;
       default:
-        return <BudgetTableWithoutOverview />;
+        return <IncomeTable />;
     }
   };
 
   return (
-    <div className="mt-10">
-      <div className="flex justify-center items-center mb-7 bg-slate-200 py-4">
-        <div className="flex flex-row justify-center items-center border py-1 w-1/2 rounded-full border-gray-800">
+    <div className="mt-20 container mx-auto ">
+      <div className="flex justify-center items-center mb-1 bg-slate-200 py-8 rounded">
+        <div className="flex flex-row justify-center items-center border py-2 w-[46%] rounded-full border-gray-800">
           {tabs.map((tab) => (
             <button
               key={tab.name}
@@ -36,7 +36,7 @@ function TableNav() {
               className={`px-4 py-2 mx-2 rounded-full ${
                 activeTab === tab.name
                   ? "bg-gray-800 text-white"
-                  : "bg-gray-200 text-gray-700"
+                  : "bg-gray-200 border hover:border-gray-600 text-gray-700"
               }`}
             >
               {tab.label}

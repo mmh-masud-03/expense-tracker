@@ -19,6 +19,9 @@ import { toast } from "react-toastify";
 import BudgetSummary from "./BudgetSummary";
 import BudgetProgressBar from "./BudgetProgressBar";
 import BudgetDetails from "./BudgetDetails";
+import LoadingMessage from "./LoadingMessage";
+import ErrorMessage from "./ErrorMessage";
+import NoDataMessage from "./NoDataMessage";
 
 const fetcher = async (url) => {
   const res = await fetch(url);
