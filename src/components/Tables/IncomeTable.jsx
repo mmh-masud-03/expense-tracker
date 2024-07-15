@@ -12,7 +12,7 @@ import {
 import IncomeForm from "../Income/IncomeForm";
 import { toast } from "react-toastify";
 
-export default function IncomeList() {
+export default function IncomeTable() {
   const [incomes, setIncomes] = useState([]);
   const [overview, setOverview] = useState({
     totalAmount: 0,
