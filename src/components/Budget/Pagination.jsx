@@ -1,12 +1,12 @@
 export default function Pagination({ page, setPage, totalPages }) {
   return (
-    <div className="flex justify-between items-center mt-4">
+    <div className="flex justify-center items-center mt-4">
       <button
         onClick={() => setPage(page - 1)}
         disabled={page === 1}
-        className={`px-4 py-2 rounded ${
+        className={`px-4 py-2 rounded-full ${
           page === 1
-            ? "bg-gray-300 cursor-not-allowed"
+            ? "bg-blue-500/50 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
         } transition-colors duration-200`}
       >
@@ -18,9 +18,9 @@ export default function Pagination({ page, setPage, totalPages }) {
       <button
         onClick={() => setPage(page + 1)}
         disabled={page === totalPages}
-        className={`px-4 py-2 rounded ${
+        className={`px-4 py-2 rounded-full ${
           page === totalPages
-            ? "bg-gray-300 cursor-not-allowed"
+            ? "bg-blue-500/50 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
         } transition-colors duration-200`}
       >

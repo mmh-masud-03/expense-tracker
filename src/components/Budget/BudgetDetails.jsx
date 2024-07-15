@@ -1,3 +1,4 @@
+import { BsFilterLeft } from "react-icons/bs";
 import BudgetTable from "./BudgetTable";
 import Pagination from "./Pagination";
 

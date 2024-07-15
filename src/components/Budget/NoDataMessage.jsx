@@ -1,3 +1,5 @@
+import { AiOutlineExclamationCircle } from "react-icons/ai";
+
 export default function NoDataMessage() {
   return (
     <div className="container mx-auto p-4 mb-6 bg-white rounded-lg shadow-md flex items-center">

@@ -1,3 +1,10 @@
+import {
+  FaEdit,
+  FaSortAmountDown,
+  FaSortAmountUp,
+  FaTrash,
+} from "react-icons/fa";
+
 export default function BudgetTable({
   sortedData,
   requestSort,

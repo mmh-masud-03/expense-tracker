@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={opensans.className}>
         <AuthProvider>
-          <div className="flex min-h-screen bg-slate-50">
+          <div className="flex min-h-screen bg-gray-900">
             {/* <Sidebar /> */}
             <div className="flex-1">
               <Navbar />

@@ -5,6 +5,10 @@ import BudgetOverview from "@/components/Budget/BudgetOverview";
 import IncomeList from "@/components/Income/IncomeList";
 import ExpenseList from "@/components/Expense/ExpenseList";
 import AllTransactionsDetailsPage from "@/components/All Transactions/AllTransactionsDetailsPage";
+import BudgetTable from "@/components/Tables/BudgetTable";
+import BudgetTableWithoutOverview from "@/components/Tables/BudgetTable";
+import IncomeTable from "@/components/Tables/IncomeTable";
+import ExpenseTable from "@/components/Tables/ExpenseTable";
 
 export default function Home() {
   return (
@@ -21,6 +25,11 @@ export default function Home() {
     //     </div>
     //   </div>
     // </div>
-    <AllTransactionsDetailsPage />
+    <>
+      <AllTransactionsDetailsPage />
+      <BudgetTableWithoutOverview />
+      <IncomeTable />
+      <ExpenseTable />
+    </>
   );
 }
