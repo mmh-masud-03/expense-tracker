@@ -1,9 +1,25 @@
-import React from "react";
+"use client";
 import { FiInfo } from "react-icons/fi";
-
+import useFinancialData from "@/utils/useFinancialData";
 const ExpenseIncomes = () => {
+  const { data, error } = useFinancialData();
+  const { incomeData, expenseData } = data;
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+  if (!incomeData || !expenseData) {
+    return <div>Loading...</div>;
+  }
+  const totalIncome = incomeData.reduce(
+    (acc, income) => acc + income.amount,
+    0
+  );
+  const totalExpense = expenseData.reduce(
+    (acc, expense) => acc + expense.amount,
+    0
+  );
   return (
-    <div className="bg-slate-100 rounded-lg shadow-md p-4 w-1/2 h-44 relative">
+    <div className="bg-slate-100 rounded-lg shadow-lg shadow-gray-300 p-4 w-1/2 h-44 relative">
       <h2 className="text-xl font-semibold mb-2">Expense & Incomes</h2>
       <div className="space-y-4">
         <div className="flex items-center">
@@ -36,8 +52,10 @@ const ExpenseIncomes = () => {
             </svg>
           </div>
           <div>
-            <p className="text-green-500 font-semibold text-lg">+$2,992.00</p>
-            <p className="text-sm text-gray-500">Total incomes this month</p>
+            <p className="text-green-500 font-semibold text-lg">
+              BDT {totalIncome}
+            </p>
+            <p className="text-sm text-gray-500">Total incomes you have made</p>
           </div>
         </div>
 
@@ -71,8 +89,10 @@ const ExpenseIncomes = () => {
             </svg>
           </div>
           <div>
-            <p className="text-purple-500 font-semibold text-lg">-$1,419.00</p>
-            <p className="text-sm text-gray-500">Total outcomes this month</p>
+            <p className="text-purple-500 font-semibold text-lg">
+              BDT {totalExpense}
+            </p>
+            <p className="text-sm text-gray-500">Total expenses</p>
           </div>
         </div>
       </div>

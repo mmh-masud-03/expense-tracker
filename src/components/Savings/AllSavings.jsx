@@ -86,7 +86,7 @@ export default function AllSavings() {
   };
 
   return (
-    <div className="relative bg-white p-6 rounded-lg shadow-md w-full">
+    <div className="relative bg-gradient-to-r from-slate-50  to-slate-200 p-6 rounded-lg shadow-lg w-full">
       <h2 className="text-xl font-semibold mb-2">Savings plan</h2>
       <p className="text-lg mb-4">{data.data.length} saving plans</p>
 
@@ -100,11 +100,11 @@ export default function AllSavings() {
           return (
             <div
               key={saving._id}
-              className="border rounded-lg p-4 relative group"
+              className="border bg-slate-50 rounded-lg p-4 relative group"
             >
               <div className="flex items-center mb-2">
                 <div
-                  className={`bg-${color}-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2`}
+                  className={`bg-${color}-500 text-blue-500 rounded-full w-8 h-8 flex items-center justify-center mr-2`}
                 >
                   <Icon />
                 </div>

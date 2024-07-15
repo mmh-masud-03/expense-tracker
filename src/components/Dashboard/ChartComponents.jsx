@@ -27,7 +27,7 @@ ChartJS.register(
 export function IncomeVsExpensesChart({ data }) {
   const chartData = prepareChartData(data, "incomeVsExpenses");
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full">
+    <div className="bg-slate-100 shadow-gray-300 p-6 rounded-lg shadow-lg w-full">
       <h2 className="text-xl font-semibold mb-4 text-center">
         Income vs Expenses
       </h2>
@@ -39,7 +39,7 @@ export function IncomeVsExpensesChart({ data }) {
 export function SavingsRateChart({ savingsRate }) {
   const chartData = prepareChartData({ savingsRate }, "savingsRate");
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+    <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-200 flex flex-col items-center">
       <h2 className="text-xl font-semibold mb-4 text-center">Savings Rate</h2>
       <div className="h-64 w-64">
         <Doughnut
@@ -85,7 +85,7 @@ export function SavingsRateChart({ savingsRate }) {
 export function BudgetVsActualChart({ data }) {
   const chartData = prepareChartData(data, "budgetVsActual");
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full mt-10 lg:mt-0">
+    <div className="bg-slate-100 shadow-gray-300 p-6 rounded-lg shadow-md w-full mt-10 lg:mt-0">
       <h2 className="text-xl font-semibold mb-4 text-center">
         Budget vs Actual Expenses
       </h2>

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { getUserId } from "@/utils/UtilityFunction";
 import {
   FaBars,
   FaTimes,
@@ -21,7 +20,6 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
-  const userId = getUserId();
   const dropdownRef = useRef(null);
 
   const navItems = [
