@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   FaBars,
   FaTimes,
@@ -10,10 +10,10 @@ import {
   FaChartBar,
   FaMoneyBillWave,
   FaWallet,
-  FaCalendarAlt,
   FaChartLine,
-  FaReceipt,
 } from "react-icons/fa";
+import NotificationDropdown from "./NotificationDropdown";
+import SettingsDropdown from "./SettingsDropdown";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,11 +24,8 @@ export default function Navbar() {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: FaChartBar },
-    { href: "/expenses", label: "Expenses", icon: FaMoneyBillWave },
-    { href: "/income", label: "Income", icon: FaWallet },
-    { href: "/budget", label: "Budget", icon: FaCalendarAlt },
+    { href: "/transactions", label: "Transactions", icon: FaMoneyBillWave },
     { href: "/reports", label: "Reports", icon: FaChartLine },
-    { href: "/savings", label: "Savings", icon: FaReceipt },
   ];
 
   useEffect(() => {
@@ -47,19 +44,22 @@ export default function Navbar() {
     <nav className="fixed w-full z-10 bg-slate-100 text-black shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/home" className="flex items-center">
-              <span className="text-white font-bold text-xl">
+          {/* Logo */}
+          <div className="flex items-center my-2 px-3">
+            <Link href="/dashboard" className="flex items-center">
+              <span className="text-black font-bold text-xl">
                 <FaWallet className="inline-block mr-2" /> Expense Tracker
               </span>
             </Link>
           </div>
-          <div className="hidden md:flex items-center space-x-4">
+
+          {/* Centered Navigation Items */}
+          <div className="hidden md:flex items-center justify-center flex-grow">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-gray-300 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base ${
+                className={`text-black border border-slate-400 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
                   pathname === item.href ? "bg-slate-900 text-white" : ""
                 }`}
               >
@@ -67,54 +67,53 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <div className="ml-4 flex items-center space-x-2">
-              {session ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="bg-slate-600 text-white p-2 rounded-full transition-colors duration-300 hover:bg-slate-500"
-                  >
-                    <FaUser />
-                  </button>
-                  {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                      {/* <Link
-                        href={`/profile/${session?.user?._id}`}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        Profile
-                      </Link> */}
-                      <button
-                        onClick={() => {
-                          signOut();
-                          setDropdownOpen(false);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="text-gray-300 hover:bg-slate-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
-                  >
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
           </div>
+
+          {/* Right Side Icons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <NotificationDropdown />
+            <SettingsDropdown />
+            {session ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="bg-slate-600 text-white p-2 rounded-full transition-colors duration-300 hover:bg-slate-500"
+                >
+                  <FaUser />
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-gray-600 hover:bg-slate-200 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -131,6 +130,8 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
       <div
         className={`${
           isOpen ? "block" : "hidden"
@@ -150,25 +151,22 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          <div className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+            <NotificationDropdown />
+          </div>
+          <div className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+            <SettingsDropdown />
+          </div>
           {session ? (
-            <>
-              {/* <Link
-                href={`/profile/${session?.user?._id}`}
-                className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Profile
-              </Link> */}
-              <button
-                onClick={() => {
-                  signOut();
-                  setIsOpen(false);
-                }}
-                className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left"
-              >
-                Logout
-              </button>
-            </>
+            <button
+              onClick={() => {
+                signOut();
+                setIsOpen(false);
+              }}
+              className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+            >
+              Logout
+            </button>
           ) : (
             <>
               <Link

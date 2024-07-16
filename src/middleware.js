@@ -1,14 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-const protectedRoutes = [
-  "/home",
-  "/dashboard",
-  "/income",
-  "/budget",
-  "/expenses",
-  "/report",
-];
+const protectedRoutes = ["/dashboard", "/transactions", "/report"];
 
 export async function middleware(req) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -25,7 +18,7 @@ export async function middleware(req) {
     return NextResponse.next();
   }
   if (token && pathname === "/") {
-    return NextResponse.redirect(new URL("/home", req.url));
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
   if (!token && pathname === "/") {
     return NextResponse.redirect(new URL("/login", req.url));
