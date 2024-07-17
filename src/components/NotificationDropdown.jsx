@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect, useRef } from "react";
 import { FaBell, FaTimes } from "react-icons/fa";
 
@@ -31,6 +32,7 @@ export default function NotificationDropdown() {
       const res = await fetch("/api/notifications");
       if (res.ok) {
         const data = await res.json();
+        console.log(data);
         setNotifications(data);
       } else {
         throw new Error("Failed to fetch notifications");

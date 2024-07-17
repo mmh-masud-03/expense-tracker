@@ -6,7 +6,7 @@ export default function SettingsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    fetchSettings();
+    // fetchSettings();
   }, []);
 
   const fetchSettings = async () => {

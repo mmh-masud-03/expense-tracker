@@ -20,8 +20,11 @@ export default function BalanceOverview() {
     0
   );
   const savingsRate =
-    totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome) * 100 : 0;
-  const totalBalance = totalIncome - totalExpense;
+    totalIncome - totalExpense > 0
+      ? ((totalIncome - totalExpense) / totalIncome) * 100
+      : 0;
+  const totalBalance =
+    totalIncome - totalExpense > 0 ? totalIncome - totalExpense : 0;
   return (
     <div className="relative shadow-lg shadow-slate-300 bg-gradient-to-br from-[#1e293b] to-[#3b4252] rounded-lg p-6 text-white w-1/2 h-44">
       <h2 className="text-2xl font-bold mb-2">Balance overview</h2>

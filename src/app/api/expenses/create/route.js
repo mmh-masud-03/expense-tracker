@@ -2,7 +2,6 @@
 import { ConnectToDB } from "@/utils/connect";
 import Expense from "@/models/Expense";
 import { getTokenFromRequest } from "@/utils/authHelper";
-import { checkBudgetExceedance } from "@/utils/budgetCheck";
 export const POST = async (req) => {
   try {
     const token = await getTokenFromRequest(req);
@@ -31,8 +30,7 @@ export const POST = async (req) => {
       date,
     });
 
-    // Check budget exceedance after creating new expense
-    await checkBudgetExceedance(user);
+
 
     return new Response(JSON.stringify(newExpense), { status: 201 });
   } catch (err) {
