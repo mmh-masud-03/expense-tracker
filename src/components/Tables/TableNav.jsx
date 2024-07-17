@@ -7,9 +7,9 @@ import ExpenseTable from "./ExpenseTable";
 function TableNav() {
   const [activeTab, setActiveTab] = useState("budget");
   const tabs = [
-    { name: "budget", label: "Budget Table" },
-    { name: "income", label: "Income Table" },
-    { name: "expense", label: "Expense Table" },
+    { name: "budget", label: "Budget" },
+    { name: "income", label: "Income" },
+    { name: "expense", label: "Expense" },
   ];
 
   const renderTable = () => {
@@ -28,7 +28,7 @@ function TableNav() {
   return (
     <div className="mt-20 container mx-auto ">
       <div className="flex justify-center items-center mb-1 bg-slate-200 py-8 rounded">
-        <div className="flex flex-row justify-center items-center border py-2 w-[46%] rounded-full border-gray-800">
+        <div className="flex flex-row justify-center items-center border py-2 w-[55%] lg:w-[46%] rounded-full border-gray-800">
           {tabs.map((tab) => (
             <button
               key={tab.name}
