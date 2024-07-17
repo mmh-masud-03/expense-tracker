@@ -291,7 +291,7 @@ export default function ExpenseReport() {
       <h2 className="text-3xl font-bold text-gray-700 mb-12 text-center">
         Expense Report
       </h2>
-      <div className="hidden mb-10 md:flex flex-row justify-between items-center">
+      <div className=" mb-10 flex flex-row justify-between items-center">
         <div className=" w-full lg:w-2/3">
           <ImprovedDatePicker
             startDate={startDate}

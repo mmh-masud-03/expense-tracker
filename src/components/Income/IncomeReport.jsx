@@ -282,7 +282,7 @@ export default function IncomeReport() {
       <h2 className="text-3xl font-bold text-gray-700  text-center mb-12">
         Income Report
       </h2>
-      <div className="hidden mb-10 md:flex flex-row justify-between items-center">
+      <div className=" mb-10 flex flex-row justify-between items-center">
         <div className=" w-full lg:w-2/3">
           <ImprovedDatePicker
             startDate={startDate}

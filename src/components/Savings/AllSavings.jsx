@@ -31,7 +31,7 @@ const categoryMap = {
 };
 
 export default function AllSavings() {
-  const { data, error, mutate } = useSWR("/api/savings?limit=100", fetcher);
+  const { data, error, mutate } = useSWR("/api/savings?limit=2", fetcher);
   const [selectedSaving, setSelectedSaving] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAddAmountOpen, setIsAddAmountOpen] = useState(false);

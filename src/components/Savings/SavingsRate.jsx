@@ -2,7 +2,7 @@
 import { Doughnut } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-
+import { FaInfoCircle } from "react-icons/fa";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function SavingsRate({ incomeData, expenseData }) {
@@ -57,7 +57,10 @@ export default function SavingsRate({ incomeData, expenseData }) {
   );
   const totalSavings = totalIncome - totalExpense;
   return (
-    <div className="bg-slate-100 p-6 rounded-xl shadow-lg flex flex-col justify-between h-full">
+    <div className="relative bg-slate-100 p-6 rounded-xl shadow-lg flex flex-col justify-between h-full">
+      <span className="absolute top-5 right-4 text-black">
+        <FaInfoCircle />
+      </span>
       <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
         Savings Rate
       </h2>

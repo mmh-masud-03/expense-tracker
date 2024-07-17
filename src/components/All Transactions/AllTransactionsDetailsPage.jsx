@@ -1,6 +1,8 @@
 "use client";
 import useFinancialData from "@/utils/useFinancialData";
 import { useState, useEffect } from "react";
+import { FiMoreVertical } from "react-icons/fi";
+
 import {
   FaWallet,
   FaChartLine,
@@ -130,6 +132,9 @@ function AllTransactionsDetailsPage() {
                     className={`absolute inset-0 bg-gradient-to-r ${card.color} rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200`}
                   ></div>
                   <div className="py-9 relative bg-slate-100 shadow-xl rounded-xl leading-none flex items-top justify-start space-x-6 p-6 transform group-hover:scale-105 transition duration-300">
+                    <span className="absolute top-4 right-4">
+                      <FiMoreVertical />
+                    </span>
                     <div
                       className={`text-${
                         card.color.split("-")[1]
