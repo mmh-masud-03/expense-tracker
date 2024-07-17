@@ -33,7 +33,7 @@ export default function ImprovedDatePicker({
   };
 
   return (
-    <div className=" bg-white p-6 rounded-lg shadow-md">
+    <div className=" bg-slate-50 p-6 rounded-lg shadow-md">
       <h3 className="text-xl font-semibold text-gray-700 mb-4">
         Select Date Range
       </h3>

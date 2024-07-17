@@ -278,7 +278,7 @@ export default function IncomeReport() {
   };
 
   return (
-    <div className="container mx-auto relative p-6 mb-6 bg-white rounded-lg shadow-md">
+    <div className="container mx-auto relative p-6 mb-6 bg-slate-100 rounded-lg shadow-md">
       <h2 className="text-3xl font-bold text-gray-700  text-center mb-12">
         Income Report
       </h2>

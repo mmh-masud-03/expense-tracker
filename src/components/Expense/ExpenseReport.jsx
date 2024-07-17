@@ -180,7 +180,7 @@ export default function ExpenseReport() {
 
   if (loading) {
     return (
-      <div className="container mx-auto flex justify-center items-center h-64 bg-white rounded shadow-md">
+      <div className="container mx-auto flex justify-center items-center h-64 bg-slate-100 rounded shadow-md">
         <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
       </div>
     );
@@ -287,7 +287,7 @@ export default function ExpenseReport() {
   };
 
   return (
-    <div className="p-6 container mx-auto relative mb-6 bg-white rounded-lg shadow-md">
+    <div className="p-6 container mx-auto relative mb-6 bg-slate-100 rounded-lg shadow-md">
       <h2 className="text-3xl font-bold text-gray-700 mb-12 text-center">
         Expense Report
       </h2>

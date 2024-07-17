@@ -57,7 +57,7 @@ export default function SavingsRate({ incomeData, expenseData }) {
   );
   const totalSavings = totalIncome - totalExpense;
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between h-full">
+    <div className="bg-slate-100 p-6 rounded-xl shadow-lg flex flex-col justify-between h-full">
       <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
         Savings Rate
       </h2>

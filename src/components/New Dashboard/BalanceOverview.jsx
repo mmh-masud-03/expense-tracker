@@ -26,7 +26,7 @@ export default function BalanceOverview() {
   const totalBalance =
     totalIncome - totalExpense > 0 ? totalIncome - totalExpense : 0;
   return (
-    <div className="relative w-full shadow-lg shadow-slate-300 bg-gradient-to-br from-[#1e293b] to-[#3b4252] rounded-lg p-6 text-white lg:w-1/2 h-44">
+    <div className="relative w-full shadow-lg shadow-slate-300 bg-gradient-to-br from-[#1e293b] to-[#3b4252] rounded-lg p-6 text-slate-200 lg:w-1/2 h-44">
       <h2 className="text-2xl font-bold mb-2">Balance overview</h2>
       <p className="text-4xl font-bold mb-2">BDT {totalBalance}</p>
       <p className="text-base">

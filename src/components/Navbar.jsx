@@ -13,8 +13,8 @@ import {
   FaChartLine,
   FaBell,
 } from "react-icons/fa";
-import SettingsDropdown from "./SettingsDropdown";
 import { useBudget } from "@/utils/BudgetContext";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -62,8 +62,8 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center my-2 px-3">
             <Link href="/dashboard" className="flex items-center">
-              <FaWallet className="inline-block mr-2" />
-              <span className="text-white font-bold text-xl">
+              <FaWallet className="inline-block text-slate-200 mr-2" />
+              <span className="text-slate-200 font-bold text-xl">
                 Expense Tracker
               </span>
             </Link>
@@ -75,8 +75,8 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={` border border-slate-400 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
-                  pathname === item.href ? "bg-white text-black" : ""
+                className={`border border-slate-400 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
+                  pathname === item.href ? "bg-slate-100 text-black" : ""
                 }`}
               >
                 <item.icon className="mr-2" />
@@ -106,7 +106,6 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            {/* <SettingsDropdown /> */}
             {session ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -199,9 +198,6 @@ export default function Navbar() {
                 {notification.message}
               </div>
             )}
-          </div>
-          <div className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-            <SettingsDropdown />
           </div>
           {session ? (
             <button

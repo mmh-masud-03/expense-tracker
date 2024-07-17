@@ -129,7 +129,7 @@ function AllTransactionsDetailsPage() {
                   <div
                     className={`absolute inset-0 bg-gradient-to-r ${card.color} rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200`}
                   ></div>
-                  <div className="py-9 relative bg-white shadow-xl rounded-xl leading-none flex items-top justify-start space-x-6 p-6 transform group-hover:scale-105 transition duration-300">
+                  <div className="py-9 relative bg-slate-100 shadow-xl rounded-xl leading-none flex items-top justify-start space-x-6 p-6 transform group-hover:scale-105 transition duration-300">
                     <div
                       className={`text-${
                         card.color.split("-")[1]
@@ -156,7 +156,7 @@ function AllTransactionsDetailsPage() {
           </div>
 
           {/* Right column: Savings Rate */}
-          <div className="w-full lg:w-1/3 flex items-center">
+          <div className="w-full lg:w-1/3 mt-8 lg:mt-0">
             <div className="w-full h-full">
               <SavingsRate
                 incomeData={data.incomeData}
