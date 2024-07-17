@@ -45,11 +45,13 @@ export const GET = async (req) => {
       };
     }
 
-    const expenses = await Expense.find(filterCriteria)
-      .sort(sortCriteria)
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const expensesQuery = Expense.find(filterCriteria).sort(sortCriteria);
 
+    if (startDate && endDate) {
+      expensesQuery.skip((page - 1) * limit).limit(limit);
+    }
+
+    const expenses = await expensesQuery;
     const totalExpenses = await Expense.countDocuments(filterCriteria);
 
     // Calculate total expense amount
@@ -64,7 +66,7 @@ export const GET = async (req) => {
     return new Response(
       JSON.stringify({
         expenses,
-        totalPages: Math.ceil(totalExpenses / limit),
+        totalPages: startDate && endDate ? Math.ceil(totalExpenses / limit) : 1,
         currentPage: page,
         totalExpenses,
         totalAmount,
