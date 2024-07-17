@@ -19,7 +19,7 @@ const ExpenseIncomes = () => {
     0
   );
   return (
-    <div className="bg-slate-100 rounded-lg shadow-lg shadow-gray-300 p-4 w-1/2 h-44 relative">
+    <div className="bg-slate-100 rounded-lg shadow-lg shadow-gray-300 p-4 lg:w-1/2 w-full h-44 relative">
       <h2 className="text-xl font-semibold mb-2">Expense & Incomes</h2>
       <div className="space-y-4">
         <div className="flex items-center">

@@ -118,12 +118,8 @@ function AllTransactionsDetailsPage() {
   ];
 
   return (
-    <div className=" container mx-auto bg-gradient-to-br from-gray-100 to-gray-200 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-gray-900 text-left mb-5">
-          Financial <span className="text-blue-600">Overview</span>
-        </h1>
-
+    <div className="mt-5 container mx-auto bg-gradient-to-br from-gray-100 to-gray-200 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto pt-12">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left column: Cards */}
           <div className="w-full lg:w-2/3">

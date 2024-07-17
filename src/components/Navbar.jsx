@@ -11,16 +11,19 @@ import {
   FaMoneyBillWave,
   FaWallet,
   FaChartLine,
+  FaBell,
 } from "react-icons/fa";
-import NotificationDropdown from "./NotificationDropdown";
 import SettingsDropdown from "./SettingsDropdown";
-
+import { useBudget } from "@/utils/BudgetContext";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
   const dropdownRef = useRef(null);
+  const notificationRef = useRef(null);
+  const { notification } = useBudget(); // Get notification from BudgetProvider
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: FaChartBar },
@@ -33,6 +36,12 @@ export default function Navbar() {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setNotificationOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -40,15 +49,22 @@ export default function Navbar() {
     };
   }, []);
 
+  const handleLogout = () => {
+    signOut();
+    setDropdownOpen(false);
+    setIsOpen(false);
+  };
+
   return (
-    <nav className="fixed w-full z-10 bg-slate-100 text-black shadow-lg">
+    <nav className="fixed w-full z-10 bg-slate-800 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex items-center my-2 px-3">
             <Link href="/dashboard" className="flex items-center">
-              <span className="text-black font-bold text-xl">
-                <FaWallet className="inline-block mr-2" /> Expense Tracker
+              <FaWallet className="inline-block mr-2" />
+              <span className="text-white font-bold text-xl">
+                Expense Tracker
               </span>
             </Link>
           </div>
@@ -59,8 +75,8 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-black border border-slate-400 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
-                  pathname === item.href ? "bg-slate-900 text-white" : ""
+                className={` border border-slate-400 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
+                  pathname === item.href ? "bg-white text-black" : ""
                 }`}
               >
                 <item.icon className="mr-2" />
@@ -71,8 +87,26 @@ export default function Navbar() {
 
           {/* Right Side Icons */}
           <div className="hidden md:flex items-center space-x-4">
-            <NotificationDropdown />
-            <SettingsDropdown />
+            {/* Notification Bell */}
+            <div className="relative" ref={notificationRef}>
+              <button
+                onClick={() => setNotificationOpen(!notificationOpen)}
+                className="text-gray-100 hover:scale-105 focus:outline-none"
+              >
+                <FaBell className="h-6 w-6" size={12} />
+                {notification?.type !== "empty" && (
+                  <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
+                )}
+              </button>
+              {notificationOpen && notification && (
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10">
+                  <div className="px-4 py-2 text-sm text-gray-700">
+                    {notification.message}
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* <SettingsDropdown /> */}
             {session ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -84,10 +118,7 @@ export default function Navbar() {
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
                     <button
-                      onClick={() => {
-                        signOut();
-                        setDropdownOpen(false);
-                      }}
+                      onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Logout
@@ -118,7 +149,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              aria-expanded="false"
+              aria-expanded={isOpen}
             >
               <span className="sr-only">Toggle menu</span>
               {isOpen ? (
@@ -151,18 +182,30 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          {/* Notification in mobile menu */}
           <div className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-            <NotificationDropdown />
+            <button
+              onClick={() => setNotificationOpen(!notificationOpen)}
+              className="flex items-center w-full text-left"
+            >
+              <FaBell className="mr-2" />
+              Notifications
+              {notification && (
+                <span className="ml-2 h-2 w-2 rounded-full bg-red-500" />
+              )}
+            </button>
+            {notificationOpen && notification && (
+              <div className="mt-2 bg-slate-700 rounded-md p-2 text-sm">
+                {notification.message}
+              </div>
+            )}
           </div>
           <div className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
             <SettingsDropdown />
           </div>
           {session ? (
             <button
-              onClick={() => {
-                signOut();
-                setIsOpen(false);
-              }}
+              onClick={handleLogout}
               className="text-gray-300 hover:bg-slate-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               Logout

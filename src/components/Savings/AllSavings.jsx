@@ -15,6 +15,7 @@ import {
   FaGraduationCap,
   FaPiggyBank,
 } from "react-icons/fa";
+import LoadingMessage from "../Budget/LoadingMessage";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -37,7 +38,12 @@ export default function AllSavings() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   if (error) return <div>Failed to load savings</div>;
-  if (!data) return <div>Loading...</div>;
+  if (!data)
+    return (
+      <div>
+        <LoadingMessage />
+      </div>
+    );
 
   const handleAddAmount = (saving) => {
     setSelectedSaving(saving);

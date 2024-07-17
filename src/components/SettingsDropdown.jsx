@@ -35,7 +35,7 @@ export default function SettingsDropdown() {
         onClick={() => setIsOpen(!isOpen)}
         className="text-black hover:bg-slate-200 p-2 rounded-full"
       >
-        <FaCog />
+        <FaCog size={22} />
       </button>
       {isOpen && (
         <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1">
