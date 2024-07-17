@@ -19,9 +19,6 @@ export const GET = async (req) => {
     const startDate = url.searchParams.get("startDate");
     const endDate = url.searchParams.get("endDate");
 
-    // Calculate the number of items to skip
-    const skip = (page - 1) * limit;
-
     // Prepare the query object
     let query = { user: new mongoose.Types.ObjectId(token.id) };
 
@@ -33,11 +30,17 @@ export const GET = async (req) => {
       };
     }
 
-    // Fetch paginated income data
-    const incomes = await Income.find(query)
-      .skip(skip)
-      .limit(limit)
-      .sort({ date: -1 });
+    // Initialize the incomes query
+    let incomesQuery = Income.find(query).sort({ date: -1 });
+
+    // Apply pagination only if the date range is specified
+    if (startDate && endDate) {
+      const skip = (page - 1) * limit;
+      incomesQuery = incomesQuery.skip(skip).limit(limit);
+    }
+
+    // Fetch incomes based on the constructed query
+    const incomes = await incomesQuery;
 
     // Calculate total income amount
     const totalIncomeAmount = await Income.aggregate([
@@ -55,7 +58,8 @@ export const GET = async (req) => {
     return new Response(
       JSON.stringify({
         incomes,
-        totalPages: Math.ceil(totalDocuments / limit),
+        totalPages:
+          startDate && endDate ? Math.ceil(totalDocuments / limit) : 1,
         currentPage: page,
         totalAmount,
       }),
