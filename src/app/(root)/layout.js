@@ -20,17 +20,23 @@ export default function RootLayout({ children }) {
       <body className={opensans.className}>
         <AuthProvider>
           <BudgetProvider>
-            <div className="flex min-h-screen bg-gray-900">
-              {/* <Sidebar /> */}
-              <div className="flex-1">
-                <Navbar />
-                <main className="p-6 mt-10">
-                  {children}
-                  <div className="container mx-auto">
-                    <AddFinanceButton />
-                  </div>
-                  <ToastContainer />
-                </main>
+            <div className="min-h-screen bg-gray-900">
+              <Navbar />
+              <div className="flex pt-16">
+                {" "}
+                {/* Added pt-16 for Navbar height */}
+                <Sidebar />
+                <div className="flex-1 lg:ml-20">
+                  {" "}
+                  {/* Added lg:ml-20 for collapsed sidebar width */}
+                  <main className="p-6">
+                    {children}
+                    <div className="container mx-auto">
+                      <AddFinanceButton />
+                    </div>
+                    <ToastContainer />
+                  </main>
+                </div>
               </div>
             </div>
           </BudgetProvider>

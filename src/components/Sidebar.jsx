@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Set to true by default
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const navItems = [
@@ -27,7 +27,7 @@ export default function Sidebar() {
     <>
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed z-20 top-4 left-4 p-2 bg-gray-800 text-white rounded-full shadow-lg"
+        className="lg:hidden fixed z-20 top-20 left-4 p-2 bg-gray-800 text-white rounded-full shadow-lg"
         aria-label="Toggle Menu"
       >
         <FaChevronRight
@@ -39,9 +39,9 @@ export default function Sidebar() {
       <aside
         className={`${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-10 bg-gray-800 text-white transition-all duration-300 ease-in-out ${
+        } lg:translate-x-0 fixed top-16 left-0 z-10 bg-gray-800 text-white transition-all duration-300 ease-in-out ${
           isCollapsed ? "w-20" : "w-64"
-        } flex flex-col`}
+        } flex flex-col h-[calc(100vh-4rem)]`}
       >
         <div
           className={`p-4 font-bold text-xl flex items-center ${
