@@ -75,7 +75,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`border border-slate-400 hover:bg-slate-900 hover:text-white px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
+                className={`border border-slate-400 hover:bg-white hover:text-black px-3 py-2 rounded-md font-medium transition duration-150 ease-in-out flex items-center text-base mx-2 ${
                   pathname === item.href ? "bg-slate-100 text-black" : ""
                 }`}
               >

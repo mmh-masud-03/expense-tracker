@@ -9,11 +9,15 @@ import {
   FaFileAlt,
   FaChevronLeft,
   FaChevronRight,
+  FaSignOutAlt,
 } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 export default function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(true); // Set to true by default
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: FaChartPie },
@@ -22,6 +26,10 @@ export default function Sidebar() {
     { href: "/budget", label: "Budget", icon: FaChartBar },
     { href: "/reports", label: "Reports", icon: FaFileAlt },
   ];
+
+  const handleLogout = () => {
+    signOut();
+  };
 
   return (
     <>
@@ -68,13 +76,22 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center text-gray-300 hover:text-white hover:bg-gray-700 transition duration-150 ease-in-out ${
                 isCollapsed ? "justify-center py-4" : "px-4 py-3"
-              }`}
+              } ${pathname === item.href ? "bg-slate-600" : ""}`}
             >
               <item.icon className={`w-6 h-6 ${isCollapsed ? "" : "mr-3"}`} />
               {!isCollapsed && <span>{item.label}</span>}
             </Link>
           ))}
         </nav>
+        <button
+          onClick={handleLogout}
+          className={`flex items-center text-gray-300 hover:text-white hover:bg-gray-700 transition duration-150 ease-in-out ${
+            isCollapsed ? "justify-center py-4" : "px-4 py-3"
+          }`}
+        >
+          <FaSignOutAlt className={`w-6 h-6 ${isCollapsed ? "" : "mr-3"}`} />
+          {!isCollapsed && <span>Logout</span>}
+        </button>
       </aside>
     </>
   );
