@@ -320,7 +320,7 @@ export default function IncomeReport() {
               {startDate === "" ? (
                 <span>Select a date range</span>
               ) : (
-                <span> to</span>
+                <span> to </span>
               )}
               {endDate}
             </p>

@@ -43,7 +43,7 @@ export default function AuthForm({ type }) {
         console.error("Error:", result.error);
         toast(result.error, { type: "error" });
       } else {
-        router.push("/home");
+        router.push("/dashboard");
         toast("Logged in", { type: "success" });
       }
     }
