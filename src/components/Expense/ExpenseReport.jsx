@@ -196,9 +196,18 @@ export default function ExpenseReport() {
 
   if (expenseData.length === 0) {
     return (
-      <div className="p-4 mb-6 bg-white rounded shadow-md">
-        No expense data available
-      </div>
+      <>
+        {" "}
+        <ImprovedDatePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+        />
+        <div className="p-4 mb-6 bg-white rounded shadow-md">
+          No expense data available
+        </div>
+      </>
     );
   }
 

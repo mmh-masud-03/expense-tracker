@@ -40,7 +40,6 @@ export default function BudgetOverview() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ open: false, id: null });
-  const [viewMode, setViewMode] = useState(false);
   const toggleViewMode = () => setViewMode((prev) => !prev);
   const limit = 10;
 
@@ -173,27 +172,24 @@ export default function BudgetOverview() {
         totalBudget={totalBudget}
         remainingBudget={remainingBudget}
       />
-      <button onClick={toggleViewMode} className=" mt-4 bg-slate-500 p-3">
-        {viewMode ? "Hide Details" : "View Details"}
-      </button>
-      {viewMode && (
-        <BudgetDetails
-          filters={filters}
-          setFilters={setFilters}
-          months={months}
-          years={years}
-          sortedData={sortedData}
-          page={page}
-          setPage={setPage}
-          totalPages={data.pages}
-          requestSort={requestSort}
-          sortConfig={sortConfig}
-          onUpdate={handleUpdate}
-          handleDelete={handleDelete}
-          confirmModal={confirmModal}
-          setConfirmModal={setConfirmModal}
-        />
-      )}
+
+      <BudgetDetails
+        filters={filters}
+        setFilters={setFilters}
+        months={months}
+        years={years}
+        sortedData={sortedData}
+        page={page}
+        setPage={setPage}
+        totalPages={data.pages}
+        requestSort={requestSort}
+        sortConfig={sortConfig}
+        onUpdate={handleUpdate}
+        handleDelete={handleDelete}
+        confirmModal={confirmModal}
+        setConfirmModal={setConfirmModal}
+      />
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">

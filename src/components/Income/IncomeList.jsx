@@ -106,209 +106,201 @@ export default function IncomeList() {
   if (error) return <ErrorState error={error} />;
 
   return (
-    <div className="p-6 container mx-auto mb-6 bg-slate-200/60 rounded-lg shadow-lg">
+    <div className="p-6 mb-6 bg-slate-100 rounded-lg shadow-lg container mx-auto">
       <OverviewSection overview={overview} />
-      <button
-        className="bg-slate-300 p-3 mb-3"
-        onClick={() => setViewDetails(!viewDetails)}
-      >
-        {viewDetails ? "Hide Details" : "Show Details"}
-      </button>
-      {viewDetails && (
-        <>
-          {/* Search and Filter */}
-          <div className="flex flex-col md:flex-row  mb-8">
-            <div className="relative flex-grow">
-              <input
-                type="text"
-                placeholder="Search income..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-              />
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-            </div>
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="px-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="">All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+      <>
+        {/* Search and Filter */}
+        <div className="flex flex-col md:flex-row  mb-8">
+          <div className="relative flex-grow">
+            <input
+              type="text"
+              placeholder="Search income..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+            />
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="px-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+          >
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => handleSort("title")}
-                  >
-                    <div className="flex items-center space-x-1">
-                      <span>Title</span>
-                      <SortIcon column="title" />
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => handleSort("category")}
-                  >
-                    <div className="flex items-center space-x-1">
-                      <span>Category</span>
-                      <SortIcon column="category" />
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => handleSort("amount")}
-                  >
-                    <div className="flex items-center space-x-1">
-                      <span>Amount</span>
-                      <SortIcon column="amount" />
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                    onClick={() => handleSort("date")}
-                  >
-                    <div className="flex items-center space-x-1">
-                      <span>Date</span>
-                      <SortIcon column="date" />
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <AnimatePresence>
-                  {incomes.length > 0 ? (
-                    incomes.map((income, index) => (
-                      <motion.tr
-                        key={income._id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                      >
-                        <td className="px-4 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">
-                            {income.title}
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            {income.category}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {income.amount.toFixed(2)} Tk
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500">
-                            {new Date(income.date).toLocaleDateString()}
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            onClick={() => handleUpdate(income)}
-                            className="text-indigo-600 hover:text-indigo-900 mr-4"
-                          >
-                            <FaEdit className="inline-block" />
-                          </button>
-                          <button
-                            onClick={() =>
-                              setConfirmModal({ open: true, id: income._id })
-                            }
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <FaTrash className="inline-block" />
-                          </button>
-                        </td>
-                      </motion.tr>
-                    ))
-                  ) : (
+        <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                  onClick={() => handleSort("title")}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>Title</span>
+                    <SortIcon column="title" />
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                  onClick={() => handleSort("category")}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>Category</span>
+                    <SortIcon column="category" />
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                  onClick={() => handleSort("amount")}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>Amount</span>
+                    <SortIcon column="amount" />
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                  onClick={() => handleSort("date")}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>Date</span>
+                    <SortIcon column="date" />
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              <AnimatePresence>
+                {incomes.length > 0 ? (
+                  incomes.map((income, index) => (
                     <motion.tr
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
+                      key={income._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                      <td
-                        colSpan="5"
-                        className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
-                      >
-                        No income found
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {income.title}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                          {income.category}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {income.amount.toFixed(2)} Tk
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500">
+                          {new Date(income.date).toLocaleDateString()}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleUpdate(income)}
+                          className="text-indigo-600 hover:text-indigo-900 mr-4"
+                        >
+                          <FaEdit className="inline-block" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            setConfirmModal({ open: true, id: income._id })
+                          }
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <FaTrash className="inline-block" />
+                        </button>
                       </td>
                     </motion.tr>
-                  )}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </div>
+                  ))
+                ) : (
+                  <motion.tr
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <td
+                      colSpan="5"
+                      className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
+                    >
+                      No income found
+                    </td>
+                  </motion.tr>
+                )}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
 
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={fetchIncome}
-          />
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={fetchIncome}
+        />
 
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-              <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div className="mt-3 text-center">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    {selectedIncome ? "Update Income" : "Add Income"}
-                  </h3>
-                  <div className="mt-2 text-left py-3">
-                    <div className="absolute top-2 right-2">
-                      <button
-                        onClick={() => {
-                          setIsModalOpen(false);
-                          setSelectedIncome(null);
-                        }}
-                        className="text-red-500 hover:text-red-700 text-2xl"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                    <IncomeForm
-                      income={selectedIncome}
-                      onClose={() => {
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+            <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+              <div className="mt-3 text-center">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  {selectedIncome ? "Update Income" : "Add Income"}
+                </h3>
+                <div className="mt-2 text-left py-3">
+                  <div className="absolute top-2 right-2">
+                    <button
+                      onClick={() => {
                         setIsModalOpen(false);
                         setSelectedIncome(null);
-                        fetchIncome(currentPage);
                       }}
-                    />
+                      className="text-red-500 hover:text-red-700 text-2xl"
+                    >
+                      &times;
+                    </button>
                   </div>
+                  <IncomeForm
+                    income={selectedIncome}
+                    onClose={() => {
+                      setIsModalOpen(false);
+                      setSelectedIncome(null);
+                      fetchIncome(currentPage);
+                    }}
+                  />
                 </div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {confirmModal.open && (
-            <ConfirmDeleteModal
-              onConfirm={() => handleDelete(confirmModal.id)}
-              onCancel={() => setConfirmModal({ open: false, id: null })}
-            />
-          )}
-        </>
-      )}
+        {confirmModal.open && (
+          <ConfirmDeleteModal
+            onConfirm={() => handleDelete(confirmModal.id)}
+            onCancel={() => setConfirmModal({ open: false, id: null })}
+          />
+        )}
+      </>
     </div>
   );
 }
@@ -385,15 +377,6 @@ function OverviewSection({ overview }) {
   );
 }
 
-function OverviewItem({ label, value, color }) {
-  return (
-    <div>
-      <div className="text-lg font-bold mb-1">{label}</div>
-      <div className={`text-xl text-${color}-700`}>BDT {value.toFixed(2)}</div>
-    </div>
-  );
-}
-
 function ConfirmDeleteModal({ onConfirm, onCancel }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -420,7 +403,7 @@ function ConfirmDeleteModal({ onConfirm, onCancel }) {
 
 function PaginationControls({ currentPage, totalPages, onPageChange }) {
   return (
-    <div className="mt-4 flex justify-between items-center">
+    <div className="mt-4 flex justify-center space-x-4 items-center">
       <PaginationButton
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
@@ -446,7 +429,7 @@ function PaginationButton({ children, onClick, disabled }) {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 bg-blue-500 text-white rounded-md transition-colors duration-200
+      className={`px-4 py-2 bg-blue-500 text-white rounded-full transition-colors duration-200
                   ${
                     disabled
                       ? "opacity-50 cursor-not-allowed"

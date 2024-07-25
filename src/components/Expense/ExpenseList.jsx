@@ -192,228 +192,221 @@ export default function ExpenseList() {
           </motion.div>
         </div>
       </motion.div>
-      <button
-        className="bg-slate-300 p-3 mb-3"
-        onClick={() => setViewDetails(!viewDetails)}
-      >
-        {viewDetails ? "Hide Details" : "View Details"}
-      </button>
-      {viewDetails && (
-        <>
-          {/* Search and Filter */}
-          <div className="flex flex-col md:flex-row gap-1 mb-8">
-            <div className="relative flex-grow">
-              <input
-                type="text"
-                placeholder="Search expenses..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-              />
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-            </div>
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="px-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="">All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          {/* Expenses List */}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <AiOutlineLoading3Quarters className="w-10 h-10 text-blue-500 animate-spin" />
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSort("title")}
-                      >
-                        <div className="flex items-center space-x-1">
-                          <span>Title</span>
-                          <SortIcon column="title" />
-                        </div>
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSort("category")}
-                      >
-                        <div className="flex items-center space-x-1">
-                          <span>Category</span>
-                          <SortIcon column="category" />
-                        </div>
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSort("amount")}
-                      >
-                        <div className="flex items-center space-x-1">
-                          <span>Amount</span>
-                          <SortIcon column="amount" />
-                        </div>
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSort("date")}
-                      >
-                        <div className="flex items-center space-x-1">
-                          <span>Date</span>
-                          <SortIcon column="date" />
-                        </div>
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    <AnimatePresence>
-                      {expenses.length > 0 ? (
-                        expenses.map((expense, index) => (
-                          <motion.tr
-                            key={expense._id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                          >
-                            <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-gray-900">
-                                {expense.title}
-                              </div>
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap">
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                {expense.category}
-                              </span>
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">
-                                {expense.amount.toFixed(2)} Tk
-                              </div>
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-500">
-                                {new Date(expense.date).toLocaleDateString()}
-                              </div>
-                            </td>
-                            <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <button
-                                onClick={() => handleUpdate(expense)}
-                                className="text-indigo-600 hover:text-indigo-900 mr-3"
-                              >
-                                <FaEdit className="inline-block" />
-                              </button>
-                              <button
-                                onClick={() =>
-                                  setConfirmModal({
-                                    open: true,
-                                    id: expense._id,
-                                  })
-                                }
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                <FaTrash className="inline-block" />
-                              </button>
-                            </td>
-                          </motion.tr>
-                        ))
-                      ) : (
+      <>
+        {/* Search and Filter */}
+        <div className="flex flex-col md:flex-row gap-1 mb-8">
+          <div className="relative flex-grow">
+            <input
+              type="text"
+              placeholder="Search expenses..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+            />
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
+          </div>
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="px-4 py-2 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+          >
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Expenses List */}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <AiOutlineLoading3Quarters className="w-10 h-10 text-blue-500 animate-spin" />
+          </div>
+        ) : (
+          <>
+            <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                      onClick={() => handleSort("title")}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>Title</span>
+                        <SortIcon column="title" />
+                      </div>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                      onClick={() => handleSort("category")}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>Category</span>
+                        <SortIcon column="category" />
+                      </div>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                      onClick={() => handleSort("amount")}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>Amount</span>
+                        <SortIcon column="amount" />
+                      </div>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                      onClick={() => handleSort("date")}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>Date</span>
+                        <SortIcon column="date" />
+                      </div>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  <AnimatePresence>
+                    {expenses.length > 0 ? (
+                      expenses.map((expense, index) => (
                         <motion.tr
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
+                          key={expense._id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
                         >
-                          <td
-                            colSpan="5"
-                            className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
-                          >
-                            No expenses found
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">
+                              {expense.title}
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                              {expense.category}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              {expense.amount.toFixed(2)} Tk
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500">
+                              {new Date(expense.date).toLocaleDateString()}
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button
+                              onClick={() => handleUpdate(expense)}
+                              className="text-indigo-600 hover:text-indigo-900 mr-3"
+                            >
+                              <FaEdit className="inline-block" />
+                            </button>
+                            <button
+                              onClick={() =>
+                                setConfirmModal({
+                                  open: true,
+                                  id: expense._id,
+                                })
+                              }
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              <FaTrash className="inline-block" />
+                            </button>
                           </td>
                         </motion.tr>
-                      )}
-                    </AnimatePresence>
-                  </tbody>
-                </table>
-              </div>
-              {confirmModal.open && (
-                <ConfirmDeleteModal
-                  onConfirm={() => handleDelete(confirmModal.id)}
-                  onCancel={() => setConfirmModal({ open: false, id: null })}
-                />
-              )}
-              <div className="mt-8 flex justify-center items-center space-x-4">
-                <button
-                  onClick={() =>
-                    currentPage > 1 && fetchExpenses(currentPage - 1)
-                  }
-                  className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
-                  disabled={currentPage <= 1}
-                >
-                  Previous
-                </button>
-                <span className="text-gray-600">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={() =>
-                    currentPage < totalPages && fetchExpenses(currentPage + 1)
-                  }
-                  className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
-                  disabled={currentPage >= totalPages}
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          )}
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-              <div className="relative mx-auto p-8 border w-full max-w-md shadow-lg rounded-lg bg-white">
-                <h3 className="text-2xl font-semibold mb-4 text-center">
-                  {selectedExpense ? "Update Expense" : "Add Expense"}
-                </h3>
-                <button
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    setSelectedExpense(null);
-                  }}
-                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-                >
-                  <FaTimes />
-                </button>
-                <ExpenseForm
-                  expense={selectedExpense}
-                  onClose={() => {
-                    setIsModalOpen(false);
-                    setSelectedExpense(null);
-                    fetchExpenses(currentPage);
-                  }}
-                />
-              </div>
+                      ))
+                    ) : (
+                      <motion.tr
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <td
+                          colSpan="5"
+                          className="px-6 py-4 whitespace-nowrap text-center text-gray-500"
+                        >
+                          No expenses found
+                        </td>
+                      </motion.tr>
+                    )}
+                  </AnimatePresence>
+                </tbody>
+              </table>
             </div>
-          )}
-        </>
-      )}
+            {confirmModal.open && (
+              <ConfirmDeleteModal
+                onConfirm={() => handleDelete(confirmModal.id)}
+                onCancel={() => setConfirmModal({ open: false, id: null })}
+              />
+            )}
+            <div className="mt-8 flex justify-center items-center space-x-4">
+              <button
+                onClick={() =>
+                  currentPage > 1 && fetchExpenses(currentPage - 1)
+                }
+                className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
+                disabled={currentPage <= 1}
+              >
+                Previous
+              </button>
+              <span className="text-gray-600">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && fetchExpenses(currentPage + 1)
+                }
+                className="px-4 py-2 bg-blue-500 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition duration-300"
+                disabled={currentPage >= totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+            <div className="relative mx-auto p-8 border w-full max-w-md shadow-lg rounded-lg bg-white">
+              <h3 className="text-2xl font-semibold mb-4 text-center">
+                {selectedExpense ? "Update Expense" : "Add Expense"}
+              </h3>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setSelectedExpense(null);
+                }}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              >
+                <FaTimes />
+              </button>
+              <ExpenseForm
+                expense={selectedExpense}
+                onClose={() => {
+                  setIsModalOpen(false);
+                  setSelectedExpense(null);
+                  fetchExpenses(currentPage);
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </>
     </div>
   );
 }
