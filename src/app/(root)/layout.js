@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       <body className={opensans.className}>
         <AuthProvider>
           <BudgetProvider>
-            <div className="min-h-screen bg-gray-900 overflow-clip">
+            <div className="min-h-screen bg-gray-900">
               <Navbar />
               <div className="flex pt-16">
                 {" "}

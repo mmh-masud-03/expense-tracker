@@ -189,9 +189,18 @@ export default function IncomeReport() {
 
   if (incomeData.length === 0) {
     return (
-      <div className="p-4 mb-6 bg-white rounded shadow-md">
-        No income data available
-      </div>
+      <>
+        {" "}
+        <ImprovedDatePicker
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+        />
+        <div className="p-4 mb-6 bg-white rounded shadow-md">
+          No income data available
+        </div>
+      </>
     );
   }
 

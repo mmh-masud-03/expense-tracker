@@ -119,11 +119,11 @@ export default function AddFinanceButton() {
         whileTap={{ scale: 0.9 }}
         onClick={toggleModal}
         className={
-          "fixed 2xl:size-20 2xl:animate-pulse flex justify-center items-center bottom-6 right-6 p-4 bg-slate-700 text-white rounded-full shadow-lg hover:bg-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+          "fixed  2xl:animate-pulse flex justify-center items-center bottom-6 right-6 p-4 bg-slate-700 text-white rounded-full shadow-lg hover:bg-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
         }
         aria-label="Add finance item"
       >
-        <FaPlus size={24} className="2xl:size-24" />
+        <FaPlus size={24} className="2xl:size-12" />
       </motion.button>
     </>
   );
