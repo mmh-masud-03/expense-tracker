@@ -14,6 +14,7 @@ import {
   FaBell,
 } from "react-icons/fa";
 import { useBudget } from "@/utils/BudgetContext";
+import { toast } from "react-toastify";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +54,7 @@ export default function Navbar() {
     signOut();
     setDropdownOpen(false);
     setIsOpen(false);
+    toast("Logged out successfully");
   };
 
   return (
