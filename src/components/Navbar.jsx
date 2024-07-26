@@ -63,9 +63,7 @@ export default function Navbar() {
           <div className="flex items-center my-2 px-3">
             <Link href="/dashboard" className="flex items-center">
               <FaWallet className="inline-block text-slate-200 mr-2" />
-              <span className="text-slate-200 font-bold text-xl">
-                Expense Tracker
-              </span>
+              <span className="text-slate-200 font-bold text-xl">FinTrack</span>
             </Link>
           </div>
 

@@ -96,7 +96,7 @@ export default function AllSavings() {
       <h2 className="text-xl font-semibold mb-2">Savings plan</h2>
       <p className="text-lg mb-4">{data.data.length} saving plans</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
         {data.data.map((saving) => {
           const percentage = Math.round(
             (saving.savedAmount / saving.goalAmount) * 100
@@ -116,7 +116,7 @@ export default function AllSavings() {
                 </div>
                 <h3 className="text-lg font-semibold">{saving.goalTitle}</h3>
               </div>
-              <p className="text-green-600 font-semibold">
+              <p className="text-green-600 text-base font-semibold">
                 Tk {saving.savedAmount.toLocaleString()} / Tk{" "}
                 {saving.goalAmount.toLocaleString()}
               </p>

@@ -56,7 +56,7 @@ export default function Sidebar() {
             isCollapsed ? "justify-center" : "justify-between"
           }`}
         >
-          {!isCollapsed && <span>Expense Tracker</span>}
+          {!isCollapsed && <span>FinTrack</span>}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="p-2 rounded-full hover:bg-gray-700 lg:block hidden"
