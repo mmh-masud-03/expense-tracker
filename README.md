@@ -1,10 +1,10 @@
-# [FinTrack]
+# FinTrack
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Overview
 
-[FinTrack] is a comprehensive finance management application built with Next.js. It helps users manage their budgets, track expenses, record income, and set savings goals with ease. The application offers a user-friendly interface, detailed reports, and real-time insights into financial health.
+FinTrack is a comprehensive finance management application built with Next.js. It helps users manage their budgets, track expenses, record income, and set savings goals with ease. The application offers a user-friendly interface, detailed reports, and real-time insights into financial health.
 
 ## Features
 
