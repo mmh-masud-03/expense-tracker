@@ -94,10 +94,10 @@ export default function AllSavings() {
   return (
     <div className="relative bg-gradient-to-r from-slate-50  to-slate-200 p-1 rounded-lg shadow-lg w-full">
       <h2 className="text-xl font-semibold mb-2">Savings plan</h2>
-      <p className="text-lg mb-4">{data.data.length} saving plans</p>
+      <p className="text-lg mb-4">{data?.data?.length} saving plans</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
-        {data.data.map((saving) => {
+        {data?.data?.map((saving) => {
           const percentage = Math.round(
             (saving.savedAmount / saving.goalAmount) * 100
           );

@@ -99,8 +99,8 @@ export function prepareChartData(data, chartType) {
       };
 
     case "budgetVsActual":
-      const sortedBudgetData = data.budgetData
-        .sort(
+      const sortedBudgetData = data?.budgetData
+        ?.sort(
           (a, b) =>
             new Date(a.year, months.indexOf(a.month)) -
             new Date(b.year, months.indexOf(b.month))
