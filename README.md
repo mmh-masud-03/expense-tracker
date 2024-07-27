@@ -26,17 +26,17 @@
 
 ### Dashboard
 
-![Dashboard](/images/dashboard.png)
+![Dashboard](/public/images/dashboard.png)
 
 ### Transactions Page
 
-![Transactions Summary](/images/transactions1.png)
-![Transactions Summary](/images/transactions2.png)
+![Transactions Summary](/public/images/transactions1.png)
+![Transactions Summary](/public/images/transactions2.png)
 
 ### Reports Page
 
-![Income Report](/images/income-report.png)
-![Expense Report](/images/expense-report.png)
+![Income Report](/public/images/income-report.png)
+![Expense Report](/public/images/expense-report.png)
 
 ## Installation
 
