@@ -34,7 +34,18 @@ export default function RootLayout({ children }) {
                     <div className="container mx-auto">
                       <AddFinanceButton />
                     </div>
-                    <ToastContainer />
+                    <ToastContainer
+                      position="top-right"
+                      autoClose={5000}
+                      hideProgressBar={false}
+                      newestOnTop={false}
+                      closeOnClick
+                      rtl={false}
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                      theme="colored"
+                    />
                   </main>
                 </div>
               </div>
