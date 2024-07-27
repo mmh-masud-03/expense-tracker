@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
                 <iframe
                   width={440}
                   height={250}
-                  src="https://www.youtube.com/embed/yYsWTdUOBVg?si=4FL5te7lRO2Xe-95"
+                  src="https://www.youtube.com/embed/"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen

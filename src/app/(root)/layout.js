@@ -24,11 +24,9 @@ export default function RootLayout({ children }) {
               <Navbar />
               <div className="flex pt-16">
                 {" "}
-                {/* Added pt-16 for Navbar height */}
                 <Sidebar />
                 <div className="flex-1 lg:ml-20">
                   {" "}
-                  {/* Added lg:ml-20 for collapsed sidebar width */}
                   <main className="px-5 py-3">
                     {children}
                     <div className="container mx-auto">
