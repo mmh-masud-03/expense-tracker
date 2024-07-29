@@ -40,7 +40,7 @@ export default function BalanceOverview() {
   }, []);
 
   if (error) {
-    return <div>Error loading data: {error}</div>;
+    return <div className="text-red-500">Error loading data: {error}</div>;
   }
 
   if (!incomeData || !expenseData) {
@@ -64,7 +64,7 @@ export default function BalanceOverview() {
         <span className="text-green-400">{savingsRate.toFixed(2)}% </span>
       </p>
       <p className="text-xs mb-4">Combination of bank accounts</p>
-      <div className="flex space-x-2">{/* Add bank icons here */}</div>
+      <div className="flex space-x-2"></div>
       <button className="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
         <FiInfo size={24} />
       </button>
