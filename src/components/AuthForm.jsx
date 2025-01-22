@@ -7,8 +7,8 @@ import Link from "next/link";
 
 export default function AuthForm({ type }) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@test.com");
+  const [password, setPassword] = useState("m@sud");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
